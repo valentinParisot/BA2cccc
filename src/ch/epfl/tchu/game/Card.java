@@ -19,9 +19,6 @@ public enum Card {
     public final static List<Card> CARS =  ALL.subList(0,COUNT);
 
 
-    Card(Object o) {
-    }
-
 
     public Card of (Color color){
         return Card.valueOf(color.toString());
