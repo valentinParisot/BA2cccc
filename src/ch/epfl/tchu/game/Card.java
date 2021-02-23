@@ -22,7 +22,7 @@ public enum Card {
     private Card(Color b) {
         this.c = b;
     }
-f
+
 
     public Card of (Color color){
         return Card.valueOf(color.toString());
