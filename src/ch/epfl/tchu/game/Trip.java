@@ -47,6 +47,10 @@ public final class Trip {
     public int points(){return this.points;}
 
     public int points(StationConnectivity connectivity){
-        return 3;
+        if (connectivity.connected(from, to)){
+            return points();
+        }
+        int malus = (- points());
+        return malus;
     }
 }
