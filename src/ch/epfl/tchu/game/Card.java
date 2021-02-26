@@ -19,8 +19,6 @@ public enum Card {
     WHITE(Color.WHITE),
     LOCOMOTIVE(null);
 
-    public int v;
-
     public static final List<Card> ALL =  List.of(values());
     public static final int COUNT = ALL.size();
     public final static List<Card> CARS =  ALL.subList(0,COUNT);
