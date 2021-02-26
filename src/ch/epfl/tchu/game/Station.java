@@ -16,7 +16,7 @@ public  final class Station {
      * @param name
      * @throws IllegalArgumentException if id is less than 0
      */
-    Station(int id, String name){
+    public Station(int id, String name){
         if(id < 0) {
             throw new IllegalArgumentException("illegal capacity: " + id + " (must be >= 0)");
             }else {
