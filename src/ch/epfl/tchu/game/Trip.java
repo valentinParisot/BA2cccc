@@ -17,9 +17,9 @@ public final class Trip {
 
     /**
      *
-     * @param from
-     * @param to
-     * @param points
+     * @param from starting station
+     * @param to ending station
+     * @param points the amount of points for this trip
      */
     public Trip(Station from, Station to, int points){
         this.from = Objects.requireNonNull(from);
@@ -31,7 +31,7 @@ public final class Trip {
     }
 
     /**
-     *
+     * creates a list of trips (with starting and ending stations)
      * @param from
      * @param to
      * @param points
@@ -54,26 +54,26 @@ public final class Trip {
 
     /**
      *
-     * @return
+     * @return starting station
      */
     public Station from(){ return this.from;}
 
     /**
      *
-     * @return
+     * @return ending station
      */
     public Station to(){return this.to;}
 
     /**
      *
-     * @return
+     * @return the amount of points of the trip
      */
     public int points(){return this.points;}
 
     /**
      *
      * @param connectivity
-     * @return
+     * @return the amount of points if the stations are connected or not
      */
     public int points(StationConnectivity connectivity){
         if (connectivity.connected(from, to)){
