@@ -2,6 +2,11 @@ package ch.epfl.tchu.game;
 
 import java.util.List;
 
+/**
+ *
+ * @author Valentin Parisot (326658)
+ */
+
 public enum Card {
 
     BLACK(Color.BLACK),
@@ -19,14 +24,27 @@ public enum Card {
     public final static List<Card> CARS =  ALL.subList(0,COUNT);
     private final Color c;
 
+    /**
+     * build a card, the color is given
+     * @param b
+     */
     private Card(Color b) {
         this.c = b;
     }
 
-
+    /**
+     *
+     * @param color
+     * @return type of the card
+     */
     public static Card of (Color color){
         return Card.valueOf(color.toString());
     }
+
+    /**
+     *
+     * @return color of the type od the card
+     */
     public Color color(){
     return c;
     }
