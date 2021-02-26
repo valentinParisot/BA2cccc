@@ -9,8 +9,15 @@ public final class Ticket implements Comparable<Ticket> {
     private final String representation;
 
     public Ticket(List<Trip> trips){
-        if (trips == null){ throw new IllegalArgumentException();}
-        else{ this.trips = trips; }
+        if (trips.size() == 0){ throw new IllegalArgumentException();}
+        String pattern = trips.get(0).from.name();
+        for(Trip t : trips){
+            if(t.from.name() != pattern){
+                throw new IllegalArgumentException();
+            }
+        }
+
+        this.trips = trips;
         representation = computeText();
     }
 
