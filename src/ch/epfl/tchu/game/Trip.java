@@ -18,6 +18,13 @@ public final class Trip {
         else{this.points = points;}
     }
 
+    /**
+     *
+     * @param from
+     * @param to
+     * @param points
+     * @return
+     */
     public static List<Trip> all(List<Station> from, List<Station> to, int points){
         List<Trip> path = new ArrayList<>();
         if (from == null || to == null || points <=0) {
