@@ -19,7 +19,7 @@ public enum Card {
     WHITE(Color.WHITE),
     LOCOMOTIVE(null);
 
-    public int h;
+    public int v;
 
     public static final List<Card> ALL =  List.of(values());
     public static final int COUNT = ALL.size();
