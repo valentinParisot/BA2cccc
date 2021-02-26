@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 public final class Ticket implements Comparable<Ticket> {
-
+    private int h;
     private final List<Trip> trips;
     private final String representation;
 
@@ -26,8 +26,8 @@ public final class Ticket implements Comparable<Ticket> {
         String n = "";
 
         for (Trip t : trips){
-            n = "Lausanne";//n = t.from.name();
-            s.add("EPFL"); // s.add( t.to.name() + " (" + t.points + ")" );
+            n = t.from.name();
+            s.add( t.to.name() + " (" + t.points + ")" );
         }
 
         String text =String.join(", ", s);
