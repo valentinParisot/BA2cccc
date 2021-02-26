@@ -31,6 +31,9 @@ public final class Ticket implements Comparable<Ticket> {
 
         String text =String.join(", ", s);
 
+        if(s.size() == 1){
+            return String.format("%s - %s",n ,text);
+        }
         return String.format("%s - {%s}",n ,text);
     }
 
