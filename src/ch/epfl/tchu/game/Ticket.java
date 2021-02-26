@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.TreeSet;
 
 public final class Ticket implements Comparable<Ticket> {
-    private int pou;
     private final List<Trip> trips;
     private final String representation;
 
@@ -40,7 +39,15 @@ public final class Ticket implements Comparable<Ticket> {
     @Override
     public String toString() { return representation; }
 
-    public int points(StationConnectivity connectivity){ return 3;}
+    public int points(StationConnectivity connectivity){
+        int realPoints = -100;
+        for (Trip t : trips){
+            if(t.points(connectivity) > realPoints){
+                realPoints = t.points(connectivity);
+            }
+        }
+        return realPoints;
+    }
 
     public int compareTo(Ticket that){
         return text().compareTo(that.text());
