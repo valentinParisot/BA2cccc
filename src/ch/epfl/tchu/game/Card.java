@@ -24,7 +24,7 @@ public enum Card {
     }
 
 
-    public Card of (Color color){
+    public static Card of (Color color){
         return Card.valueOf(color.toString());
     }
     public Color color(){

@@ -2,23 +2,17 @@ package ch.epfl.tchu.game;
 
 public  final class Station {
 
-    public int id;
-    public String name;
+    private final int id;
+    private final String name;
 
     Station(int id, String name){
+        if(id < 0) {
+            throw new IllegalArgumentException("illegal capacity: " + id + " (must be >= 0)");
+            }else {
+            this.id = id;
+            this.name = name;
 
-        try {
-            if(id < 0) {
-                throw new IllegalArgumentException();
-            }
-            else {
-                this.id = id;
-            }
-
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
         }
-        this.name = name;
     }
 
     public int id(){
