@@ -16,20 +16,20 @@ public final class Route {
 
     public enum Level {
 
-        OVERGROUND ,
-        UNDERGROUND ;
+        OVERGROUND,
+        UNDERGROUND;
 
     }
 
-    public Route(String id, Station station1, Station station2, int length, Level level, Color color){
-        if(station1.equals(station2)){
+    public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
+        if (station1.equals(station2)) {
             throw new IllegalArgumentException("Stations are the same");
         }
-        if(length > Constants.MAX_ROUTE_LENGTH || length < Constants.MIN_ROUTE_LENGTH){
+        if (length > Constants.MAX_ROUTE_LENGTH || length < Constants.MIN_ROUTE_LENGTH) {
             throw new IllegalArgumentException("wrong size");
 
         }
-        if(id == null || station1 == null || station2 == null || level == null){
+        if (id == null || station1 == null || station2 == null || level == null) {
             throw new NullPointerException("Some fields are null");
 
         }
@@ -64,14 +64,14 @@ public final class Route {
     }
 
     public Color color() {
-        if(this.color == null){
+        if (this.color == null) {
 
             return null;
         }
         return color;
     }
 
-    public List<Station> stations(){
+    public List<Station> stations() {
         List<Station> stations = new ArrayList<Station>();
         stations.add(station1);
         stations.add(station2);
@@ -79,47 +79,51 @@ public final class Route {
         return stations;
     }
 
-    public Station stationOpposite(Station station){
-        if (station.equals(station1)){
+    public Station stationOpposite(Station station) {
+        if (station.equals(station1)) {
             return station2;
         }
-        if (station.equals(station2)){
+        if (station.equals(station2)) {
             return station1;
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Incompatible Station");
         }
 
     }
 
-    public List<SortedBag<Card>> possibleClaimCards(){
-        SortedBag.Builder<Card> card1 = new SortedBag.Builder<>();
-      if(this.color != null) {
-          for (int loco = 0; loco < length; loco++) {
-              card1.add(SortedBag.of(length - loco, Card.of(this.color), loco, Card.LOCOMOTIVE));
+    public List<SortedBag<Card>> possibleClaimCards() {
+        List<SortedBag<Card>> cards1 = new ArrayList<>();
+        if (level.equals(Level.UNDERGROUND)) {
+            for (int i = 0; i < length; i++) {
+                if (color != null) {
+                    cards1.add(SortedBag.of(length - i, Card.of(color), i, Card.LOCOMOTIVE));
 
-          }
-      }
-        else{
+                } else { // FAUX
+                    for (Card card : Card.CARS) {
+                        cards1.add(SortedBag.of(length - i, card, i, Card.LOCOMOTIVE));
+                    }
+                } // JUSQU'A LA
 
+            }
+        } else if (level.equals(Level.OVERGROUND)) {
+            if (color != null) {
+                cards1.add(SortedBag.of(length, Card.of(color)));
 
-
-
-          }
-
-
-
-
-
-
+            } else {
+                for (Card card : Card.CARS) {
+                    cards1.add(SortedBag.of(length, card));
+                }
+            }
+        }
+        return cards1;
 
     }
 
-    public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards){
+    public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
 
     }
 
-    public int claimPoints(){
+    public int claimPoints() {
 
     }
 }
