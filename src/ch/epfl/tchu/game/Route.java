@@ -121,6 +121,26 @@ public final class Route {
 
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
 
+        if(level.equals(Level.OVERGROUND) || drawnCards.size() != 3) {
+           throw new IllegalArgumentException("Error level ");
+        }
+
+        Card card = claimCards.get(0);
+        Color color = card.color();
+
+        int count = 0 ;
+        for(int i = 0; i<3; ++i) {
+            if ((drawnCards.get(i)).equals(card)) {
+                count++;
+
+            }
+            else if((drawnCards.get(i)).equals(Card.LOCOMOTIVE)){
+                count++;
+
+            }
+        }
+
+        return count;
     }
 
     public int claimPoints() {
