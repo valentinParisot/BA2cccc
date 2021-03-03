@@ -98,11 +98,11 @@ public final class Route {
                 if (color != null) {
                     cards1.add(SortedBag.of(length - i, Card.of(color), i, Card.LOCOMOTIVE));
 
-                } else { // FAUX
+                } else {
                     for (Card card : Card.CARS) {
                         cards1.add(SortedBag.of(length - i, card, i, Card.LOCOMOTIVE));
                     }
-                } // JUSQU'A LA
+                }
 
             }
         } else if (level.equals(Level.OVERGROUND)) {
@@ -121,20 +121,19 @@ public final class Route {
 
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
 
-        if(level.equals(Level.OVERGROUND) || drawnCards.size() != 3) {
-           throw new IllegalArgumentException("Error level ");
+        if (level.equals(Level.OVERGROUND) || drawnCards.size() != 3) {
+            throw new IllegalArgumentException("Error level ");
         }
 
         Card card = claimCards.get(0);
         Color color = card.color();
 
-        int count = 0 ;
-        for(int i = 0; i<3; ++i) {
+        int count = 0;
+        for (int i = 0; i < 3; ++i) {
             if ((drawnCards.get(i)).equals(card)) {
                 count++;
 
-            }
-            else if((drawnCards.get(i)).equals(Card.LOCOMOTIVE)){
+            } else if ((drawnCards.get(i)).equals(Card.LOCOMOTIVE)) {
                 count++;
 
             }
@@ -145,5 +144,37 @@ public final class Route {
 
     public int claimPoints() {
 
+        int points = 0;
+        switch (length) {
+            case 1:
+                points = 1;
+                break;
+
+            case 2:
+                points = 2;
+                break;
+
+            case 3:
+                points = 4;
+                break;
+
+            case 4:
+                points = 7;
+                break;
+
+            case 5:
+                points = 10;
+                break;
+
+            case 6:
+                points = 15;
+                break;
+
+            default:
+                points = 0;
+                break;
+
+        }
+        return points;
     }
 }
