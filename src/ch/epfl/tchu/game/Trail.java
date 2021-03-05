@@ -13,6 +13,11 @@ public final class Trail {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *creates a trail from a list of roads
+     * @param routeList
+     */
+
     private Trail(List<Route> routeList) {
         this.routeList = routeList;
         station1 = routeList.get(0).station1();
@@ -20,6 +25,12 @@ public final class Trail {
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param routes list of roads that belong to the player
+     * @return the longest trail possible
+     */
 
     public static Trail longest(List<Route> routes) {
         Trail longest = null;
@@ -56,6 +67,11 @@ public final class Trail {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @return the length of the trail
+     */
+
     public int length() {
         int size = 0;
         for (Route r : routeList) {
@@ -68,8 +84,7 @@ public final class Trail {
 
     /**
      *
-     *
-     * @return
+     * @return the 1st station of the trail
      */
 
     public Station station1(){
@@ -81,6 +96,10 @@ public final class Trail {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @return the last station of the trail
+     */
     public Station station2(){
         if(this.length() == 0){
             return null;
@@ -89,6 +108,11 @@ public final class Trail {
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @return the stations of the trial (ordered) and its points
+     */
 
     @Override
     public String toString(){
