@@ -30,14 +30,15 @@ public final class Trail {
                 List<Route> rs = null;
 
                 for (Route r : routes) {
-                    if ((!cs.contains(r)) && (r.stations().contains(r.stationOpposite(station2)))) {
+                    if ((!cs.contains(r)) && ((r.stations().contains(r.stationOpposite(t.station2())))
+                    || (r.stations().contains(r.stationOpposite(t.station1()))))) {
                         rs.add(r);
 
                     }
                 }
                 for (Route r1 : rs) {
-                    routeList.add(r1);
-                    csPrime.add(new Trail(routeList));
+                    t.routeList.add(r1);
+                    csPrime.add(new Trail(t.routeList));
                 }
                 if ((t.length > longest.length() || longest == null)) {
                     longest = t;
@@ -80,6 +81,7 @@ public final class Trail {
     public String toString(){
 
         String n = " ";
+        n = "";
 
         for(Route r : routeList){
             n =(n + (r.station1().name() + " - "));
