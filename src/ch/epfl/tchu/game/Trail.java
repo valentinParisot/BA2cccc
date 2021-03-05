@@ -3,33 +3,40 @@ package ch.epfl.tchu.game;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Hugo Jeannin (329220)
+ */
+
 public final class Trail {
 
-    private int length;
-    private List<Route> routeList;
-    private Station station1;
-    private Station station2;
+    private final int length;
+    private final List<Route> routeList;
+    private final Station station1;
+    private final Station station2;
 
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * creates a trail from a list of roads
      *
-     * @param routeList list of roads making a trail
+     * @param routeList list of roads that belong to the player
+     * @param station1 first station of the trail
+     * @param station2 last station of the trail
+     * @param length length of the trail (sum of the length of each road)
      */
 
     private Trail(List<Route> routeList, Station station1, Station station2, int length) {
         this.routeList = routeList;
         this.station1 = station1;
         this.station2 = station2;
+        this.length = length;
     }
 
     //----------------------------------------------------------------------------------------------------
 
     /**
      * @param routes list of roads that belong to the player
-     * @return the longest trail possible
+     * @return the longest trail possible (even if there may have several)
      */
 
     public static Trail longest(List<Route> routes) {
@@ -37,17 +44,19 @@ public final class Trail {
         List<Trail> cs = null;
         for (Route r : routes) {
             cs.add(new Trail(List.of(r), r.station1(), r.station2(), r.length()));
+            cs.add(new Trail(List.of(r), r.station2(), r.station1(), r.length()));
         }
 
         while (cs.size() != 0) {
             List<Trail> csPrime = null;
             for (Trail t : cs) {
 
+                List<Route> rs = t.routeList;
+
                 for (Route r : routes) {
                     if ((!cs.contains(r)) && (r.stations().contains(t.station2))) {
-                        t.routeList.add(r);
-                        t.station2 = r.station2();
-                        csPrime.add(new Trail(t.routeList, t.station1, t.station2, t.length()));
+                        rs.add(r);
+                        csPrime.add(new Trail(rs, t.station1, r.station2(), t.length()));
                     }
                 }
 
@@ -77,7 +86,7 @@ public final class Trail {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @return the 1st station of the trail
+     * @return the first station of the trail
      */
 
     public Station station1() {
