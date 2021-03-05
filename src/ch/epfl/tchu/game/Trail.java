@@ -15,7 +15,7 @@ public final class Trail {
 
     /**
      *creates a trail from a list of roads
-     * @param routeList
+     * @param routeList list of roads making a trail
      */
 
     private Trail(List<Route> routeList) {
@@ -111,7 +111,7 @@ public final class Trail {
 
     /**
      *
-     * @return the stations of the trial (ordered) and its points
+     * @return the stations of the trial (ordered) and its length
      */
 
     @Override
