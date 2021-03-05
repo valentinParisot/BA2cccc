@@ -14,6 +14,8 @@ public final class Route {
     private final Color color;
 
 
+    //----------------------------------------------------------------------------------------------------
+
     public enum Level {
 
         OVERGROUND,
@@ -22,6 +24,28 @@ public final class Route {
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     * constructor of route
+     * @param id
+     *          id of route
+     * @param station1
+     *          first station
+     * @param station2
+     *          second station
+     * @param length
+     *          length of the route
+     * @param level
+     *          underground or overground
+     * @param color
+     *          color
+     *
+     * @throws IllegalArgumentException
+     *          if station 1 equals to station 2
+     *          if the length is not in the constant bounds
+     * @throws NullPointerException
+     *          if id or station1,2 or level is/are null
+     */
 
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
         if (station1.equals(station2)) {
@@ -47,11 +71,21 @@ public final class Route {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @return the id of the route
+     */
+
     public String id() {
         return id;
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @return the first station
+     */
 
     public Station station1() {
         return station1;
@@ -59,11 +93,21 @@ public final class Route {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @return the second station
+     */
+
     public Station station2() {
         return station2;
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @return the length of the route
+     */
 
     public int length() {
         return length;
@@ -71,11 +115,21 @@ public final class Route {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @return the level, overground or underground
+     */
+
     public Level level() {
         return level;
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @return the color of the route
+     */
 
     public Color color() {
         if (this.color == null) {
@@ -87,6 +141,11 @@ public final class Route {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * creat a list with the first and the second station
+     * @return list with station 1,2
+     */
+
     public List<Station> stations() {
         List<Station> stations = new ArrayList<Station>();
         stations.add(station1);
@@ -96,6 +155,12 @@ public final class Route {
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     * return the next station
+     * @param station starting station or ending station
+     * @return the opposite station of the param
+     */
 
     public Station stationOpposite(Station station) {
         if (station.equals(station1)) {
@@ -110,6 +175,12 @@ public final class Route {
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     * return the list with the whole sets of cards who can be play
+     * the list is sorted
+     * @return the list with the whole sets of cards who can be play
+     */
 
     public List<SortedBag<Card>> possibleClaimCards() {
         List<SortedBag<Card>> cards1 = new ArrayList<>();
@@ -142,10 +213,13 @@ public final class Route {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * return the number of cards additional required to get the route
+     * @param claimCards cards posed by the player
+     * @param drawnCards 3 cards drown on the top of the deck
      *
-     * @param claimCards
-     * @param drawnCards
-     * @return
+     * @throws IllegalArgumentException if the current route is not an undergound
+     *                                  or if drowncards doesn't have exactly 3 cards
+     * @return the number of cards additional required to get the route
      */
 
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
@@ -172,6 +246,19 @@ public final class Route {
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     * return the number of points that a players obtains when you the player get the route
+     * compute with the length
+     * length       points
+     *  1             1
+     *  2             2
+     *  3             4
+     *  4             7
+     *  5             10
+     *  6             15
+     * @return points
+     */
 
     public int claimPoints() {
 

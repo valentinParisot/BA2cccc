@@ -18,6 +18,11 @@ public final class Trail {
      * @param routeList list of roads making a trail
      */
 
+    /**
+     *
+     * @param routeList
+     */
+
     private Trail(List<Route> routeList) {
         this.routeList = routeList;
         station1 = routeList.get(0).station1();
