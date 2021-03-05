@@ -5,34 +5,29 @@ import java.util.List;
 
 public final class Trail {
 
-    private static int length;
-    private static List<Route> routeList;
-    private static Station station1;
-    private static Station station2;
+    private int length;
+    private List<Route> routeList;
+    private Station station1;
+    private Station station2;
 
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *creates a trail from a list of roads
+     * creates a trail from a list of roads
+     *
      * @param routeList list of roads making a trail
      */
 
-    /**
-     *
-     * @param routeList
-     */
-
-    private Trail(List<Route> routeList) {
+    private Trail(List<Route> routeList, Station station1, Station station2, int length) {
         this.routeList = routeList;
-        station1 = routeList.get(0).station1();
-        station2 = routeList.get(routeList.size() - 1).station1();
+        this.station1 = station1;
+        this.station2 = station2;
     }
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param routes list of roads that belong to the player
      * @return the longest trail possible
      */
@@ -41,26 +36,21 @@ public final class Trail {
         Trail longest = null;
         List<Trail> cs = null;
         for (Route r : routes) {
-            cs.add(new Trail(List.of(r)));
+            cs.add(new Trail(List.of(r), r.station1(), r.station2(), r.length()));
         }
 
         while (cs.size() != 0) {
             List<Trail> csPrime = null;
             for (Trail t : cs) {
 
-                List<Route> rs = null;
-
                 for (Route r : routes) {
-                    if ((!cs.contains(r)) && ((r.stations().contains(r.stationOpposite(t.station2())))
-                    || (r.stations().contains(r.stationOpposite(t.station1()))))) {
-                        rs.add(r);
-
+                    if ((!cs.contains(r)) && (r.stations().contains(t.station2))) {
+                        t.routeList.add(r);
+                        t.station2 = r.station2();
+                        csPrime.add(new Trail(t.routeList, t.station1, t.station2, t.length()));
                     }
                 }
-                for (Route r1 : rs) {
-                    t.routeList.add(r1);
-                    csPrime.add(new Trail(t.routeList));
-                }
+
                 if ((t.length > longest.length() || longest == null)) {
                     longest = t;
                 }
@@ -73,7 +63,6 @@ public final class Trail {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @return the length of the trail
      */
 
@@ -88,45 +77,42 @@ public final class Trail {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @return the 1st station of the trail
      */
 
-    public Station station1(){
-        if(this.length() == 0){
+    public Station station1() {
+        if (this.length() == 0) {
             return null;
         }
-        return routeList.get(0).station1();
+        return station1;
     }
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @return the last station of the trail
      */
-    public Station station2(){
-        if(this.length() == 0){
+    public Station station2() {
+        if (this.length() == 0) {
             return null;
         }
-        return routeList.get(routeList.size() - 1).station2();
+        return station2;
     }
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @return the stations of the trial (ordered) and its length
      */
 
     @Override
-    public String toString(){
+    public String toString() {
 
         String n = " ";
         n = "";
 
-        for(Route r : routeList){
-            n =(n + (r.station1().name() + " - "));
+        for (Route r : routeList) {
+            n = (n + (r.station1().name() + " - "));
         }
         n = (n + (station2().name() + "(" + length() + ")"));
 
