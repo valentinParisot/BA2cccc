@@ -10,13 +10,16 @@ public final class Trail {
     private static Station station1;
     private static Station station2;
 
+
+    //----------------------------------------------------------------------------------------------------
+
     private Trail(List<Route> routeList) {
         this.routeList = routeList;
         station1 = routeList.get(0).station1();
         station2 = routeList.get(routeList.size() - 1).station1();
     }
 
-//----------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
 
     public static Trail longest(List<Route> routes) {
         Trail longest = null;
@@ -61,6 +64,8 @@ public final class Trail {
         return size;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     /**
      *
      *
@@ -74,12 +79,16 @@ public final class Trail {
         return routeList.get(0).station1();
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public Station station2(){
         if(this.length() == 0){
             return null;
         }
         return routeList.get(routeList.size() - 1).station2();
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     @Override
     public String toString(){
@@ -94,4 +103,6 @@ public final class Trail {
 
         return n;
     }
+
+    //----------------------------------------------------------------------------------------------------
 }

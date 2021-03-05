@@ -21,6 +21,8 @@ public final class Route {
 
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
         if (station1.equals(station2)) {
             throw new IllegalArgumentException("Stations are the same");
@@ -43,25 +45,37 @@ public final class Route {
 
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public String id() {
         return id;
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public Station station1() {
         return station1;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public Station station2() {
         return station2;
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public int length() {
         return length;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public Level level() {
         return level;
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public Color color() {
         if (this.color == null) {
@@ -71,6 +85,8 @@ public final class Route {
         return color;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public List<Station> stations() {
         List<Station> stations = new ArrayList<Station>();
         stations.add(station1);
@@ -78,6 +94,8 @@ public final class Route {
 
         return stations;
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public Station stationOpposite(Station station) {
         if (station.equals(station1)) {
@@ -90,6 +108,8 @@ public final class Route {
         }
 
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public List<SortedBag<Card>> possibleClaimCards() {
         List<SortedBag<Card>> cards1 = new ArrayList<>();
@@ -118,6 +138,8 @@ public final class Route {
         return cards1;
 
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     /**
      *
@@ -148,6 +170,8 @@ public final class Route {
 
         return count;
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public int claimPoints() {
 
@@ -184,4 +208,6 @@ public final class Route {
         }
         return points;
     }
+
+    //----------------------------------------------------------------------------------------------------
 }
