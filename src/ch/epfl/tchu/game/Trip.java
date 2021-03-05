@@ -1,11 +1,14 @@
 package ch.epfl.tchu.game;
 
+import ch.epfl.tchu.Preconditions;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
- *
+ * Trip
+ * class
  * @author Hugo Jeannin (329220)
  */
 
@@ -25,12 +28,14 @@ public final class Trip {
      */
 
     public Trip(Station from, Station to, int points){
+
         this.from = Objects.requireNonNull(from);
+
         this.to = Objects.requireNonNull(to);
-        if (points<=0){
-            throw new IllegalArgumentException();
-        }
-        else{this.points = points;}
+
+        Preconditions.checkArgument(points >0);
+
+        this.points = points;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -88,7 +93,7 @@ public final class Trip {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
+     * compute with the connectivity given
      * @param connectivity
      * @return the amount of points if the stations are connected or not
      */

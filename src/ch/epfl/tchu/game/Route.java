@@ -1,8 +1,16 @@
 package ch.epfl.tchu.game;
 
+import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
 import java.util.*;
+
+/**
+ * Route
+ *
+ * @author Valentin Parisot (326658)
+ * @author Hugo Jeannin (329220)
+ */
 
 public final class Route {
 
@@ -15,6 +23,13 @@ public final class Route {
 
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * enum contains two level of route
+     * OVERGROUND
+     * UNDERGROUND
+     */
 
     public enum Level {
 
@@ -39,7 +54,6 @@ public final class Route {
      *          underground or overground
      * @param color
      *          color
-     *
      * @throws IllegalArgumentException
      *          if station 1 equals to station 2
      *          if the length is not in the constant bounds
@@ -48,23 +62,15 @@ public final class Route {
      */
 
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
-        if (station1.equals(station2)) {
-            throw new IllegalArgumentException("Stations are the same");
-        }
-        if (length > Constants.MAX_ROUTE_LENGTH || length < Constants.MIN_ROUTE_LENGTH) {
-            throw new IllegalArgumentException("wrong size");
 
-        }
-        if (id == null || station1 == null || station2 == null || level == null) {
-            throw new NullPointerException("Some fields are null");
-
-        }
+        Preconditions.checkArgument(!(station1.equals(station2)));
+        Preconditions.checkArgument((length <= Constants.MAX_ROUTE_LENGTH && length >= Constants.MIN_ROUTE_LENGTH));
 
         this.id = id;
-        this.station1 = station1;
-        this.station2 = station2;
+        this.station1 = Objects.requireNonNull(station1);
+        this.station2 = Objects.requireNonNull(station1);
         this.length = length;
-        this.level = level;
+        this.level = Objects.requireNonNull(level);;
         this.color = color;
 
     }
@@ -157,33 +163,37 @@ public final class Route {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * return the next station
+     * return the opposit station of the station in the input
      * @param station starting station or ending station
+     *
+     * @throws IllegalArgumentException if the given station is neither the first nor the second
      * @return the opposite station of the param
      */
 
     public Station stationOpposite(Station station) {
+
+        Preconditions.checkArgument(stations().contains(station));
+
         if (station.equals(station1)) {
             return station2;
         }
-        if (station.equals(station2)) {
+        else
             return station1;
-        } else {
-            throw new IllegalArgumentException("Incompatible Station");
-        }
 
     }
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * return the list with the whole sets of cards who can be play
-     * the list is sorted
+     * - return the list with the whole sets of cards who can be play
+     * - the list is sorted by increasing number of Locomotive cards then by color
      * @return the list with the whole sets of cards who can be play
      */
 
     public List<SortedBag<Card>> possibleClaimCards() {
+
         List<SortedBag<Card>> cards1 = new ArrayList<>();
+
         if (level.equals(Level.UNDERGROUND)) {
             for (int i = 0; i < length; i++) {
                 if (color != null) {
@@ -224,9 +234,7 @@ public final class Route {
 
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
 
-        if (level.equals(Level.OVERGROUND) || drawnCards.size() != 3) {
-            throw new IllegalArgumentException("Error level ");
-        }
+        Preconditions.checkArgument(!(level.equals(Level.OVERGROUND)) && drawnCards.size() == 3);
 
         Card card = claimCards.get(0);
         Color color = card.color();

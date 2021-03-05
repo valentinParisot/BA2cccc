@@ -1,10 +1,14 @@
 package ch.epfl.tchu.game;
 
+import ch.epfl.tchu.Preconditions;
+
 /**
+ * Station
+ * class
  *
  * @author valentin Parisot (3266589
  */
-public  final class Station {
+public final class Station {
 
     private final int id;
     private final String name;
@@ -12,21 +16,19 @@ public  final class Station {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
+     * Constructor
      *
      * @param id  (must be superior of 0)
-     * @param name
+     * @param name name
      * @throws IllegalArgumentException if id is less than 0
      */
 
     public Station(int id, String name){
-        if(id < 0) {
-            throw new IllegalArgumentException("illegal capacity: " + id + " (must be >= 0)");
-            }else {
+
+            Preconditions.checkArgument(id>=0);
             this.id = id;
             this.name = name;
 
-        }
     }
 
     //----------------------------------------------------------------------------------------------------

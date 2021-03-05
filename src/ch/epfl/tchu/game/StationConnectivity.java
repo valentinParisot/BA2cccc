@@ -1,6 +1,8 @@
 package ch.epfl.tchu.game;
 
 /**
+ * Station connectivity
+ * interface
  *
  * @author valentin Parisot (326658)
  */

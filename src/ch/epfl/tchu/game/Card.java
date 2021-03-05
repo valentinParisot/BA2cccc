@@ -3,6 +3,8 @@ package ch.epfl.tchu.game;
 import java.util.List;
 
 /**
+ * Card
+ * enum
  *
  * @author Valentin Parisot (326658)
  */
