@@ -119,6 +119,13 @@ public final class Route {
 
     }
 
+    /**
+     *
+     * @param claimCards
+     * @param drawnCards
+     * @return
+     */
+
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
 
         if (level.equals(Level.OVERGROUND) || drawnCards.size() != 3) {

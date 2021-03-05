@@ -56,6 +56,12 @@ public final class Trail {
         return size;
     }
 
+    /**
+     *
+     *
+     * @return
+     */
+
     public Station station1(){
         if(this.length() == 0){
             return null;
@@ -73,7 +79,7 @@ public final class Trail {
     @Override
     public String toString(){
 
-        String n = "";
+        String n = " ";
 
         for(Route r : routeList){
             n =(n + (r.station1().name() + " - "));

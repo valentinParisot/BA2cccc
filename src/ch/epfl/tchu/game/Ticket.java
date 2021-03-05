@@ -7,7 +7,7 @@ import java.util.TreeSet;
 /**
  * @author Hugo Jeannin (329220)
  */
-public final class Ticket implements Comparable<Ticket> {
+    public final class Ticket implements Comparable<Ticket> {
     private final List<Trip> trips;
     private final String representation;
 
