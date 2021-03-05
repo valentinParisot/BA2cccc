@@ -16,6 +16,8 @@ public final class Trail {
         station2 = routeList.get(routeList.size() - 1).station1();
     }
 
+//----------------------------------------------------------------------------------------------------
+
     public static Trail longest(List<Route> routes) {
         Trail longest = null;
         List<Trail> cs = null;
@@ -48,6 +50,8 @@ public final class Trail {
         }
         return longest;
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public int length() {
         int size = 0;
