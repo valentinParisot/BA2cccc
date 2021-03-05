@@ -6,7 +6,8 @@ import java.util.List;
  * Color
  * enum
  *
- * @author valentin Parisot (326658)
+ * @author Valentin Parisot (326658)
+ * @author Hugo Jeannin (329220)
  */
 public enum Color{
 

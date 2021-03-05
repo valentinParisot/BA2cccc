@@ -6,7 +6,8 @@ import ch.epfl.tchu.Preconditions;
  * Station
  * class
  *
- * @author valentin Parisot (3266589
+ * @author Valentin Parisot (326658)
+ * @author Hugo Jeannin (329220)
  */
 public final class Station {
 

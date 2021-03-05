@@ -1,8 +1,13 @@
 package ch.epfl.tchu;
 
 /**
+ * Preconditions
+ * class
+ *
+ * @author Valentin Parisot (326658)
  * @author Hugo Jeannin (329220)
  */
+
 public final class Preconditions {
 
     //----------------------------------------------------------------------------------------------------

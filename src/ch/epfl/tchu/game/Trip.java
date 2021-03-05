@@ -9,6 +9,8 @@ import java.util.Objects;
 /**
  * Trip
  * class
+ *
+ * @author Valentin Parisot (326658)
  * @author Hugo Jeannin (329220)
  */
 

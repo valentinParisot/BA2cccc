@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Trail
+ * class
+ *
+ * @author Valentin Parisot (326658)
  * @author Hugo Jeannin (329220)
  */
 

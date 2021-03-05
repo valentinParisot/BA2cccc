@@ -10,6 +10,7 @@ import java.util.TreeSet;
  * Ticket
  * class
  *
+ * @author Valentin Parisot (326658)
  * @author Hugo Jeannin (329220)
  */
 
