@@ -35,7 +35,7 @@ public class PublicCardState {
 
         Preconditions.checkArgument(faceUpCards.size() == 5 && deckSize >= 0 && discardsSize >= 0);
 
-        this.faceUpCards = faceUpCards;
+        this.faceUpCards = List.copyOf(faceUpCards);
 
         this.discardsize = discardsSize;
 
@@ -67,14 +67,7 @@ public class PublicCardState {
 
     public List<Card> faceUpCards(){
 
-        ArrayList<Card> a = new ArrayList<Card>();
-
-        for (Card c : faceUpCards) {
-
-            a.add(c);
-        }
-
-        return a;
+        return faceUpCards;
 
     }
 
