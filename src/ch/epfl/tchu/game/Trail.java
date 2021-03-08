@@ -22,6 +22,7 @@ public final class Trail {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * constructor
      *
      * @param routeList list of roads that belong to the player
      * @param station1 first station of the trail
