@@ -60,11 +60,11 @@ public final class Trail {
                 for (Route r : routes) {
                     if ((!cs.contains(r)) && (r.stations().contains(t.station2))) {
                         rs.add(r);
-                        csPrime.add(new Trail(rs, t.station1, r.station2(), t.length()));
+                        csPrime.add(new Trail(rs, t.station1, r.stationOpposite(t.station2), t.length()+r.length()));
                     }
                 }
 
-                if ((t.length > longest.length() || longest == null)) {
+                if ((t.length() > longest.length() || longest == null)) {
                     longest = t;
                 }
                 cs = csPrime;
@@ -121,13 +121,13 @@ public final class Trail {
     @Override
     public String toString() {
 
-        String n = " ";
-        n = "";
-
-        for (Route r : routeList) {
-            n = (n + (r.station1().name() + " - "));
+        if (this == null){
+            return "Nothing to see there...";
         }
-        n = (n + (station2().name() + "(" + length() + ")"));
+
+        String n = (station1.name() + station2.name());
+
+        n = (n + "(" + length() + ")");
 
         return n;
     }
