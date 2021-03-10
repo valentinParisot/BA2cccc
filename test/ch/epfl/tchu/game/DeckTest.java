@@ -9,7 +9,7 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DeckTest {
-
+double m;
 
 
 public static final Random
