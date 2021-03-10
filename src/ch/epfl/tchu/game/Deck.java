@@ -48,7 +48,7 @@ public final class Deck<C extends Comparable<C>> {
 
     public static <C extends Comparable<C>> Deck<C> of(SortedBag<C> cards, Random rng){
 
-       List<C> cards2 =  cards.toList();
+       List<C> cards2 = cards.toList();
 
        Collections.shuffle(cards2 , rng);
 
