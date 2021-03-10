@@ -6,8 +6,8 @@ import ch.epfl.tchu.SortedBag;
 import java.util.List;
 import java.util.Random;
 
-public final class CardState extends PublicCardState {
-
+public final class CardState /**extends PublicCardState**/ {
+/**
     private final List<Card> deck;
     private final List<Card> discard;
 
@@ -65,5 +65,5 @@ public final class CardState extends PublicCardState {
     }
 
     //----------------------------------------------------------------------------------------------------
-
+**/
 }
