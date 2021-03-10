@@ -157,6 +157,7 @@ public final class CardState extends PublicCardState {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     *
      * create a new card state with additional cards in the discard
      * @param additionalDiscards new cards for the discard
      * @return new card state
