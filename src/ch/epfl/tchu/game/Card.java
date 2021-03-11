@@ -24,7 +24,7 @@ public enum Card {
 
     public static final List<Card> ALL =  List.of(values());
     public static final int COUNT = ALL.size();
-    public final static List<Card> CARS =  ALL.subList(0,COUNT);
+    public final static List<Card> CARS =  ALL.subList(0,8);
     private final Color c;
 
 

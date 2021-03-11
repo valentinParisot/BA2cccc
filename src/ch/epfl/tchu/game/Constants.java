@@ -33,7 +33,8 @@ public final class Constants {
         cardsBuilder.add(LOCOMOTIVE_CARDS_COUNT, Card.LOCOMOTIVE);
         for (Card card : Card.CARS)
             cardsBuilder.add(CAR_CARDS_COUNT, card);
-        assert cardsBuilder.size() == TOTAL_CARDS_COUNT;
+        assert cardsBuilder.size() == TOTAL_CARDS_COUNT : cardsBuilder.size();
+
         return cardsBuilder.build();
     }
 

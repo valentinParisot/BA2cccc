@@ -98,7 +98,7 @@ public final class Deck<C extends Comparable<C>> {
 
         Preconditions.checkArgument(!this.isEmpty());
 
-        return cards.get(cards.size() - 1);
+        return cards.get(cards.size()-1);
 
     }
 

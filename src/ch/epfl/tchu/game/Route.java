@@ -66,9 +66,9 @@ public final class Route {
         Preconditions.checkArgument(!(station1.equals(station2)));
         Preconditions.checkArgument((length <= Constants.MAX_ROUTE_LENGTH && length >= Constants.MIN_ROUTE_LENGTH));
 
-        this.id = id;
+        this.id = Objects.requireNonNull(id);
         this.station1 = Objects.requireNonNull(station1);
-        this.station2 = Objects.requireNonNull(station1);
+        this.station2 = Objects.requireNonNull(station2);
         this.length = length;
         this.level = Objects.requireNonNull(level);;
         this.color = color;
@@ -199,6 +199,7 @@ public final class Route {
                 if (color != null) {
                     cards1.add(SortedBag.of(length - i, Card.of(color), i, Card.LOCOMOTIVE));
 
+
                 } else {
                     for (Card card : Card.CARS) {
                         cards1.add(SortedBag.of(length - i, card, i, Card.LOCOMOTIVE));
@@ -206,7 +207,7 @@ public final class Route {
                 }
 
             }
-        } else if (level.equals(Level.OVERGROUND)) {
+        }  if (level.equals(Level.OVERGROUND)) {
             if (color != null) {
                 cards1.add(SortedBag.of(length, Card.of(color)));
 
@@ -215,6 +216,7 @@ public final class Route {
                     cards1.add(SortedBag.of(length, card));
                 }
             }
+
         }
         return cards1;
 
