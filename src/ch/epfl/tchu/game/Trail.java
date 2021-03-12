@@ -47,6 +47,7 @@ public final class Trail {
     public static Trail longest(List<Route> routes) {
         Trail longest = null;
         List<Trail> cs = null;
+
         for (Route r : routes) {
             cs.add(new Trail(List.of(r), r.station1(), r.station2(), r.length()));
             cs.add(new Trail(List.of(r), r.station2(), r.station1(), r.length()));

@@ -195,18 +195,22 @@ public final class Route {
         List<SortedBag<Card>> cards1 = new ArrayList<>();
 
         if (level.equals(Level.UNDERGROUND)) {
-            for (int i = 0; i < length; i++) {
+            for (int i = 0; i <= length; i++) {
                 if (color != null) {
                     cards1.add(SortedBag.of(length - i, Card.of(color), i, Card.LOCOMOTIVE));
 
-
                 } else {
-                    for (Card card : Card.CARS) {
-                        cards1.add(SortedBag.of(length - i, card, i, Card.LOCOMOTIVE));
+                    if ( i != length) {
+                        for (Card card : Card.CARS) {
+                            cards1.add(SortedBag.of(length - i, card, i, Card.LOCOMOTIVE));
+                        }
+                    }
+                    else{
+                        cards1.add(SortedBag.of(i,Card.LOCOMOTIVE));
                     }
                 }
-
             }
+
         }  if (level.equals(Level.OVERGROUND)) {
             if (color != null) {
                 cards1.add(SortedBag.of(length, Card.of(color)));

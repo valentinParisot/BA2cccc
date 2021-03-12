@@ -91,7 +91,7 @@ public class DeckTest {
                 return i-1;
             }
         };
-        //assertEquals(SortedBag.of(List.of(2, 3)), Deck.of(SortedBag.of(List.of(1, 2, 3)), NON_RANDOM).withoutTopCard());
+        assertEquals(SortedBag.of(List.of(2, 3)), Deck.of(SortedBag.of(List.of(1, 2, 3)), NON_RANDOM).withoutTopCard());
         assertThrows(IllegalArgumentException.class, () -> {
             Deck.of(SortedBag.of(list), NON_RANDOM).withoutTopCard();
         });
