@@ -174,6 +174,8 @@ public final class Info {
     }
 
     public String won(int points, int loserPoints){
+
         return String.format(StringsFr.WINS, this.playerName, points, loserPoints);
     }
 }
+
