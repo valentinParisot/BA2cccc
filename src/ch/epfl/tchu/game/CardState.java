@@ -78,24 +78,10 @@ public final class CardState extends PublicCardState {
 
         Preconditions.checkArgument(!deck.isEmpty());
 
-        SortedBag.Builder<Card> builder1 = new SortedBag.Builder<>();
-        builder1.add(discard);
-        builder1.add(faceUpCard(checkIndex(slot , 5)));
+        ArrayList<Card> newfaceupcard = new ArrayList<>(faceUpCards());
+        newfaceupcard.set(checkIndex(slot , 5), deck.topCard());
 
-        SortedBag<Card> newdiscard = builder1.build();
-
-
-        SortedBag.Builder<Card> builder2 = new SortedBag.Builder<>();
-
-        for (int c : FACE_UP_CARD_SLOTS){
-
-            builder2.add(faceUpCard(c));
-
-        }
-
-        List<Card> newfaceUpCards = builder2.build().toList();
-
-        CardState withDrawnFaceUpCard = new CardState(deck.withoutTopCard(), newdiscard, newfaceUpCards, deck.size() -1 , discardsSize() + 1);
+        CardState withDrawnFaceUpCard = new CardState(deck.withoutTopCard(), discard, newfaceupcard, deck.size() -1 , discardsSize());
 
         return withDrawnFaceUpCard;
 
@@ -165,7 +151,6 @@ public final class CardState extends PublicCardState {
 
     public CardState withMoreDiscardedCards(SortedBag<Card> additionalDiscards){
 
-
         SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
 
         builder.add(discard);
@@ -173,7 +158,7 @@ public final class CardState extends PublicCardState {
 
         SortedBag<Card> newdiscard = builder.build();
 
-        CardState  withMoreDiscardedCards = new CardState( this.deck , newdiscard , faceUpCards(), deck.size() , discardsSize() + additionalDiscards.size());
+        CardState  withMoreDiscardedCards = new CardState( this.deck , newdiscard , faceUpCards(), deck.size() , newdiscard.size());
 
         return withMoreDiscardedCards;
 
