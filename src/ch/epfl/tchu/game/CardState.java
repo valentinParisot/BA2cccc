@@ -151,14 +151,9 @@ public final class CardState extends PublicCardState {
 
     public CardState withMoreDiscardedCards(SortedBag<Card> additionalDiscards){
 
-        SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
+        SortedBag<Card> newDiscard = discard.union(additionalDiscards);
 
-        builder.add(discard);
-        builder.add(additionalDiscards);
-
-        SortedBag<Card> newdiscard = builder.build();
-
-        CardState  withMoreDiscardedCards = new CardState( this.deck , newdiscard , faceUpCards(), deck.size() , newdiscard.size());
+        CardState  withMoreDiscardedCards = new CardState( this.deck , newDiscard , faceUpCards(), deck.size() , newDiscard.size());
 
         return withMoreDiscardedCards;
 
