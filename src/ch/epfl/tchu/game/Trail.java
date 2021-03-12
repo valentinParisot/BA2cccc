@@ -25,9 +25,9 @@ public final class Trail {
      * constructor
      *
      * @param routeList list of roads that belong to the player
-     * @param station1 first station of the trail
-     * @param station2 last station of the trail
-     * @param length length of the trail (sum of the length of each road)
+     * @param station1  first station of the trail
+     * @param station2  last station of the trail
+     * @param length    length of the trail (sum of the length of each road)
      */
 
     private Trail(List<Route> routeList, Station station1, Station station2, int length) {
@@ -45,31 +45,43 @@ public final class Trail {
      */
 
     public static Trail longest(List<Route> routes) {
-        Trail longest = null;
-        List<Trail> cs = null;
+        Trail longest = new Trail(List.of(), null, null, 0);
+        List<Trail> cs = new ArrayList<>();
         for (Route r : routes) {
             cs.add(new Trail(List.of(r), r.station1(), r.station2(), r.length()));
+
+            if (r.length() > longest.length) {
+                longest = new Trail(List.of(r), r.station1(), r.station2(), r.length());
+            }
             cs.add(new Trail(List.of(r), r.station2(), r.station1(), r.length()));
         }
 
         while (cs.size() != 0) {
-            List<Trail> csPrime = null;
+            List<Trail> csPrime = new ArrayList<>();
             for (Trail t : cs) {
 
-                List<Route> rs = t.routeList;
+                List<Route> rs = new ArrayList<>();
+                for (Route r : t.routeList) {
+                    rs.add(r);
+                }
 
                 for (Route r : routes) {
                     if ((!cs.contains(r)) && (r.stations().contains(t.station2))) {
                         rs.add(r);
-                        csPrime.add(new Trail(rs, t.station1, r.stationOpposite(t.station2), t.length()+r.length()));
+                        csPrime.add(new Trail(rs, t.station1, r.stationOpposite(t.station2), t.length + r.length()));
+
+                        if (t.length + r.length() > longest.length){
+                            longest = new Trail(rs, t.station1, r.stationOpposite(t.station2), t.length + r.length());
+                        }
                     }
                 }
 
-                if ((t.length() > longest.length() || longest == null)) {
+                /**if (t.length() > longest.length()) {
                     longest = t;
-                }
-                cs = csPrime;
+                }*/
+
             }
+            cs = csPrime;
         }
         return longest;
     }
@@ -122,7 +134,7 @@ public final class Trail {
     @Override
     public String toString() {
 
-        if (this == null){
+        if (this == null) {
             return "Nothing to see there...";
         }
 

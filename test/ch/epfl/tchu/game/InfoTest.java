@@ -23,7 +23,7 @@ public class InfoTest {
     void cardNameWorks() {
         Card card = Card.BLUE;
         int count = 2;
-        assertEquals("bleues", Info.cardName(card, count));
+        assertEquals("2 bleues", Info.cardName(card, count));
     }
 
     @Test
@@ -102,7 +102,7 @@ public class InfoTest {
 
     @Test
     void lastTurnBeginsWorks() {
-        assertEquals("\nGilles n'a plus que 3 wagons, le dernier tour commence !\n", info.lastTurnBegins(3));
+        assertEquals("\nGilles n'a plus que 2 wagons, le dernier tour commence !\n", info.lastTurnBegins(2));
     }
 
 
