@@ -2,7 +2,6 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -167,7 +166,7 @@ public final class Deck<C extends Comparable<C>> {
 
         Preconditions.checkArgument(count >= 0 && count <= this.size());
 
-        Deck<C> deckwithoutTopCards = new Deck<>(this.size() - count , cards.subList(0, cards.size() - count));
+        Deck<C> deckwithoutTopCards = new Deck<>(this.size() - count , cards.subList(0, cards.size() - count ));
 
         return deckwithoutTopCards;
 

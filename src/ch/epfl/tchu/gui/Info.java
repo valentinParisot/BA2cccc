@@ -78,7 +78,7 @@ public final class Info {
         return String.format(StringsFr.CAN_PLAY, this.playerName);
     }
 
-    public String drewTickets(int count) {
+    public String drewTickets(int count){
         return String.format(StringsFr.DREW_TICKETS, this.playerName, count, StringsFr.plural(count));
     }
 
@@ -88,40 +88,7 @@ public final class Info {
     }
 
     public String drewVisibleCard(Card card) {
-
-        String name = "";
-
-        switch (card) {
-            case BLACK:
-                name = StringsFr.BLACK_CARD;
-                break;
-            case VIOLET:
-                name = StringsFr.VIOLET_CARD;
-                break;
-            case BLUE:
-                name = StringsFr.BLUE_CARD;
-                break;
-            case GREEN:
-                name = StringsFr.GREEN_CARD;
-                break;
-            case YELLOW:
-                name = StringsFr.YELLOW_CARD;
-                break;
-            case ORANGE:
-                name = StringsFr.ORANGE_CARD;
-                break;
-            case RED:
-                name = StringsFr.RED_CARD;
-                break;
-            case WHITE:
-                name = StringsFr.WHITE_CARD;
-                break;
-            case LOCOMOTIVE:
-                name = StringsFr.LOCOMOTIVE_CARD;
-                break;
-        }
-
-        return String.format(StringsFr.DREW_VISIBLE_CARD, this.playerName, name);
+        return String.format(StringsFr.DREW_VISIBLE_CARD, this.playerName, card);
     }
 
 
@@ -179,24 +146,26 @@ public final class Info {
     public String drewAdditionalCards(SortedBag<Card> drawnCards, int additionalCost) {
         String cards = cardsDescription(drawnCards);
         if (additionalCost == 0) {
-            return (String.format(StringsFr.ADDITIONAL_CARDS_ARE, cards) +
+            return (String.format(StringsFr.ADDITIONAL_CARDS_ARE, cards)
+                    + " " +
                     StringsFr.NO_ADDITIONAL_COST);
         }
-        return (String.format(StringsFr.ADDITIONAL_CARDS_ARE, cards) +
+        return (String.format(StringsFr.ADDITIONAL_CARDS_ARE, cards)
+                + " " +
                 String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost, StringsFr.plural(additionalCost)));
     }
 
-    public String didNotClaimRoute(Route route) {
+    public String didNotClaimRoute(Route route){
         String gares = routeName(route);
-        return String.format(StringsFr.DID_NOT_CLAIM_ROUTE, this.playerName, gares);
+        return String.format(StringsFr.DID_NOT_CLAIM_ROUTE, this. playerName, gares);
     }
 
-    public String lastTurnBegins(int carCount) {
-        Preconditions.checkArgument(carCount <= 2);
+    public String lastTurnBegins(int carCount){
+        Preconditions.checkArgument(carCount<=2);
         return String.format(StringsFr.LAST_TURN_BEGINS, this.playerName, carCount, StringsFr.plural(carCount));
     }
 
-    public String getsLongestTrailBonus(Trail longestTrail) {
+    public String getsLongestTrailBonus(Trail longestTrail){
 
         String station1 = longestTrail.station1().name();
         String station2 = longestTrail.station2().name();
@@ -204,9 +173,9 @@ public final class Info {
         return String.format(StringsFr.GETS_BONUS, this.playerName, station1 + StringsFr.EN_DASH_SEPARATOR + station2);
     }
 
-    public String won(int points, int loserPoints) {
+    public String won(int points, int loserPoints){
 
-        return String.format(StringsFr.WINS, this.playerName, points, StringsFr.plural(points), loserPoints, StringsFr.plural(loserPoints) );
+        return String.format(StringsFr.WINS, this.playerName, points, loserPoints);
     }
 }
 
