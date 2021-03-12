@@ -29,13 +29,12 @@ public final class CardState extends PublicCardState {
      * @param deck the deck
      * @param discard the discard sorted
      * @param faceUpCards list of facupcards
-     * @param decksize decksize
-     * @param discardsize discardsize
+     *
      */
 
-    private CardState(Deck deck, SortedBag<Card> discard, List<Card> faceUpCards, int decksize, int discardsize ){
+    private CardState(Deck<Card> deck, SortedBag<Card> discard, List<Card> faceUpCards ){
 
-        super(faceUpCards, decksize, discardsize);
+        super(faceUpCards, deck.size(), discard.size());
         this.deck = deck;
         this.discard = discard;
 
@@ -58,7 +57,7 @@ public final class CardState extends PublicCardState {
 
         List<Card> listTopCards = deck.topCards(5).toList();
 
-        CardState without5 = new CardState(deck.withoutTopCards(5), null, listTopCards, deck.size() - 5, 0);
+        CardState without5 = new CardState(deck.withoutTopCards(5), null, listTopCards);
 
         return without5;
     }
@@ -81,7 +80,7 @@ public final class CardState extends PublicCardState {
         ArrayList<Card> newfaceupcard = new ArrayList<>(faceUpCards());
         newfaceupcard.set(checkIndex(slot , 5), deck.topCard());
 
-        CardState withDrawnFaceUpCard = new CardState(deck.withoutTopCard(), discard, newfaceupcard, deck.size() -1 , discardsSize());
+        CardState withDrawnFaceUpCard = new CardState(deck.withoutTopCard(), discard, newfaceupcard);
 
         return withDrawnFaceUpCard;
 
@@ -115,7 +114,7 @@ public final class CardState extends PublicCardState {
 
         Preconditions.checkArgument(!deck.isEmpty());
 
-        CardState  withoutTopDeckCard = new CardState(deck.withoutTopCard(), this.discard, faceUpCards(), deck.size() - 1 , discardsSize());
+        CardState  withoutTopDeckCard = new CardState(deck.withoutTopCard(), this.discard, faceUpCards());
 
         return withoutTopDeckCard ;
 
@@ -135,7 +134,7 @@ public final class CardState extends PublicCardState {
 
         Preconditions.checkArgument(!deck.isEmpty());
 
-        CardState  withDeckRecreatedFromDiscards = new CardState( deck.of(discard, rng),null , faceUpCards(), deck.size() , 0);
+        CardState  withDeckRecreatedFromDiscards = new CardState( Deck.of(discard, rng),SortedBag.of() , faceUpCards());
 
         return withDeckRecreatedFromDiscards;
     }
@@ -153,7 +152,7 @@ public final class CardState extends PublicCardState {
 
         SortedBag<Card> newDiscard = discard.union(additionalDiscards);
 
-        CardState  withMoreDiscardedCards = new CardState( this.deck , newDiscard , faceUpCards(), deck.size() , newDiscard.size());
+        CardState  withMoreDiscardedCards = new CardState( this.deck , newDiscard , faceUpCards());
 
         return withMoreDiscardedCards;
 
