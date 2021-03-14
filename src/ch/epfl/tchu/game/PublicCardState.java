@@ -79,7 +79,7 @@ public class PublicCardState {
      * @param slot index of the card
      *
      * @throws IndexOutOfBoundsException if slot is less than 0 or bigger than 5
-     * @return
+     * @return faceUpcards
      */
 
     public Card faceUpCard(int slot){

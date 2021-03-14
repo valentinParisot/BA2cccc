@@ -5,7 +5,7 @@ import java.util.List;
 import static ch.epfl.tchu.game.Constants.INITIAL_CAR_COUNT;
 
 /**
- * Station
+ * PublicPlayerState
  * class
  *
  * @author Valentin Parisot (326658)
