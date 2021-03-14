@@ -37,9 +37,14 @@ class CardTest {
     @Test
     void cardColorWorksForAllColors() {
         var allColors = Color.values();
+        int i;
+        for(i = 0 ; i<3 ; ++i){
+            i = i + 1;
+        }
         for (var card : values()) {
             if (card != LOCOMOTIVE)
                 assertEquals(allColors[card.ordinal()], card.color());
         }
+        System.out.print(i);
     }
 }
