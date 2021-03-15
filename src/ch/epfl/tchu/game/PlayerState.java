@@ -100,31 +100,23 @@ public final class PlayerState extends PublicPlayerState {
 
     public boolean canClaimRoute(Route route){
 
-        int nbCardColor = 0;
-        for(Card c : cards){
-            if(route.color().equals(c.color())){
-                nbCardColor += 1;
+        List<SortedBag<Card>> possibleClaimCards = possibleClaimCards(route);
 
-            }
-        }
-
-        return ((carCount() >= route.length()) && (nbCardColor >= route.length()));
+        return ((carCount() >= route.length()) && (!(possibleClaimCards.isEmpty())));
     }
 
     //----------------------------------------------------------------------------------------------------
 
     public List<SortedBag<Card>> possibleClaimCards(Route route){
 
-        Preconditions.checkArgument((carCount() >= route.length())&&(1==1));
+        Preconditions.checkArgument((carCount() >= route.length()));
         List<SortedBag<Card>> p = route.possibleClaimCards();
-        //ArrayList<SortedBag<Card>> r = new ArrayList<>();
 
         for(SortedBag<Card> s : p){
             if(!(cards.contains(s))){
                 p.remove(s);
             }
 
-            //if(cards contains s ) then r.add(s)
         }
         return p;
 
@@ -152,6 +144,7 @@ public final class PlayerState extends PublicPlayerState {
     //----------------------------------------------------------------------------------------------------
 
     public int ticketPoints(){
+
 
         // besoin du batissuer statioon partiton
         return 0;
