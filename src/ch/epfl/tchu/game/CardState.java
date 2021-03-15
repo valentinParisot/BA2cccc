@@ -57,7 +57,10 @@ public final class CardState extends PublicCardState {
 
         List<Card> listTopCards = deck.topCards(5).toList();
 
-        CardState without5 = new CardState(deck.withoutTopCards(5), null, listTopCards);
+        SortedBag.Builder<Card> e = new SortedBag.Builder<>();
+        SortedBag<Card> c = e.build();
+
+        CardState without5 = new CardState(deck.withoutTopCards(5), c , listTopCards);
 
         return without5;
     }
@@ -132,7 +135,7 @@ public final class CardState extends PublicCardState {
 
     public CardState withDeckRecreatedFromDiscards(Random rng){
 
-        Preconditions.checkArgument(!deck.isEmpty());
+        Preconditions.checkArgument(deck.isEmpty());
 
         CardState  withDeckRecreatedFromDiscards = new CardState( Deck.of(discard, rng),SortedBag.of() , faceUpCards());
 

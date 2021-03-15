@@ -115,7 +115,7 @@ public final class PlayerState extends PublicPlayerState {
 
     public List<SortedBag<Card>> possibleClaimCards(Route route){
 
-        Preconditions.checkArgument((carCount() >= route.length())&&();
+        Preconditions.checkArgument((carCount() >= route.length())&&(1==1));
         List<SortedBag<Card>> p = route.possibleClaimCards();
         //ArrayList<SortedBag<Card>> r = new ArrayList<>();
 
@@ -134,6 +134,7 @@ public final class PlayerState extends PublicPlayerState {
 
     public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards){
 
+        return null;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -153,6 +154,7 @@ public final class PlayerState extends PublicPlayerState {
     public int ticketPoints(){
 
         // besoin du batissuer statioon partiton
+        return 0;
 
     }
 
