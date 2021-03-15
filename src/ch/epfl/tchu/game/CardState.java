@@ -5,7 +5,6 @@ import ch.epfl.tchu.SortedBag;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
 import static java.util.Objects.checkIndex;
 
 /**

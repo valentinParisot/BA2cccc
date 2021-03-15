@@ -40,6 +40,9 @@ public final class Trail {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * returns the longest path of the network made up of the given routes; if there are more than one of maximum
+     * length, the returned one is not specified; if the list of given routes is empty, returns a zero-length path,
+     * whose stations are both equal to null
      * @param routes list of roads that belong to the player
      * @return the longest trail possible (even if there may have several)
      */
@@ -73,10 +76,6 @@ public final class Trail {
                         }
                     }
                 }
-
-                /**if (t.length() > longest.length()) {
-                 longest = t;
-                 }*/
 
             }
             cs = csPrime;

@@ -240,7 +240,7 @@ public final class Route {
 
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
 
-        Preconditions.checkArgument(!(level.equals(Level.OVERGROUND)) && drawnCards.size() == 3);
+        Preconditions.checkArgument((level.equals(Level.UNDERGROUND)) && drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS);
 
         Card card = claimCards.get(0);
         Color color = card.color();
@@ -276,38 +276,7 @@ public final class Route {
 
     public int claimPoints() {
 
-        int points = 0;
-        switch (length) {
-            case 1:
-                points = 1;
-                break;
-
-            case 2:
-                points = 2;
-                break;
-
-            case 3:
-                points = 4;
-                break;
-
-            case 4:
-                points = 7;
-                break;
-
-            case 5:
-                points = 10;
-                break;
-
-            case 6:
-                points = 15;
-                break;
-
-            default:
-                points = 0;
-                break;
-
-        }
-        return points;
+        return Constants.ROUTE_CLAIM_POINTS.get(length);
     }
 
     //----------------------------------------------------------------------------------------------------

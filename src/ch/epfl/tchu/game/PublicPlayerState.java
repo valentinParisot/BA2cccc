@@ -11,6 +11,7 @@ import static ch.epfl.tchu.game.Constants.INITIAL_CAR_COUNT;
  * @author Valentin Parisot (326658)
  * @author Hugo Jeannin (329220)
  */
+
 public class PublicPlayerState {
 
     private final int ticketCount;
@@ -21,7 +22,7 @@ public class PublicPlayerState {
 
     //----------------------------------------------------------------------------------------------------
 
-    PublicPlayerState(int ticketCount, int cardCount, List<Route> routes){
+    public PublicPlayerState(int ticketCount, int cardCount, List<Route> routes){
         Preconditions.checkArgument(ticketCount>=0 && cardCount >=0);
         this.ticketCount = ticketCount;
         this.cardCount = cardCount;
@@ -44,7 +45,7 @@ public class PublicPlayerState {
 
     //----------------------------------------------------------------------------------------------------
 
-    public List<Route> Routes() {
+    public List<Route> routes() {
         return routes;
     }
 

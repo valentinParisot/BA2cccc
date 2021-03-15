@@ -1,17 +1,28 @@
 package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
-
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * StationPartition & Builder
+ * class
+ *
+ * @author Valentin Parisot (326658)
+ * @author Hugo Jeannin (329220)
+ */
 
 public final class StationPartition implements StationConnectivity{
 
     private final List<Integer> integers;
 
+    //----------------------------------------------------------------------------------------------------
+
     private StationPartition(List<Integer> integers){
         this.integers = integers;
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public boolean connected(Station station1, Station station2){
 
@@ -25,9 +36,12 @@ public final class StationPartition implements StationConnectivity{
         return false;
     }
 
+    //----------------------------------------------------------------------------------------------------
 
     public final static class Builder{
         private List<Integer> integersBuilder;
+
+        //------------------------------------------------------------------------------------------------
 
         public Builder(int stationCount){
             Preconditions.checkArgument(stationCount>=0);
@@ -37,19 +51,28 @@ public final class StationPartition implements StationConnectivity{
             }
         }
 
+        //------------------------------------------------------------------------------------------------
+
         private int representative(int id){
             return integersBuilder.get(id);
         }
+
+        //------------------------------------------------------------------------------------------------
 
         public Builder connect(Station s1, Station s2){
             integersBuilder.set(s2.id(), representative(s1.id()));
             return this;
         }
 
+        //------------------------------------------------------------------------------------------------
+
         public StationPartition build(){
             return new StationPartition(integersBuilder);
         }
+
+        //------------------------------------------------------------------------------------------------
     }
 
+    //----------------------------------------------------------------------------------------------------
 
 }

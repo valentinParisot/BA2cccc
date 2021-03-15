@@ -1,7 +1,6 @@
 package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
-import java.util.ArrayList;
 import java.util.List;
 import static java.util.Objects.checkIndex;
 
@@ -33,7 +32,7 @@ public class PublicCardState {
 
     public PublicCardState(List<Card> faceUpCards, int deckSize, int discardsSize){
 
-        Preconditions.checkArgument(faceUpCards.size() == 5 && deckSize >= 0 && discardsSize >= 0);
+        Preconditions.checkArgument(faceUpCards.size() == Constants.FACE_UP_CARDS_COUNT && deckSize >= 0 && discardsSize >= 0);
 
         this.faceUpCards = List.copyOf(faceUpCards);
 
@@ -53,7 +52,7 @@ public class PublicCardState {
 
     public int totalSize(){
 
-        return (5 + decksize + discardsize);
+        return (Constants.FACE_UP_CARDS_COUNT + decksize + discardsize);
 
     }
 
@@ -84,7 +83,7 @@ public class PublicCardState {
 
     public Card faceUpCard(int slot){
 
-       return faceUpCards.get(checkIndex(slot , 5));
+       return faceUpCards.get(checkIndex(slot , Constants.FACE_UP_CARDS_COUNT));
 
 
     }

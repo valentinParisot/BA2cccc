@@ -5,18 +5,28 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.Route;
 import ch.epfl.tchu.game.Trail;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
+
+/**
+ * Info
+ * class
+ *
+ * @author Valentin Parisot (326658)
+ * @author Hugo Jeannin (329220)
+ */
 
 public final class Info {
 
     private final String playerName;
 
+    //----------------------------------------------------------------------------------------------------
+
     public Info(String playerName) {
         this.playerName = playerName;
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public static String cardName(Card card, int count) {
 
@@ -59,31 +69,45 @@ public final class Info {
         return name;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public static String draw(List<String> playerNames, int points) {
         String toDraw = String.join(StringsFr.AND_SEPARATOR, playerNames);
         return String.format(StringsFr.DRAW, toDraw, points);
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public String willPlayFirst() {
         return String.format(StringsFr.WILL_PLAY_FIRST, this.playerName);
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public String keptTickets(int count) {
         return String.format(StringsFr.KEPT_N_TICKETS, this.playerName, count, StringsFr.plural(count));
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public String canPlay() {
         return String.format(StringsFr.CAN_PLAY, this.playerName);
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public String drewTickets(int count) {
         return String.format(StringsFr.DREW_TICKETS, this.playerName, count, StringsFr.plural(count));
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public String drewBlindCard() {
         return String.format(StringsFr.DREW_BLIND_CARD, this.playerName);
 
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public String drewVisibleCard(Card card) {
 
@@ -122,6 +146,7 @@ public final class Info {
         return String.format(StringsFr.DREW_VISIBLE_CARD, this.playerName, name);
     }
 
+    //----------------------------------------------------------------------------------------------------
 
     private static String routeName(Route route) {
         Preconditions.checkArgument(route != null);
@@ -157,6 +182,7 @@ public final class Info {
         return String.join(StringsFr.AND_SEPARATOR, finalText);
     }
 
+    //----------------------------------------------------------------------------------------------------
 
     public String claimedRoute(Route route, SortedBag<Card> cards) {
 
@@ -166,6 +192,8 @@ public final class Info {
         return String.format(StringsFr.CLAIMED_ROUTE, this.playerName, gares, cartes);
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public String attemptsTunnelClaim(Route route, SortedBag<Card> initialCards) {
 
         String tunnel = routeName(route);
@@ -173,6 +201,8 @@ public final class Info {
 
         return String.format(StringsFr.ATTEMPTS_TUNNEL_CLAIM, this.playerName, tunnel, cartes);
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public String drewAdditionalCards(SortedBag<Card> drawnCards, int additionalCost) {
         String cards = cardsDescription(drawnCards);
@@ -184,15 +214,21 @@ public final class Info {
                 String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost, StringsFr.plural(additionalCost)));
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public String didNotClaimRoute(Route route) {
         String gares = routeName(route);
         return String.format(StringsFr.DID_NOT_CLAIM_ROUTE, this.playerName, gares);
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public String lastTurnBegins(int carCount) {
         Preconditions.checkArgument(carCount <= 2);
         return String.format(StringsFr.LAST_TURN_BEGINS, this.playerName, carCount, StringsFr.plural(carCount));
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public String getsLongestTrailBonus(Trail longestTrail) {
 
@@ -202,9 +238,13 @@ public final class Info {
         return String.format(StringsFr.GETS_BONUS, this.playerName, station1 + StringsFr.EN_DASH_SEPARATOR + station2);
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public String won(int points, int loserPoints) {
 
         return String.format(StringsFr.WINS, this.playerName, points, StringsFr.plural(points), loserPoints, StringsFr.plural(loserPoints) );
     }
+
+    //----------------------------------------------------------------------------------------------------
 }
 
