@@ -56,9 +56,7 @@ public final class Info {
 
         name = (name + StringsFr.plural(count));
 
-        String text = String.format("%s %s", count, name);
-
-        return text;
+        return name;
     }
 
     public static String draw(List<String> playerNames, int points) {
@@ -137,7 +135,7 @@ public final class Info {
 
         for (Card c : cards.toSet()) {
             int n = cards.countOf(c);
-            String s = cardName(c, n);
+            String s = (n + " " + cardName(c, n));
             cartes.add(s);
         }
 
