@@ -35,13 +35,7 @@ public final class PlayerState extends PublicPlayerState {
     public static PlayerState initial(SortedBag<Card> initialCards) {
 
         Preconditions.checkArgument(initialCards.size() == Constants.INITIAL_CARDS_COUNT);
-
-        SortedBag.Builder<Ticket> builder = new SortedBag.Builder<>();
-        SortedBag<Ticket> tickets = builder.build();
-
-        ArrayList<Route> routes = new ArrayList<>();
-
-        PlayerState initial = new PlayerState(tickets, initialCards, routes);
+        PlayerState initial = new PlayerState(SortedBag.of(), initialCards, List.of());
 
         return initial;
 
@@ -51,7 +45,7 @@ public final class PlayerState extends PublicPlayerState {
 
     public SortedBag<Ticket> tickets(){
 
-        return tickets;
+        return this.tickets;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -67,7 +61,7 @@ public final class PlayerState extends PublicPlayerState {
 
     public SortedBag<Card> cards(){
 
-        return cards;
+        return this.cards;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -100,9 +94,15 @@ public final class PlayerState extends PublicPlayerState {
 
     public boolean canClaimRoute(Route route){
 
-        List<SortedBag<Card>> possibleClaimCards = possibleClaimCards(route);
-
-        return ((carCount() >= route.length()) && (!(possibleClaimCards.isEmpty())));
+        if(carCount() >= route.length()){
+            if(!(this.possibleClaimCards(route).isEmpty())){
+                return true;
+            }
+            else
+                return false;
+        }else{
+            return false;
+        }
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -133,6 +133,7 @@ public final class PlayerState extends PublicPlayerState {
          && (drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS));
 
         SortedBag<Card> cards2 = cards.difference(initialCards);
+
         SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
 
         for(Card c : cards2) {
@@ -146,12 +147,12 @@ public final class PlayerState extends PublicPlayerState {
         }
 
         SortedBag<Card> cards3 = builder.build();
+
         Set<SortedBag<Card>> set = cards3.subsetsOfSize(additionalCardsCount);
+
         List<SortedBag<Card>> listSubsets = new ArrayList<>(set);
 
-        listSubsets.sort(
-                Comparator.comparingInt(cs -> cs.countOf(Card.LOCOMOTIVE)));
-
+        listSubsets.sort(Comparator.comparingInt(cs -> cs.countOf(Card.LOCOMOTIVE)));
 
         return listSubsets;
     }

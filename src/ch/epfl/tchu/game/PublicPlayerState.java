@@ -14,8 +14,7 @@ import static ch.epfl.tchu.game.Constants.INITIAL_CAR_COUNT;
 
 public class PublicPlayerState {
 
-    private final int ticketCount;
-    private final int cardCount;
+    private final int ticketCount, cardCount;
     private final List<Route> routes;
     private int carCount;
     private int claimPoints;
@@ -51,7 +50,7 @@ public class PublicPlayerState {
 
     //----------------------------------------------------------------------------------------------------
 
-    public int carCountCalc(){
+    private int carCountCalc(){
 
         int size = 0;
         for(Route r : routes){
@@ -62,7 +61,7 @@ public class PublicPlayerState {
 
     //----------------------------------------------------------------------------------------------------
 
-    public int claimPointsCalc (){
+    private int claimPointsCalc (){
 
         int points = 0;
         for(Route r : routes){
