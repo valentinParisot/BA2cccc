@@ -82,7 +82,7 @@ public final class Info {
      *
      * @param playerNames names of the 2 players
      * @param points their points
-     * @return a message stating that the 2 players finished the game ex æqo (+ "points")
+     * @return a message stating that the 2 players finished the game ex æqo (+ @points)
      */
     public static String draw(List<String> playerNames, int points) {
         String toDraw = String.join(StringsFr.AND_SEPARATOR, playerNames);
@@ -104,7 +104,7 @@ public final class Info {
     /**
      *
      * @param count number of tickets that the player kept
-     * @return a message stating that the player kept "count" tickets
+     * @return a message stating that the player kept @count tickets
      */
     public String keptTickets(int count) {
         return String.format(StringsFr.KEPT_N_TICKETS, this.playerName, count, StringsFr.plural(count));
@@ -112,18 +112,32 @@ public final class Info {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @return a message stating that the player can play
+     */
     public String canPlay() {
         return String.format(StringsFr.CAN_PLAY, this.playerName);
     }
 
     //----------------------------------------------------------------------------------------------------
 
+
+    /**
+     *
+     * @param count number of drawn tickets
+     * @return a message stating that the player drew @count tickets
+     */
     public String drewTickets(int count) {
         return String.format(StringsFr.DREW_TICKETS, this.playerName, count, StringsFr.plural(count));
     }
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @return a message stating that the player drew a card from the deck
+     */
     public String drewBlindCard() {
         return String.format(StringsFr.DREW_BLIND_CARD, this.playerName);
 
@@ -131,6 +145,11 @@ public final class Info {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @param card one of the 5 visible cards
+     * @return a message stating that the player drew @card
+     */
     public String drewVisibleCard(Card card) {
 
         String name = "";
@@ -170,12 +189,24 @@ public final class Info {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @param route
+     * @return the 2 stations of @route separeted by " - "
+     */
     private static String routeName(Route route) {
         Preconditions.checkArgument(route != null);
         String routes = (route.station1().name() + StringsFr.EN_DASH_SEPARATOR + route.station2().name());
         return routes;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param cards a group of cards
+     * @return the cards form @cards with their multiplicity
+     */
     private static String cardsDescription(SortedBag<Card> cards) {
 
         List<String> cartes = new ArrayList<>();
@@ -206,6 +237,12 @@ public final class Info {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @param route the route that the player took
+     * @param cards cards used by the player
+     * @return a message stating that the player took @route with @cards
+     */
     public String claimedRoute(Route route, SortedBag<Card> cards) {
 
         String gares = routeName(route);
@@ -216,6 +253,12 @@ public final class Info {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @param route the tunnel the player wants to take
+     * @param initialCards the cards the player wants to use
+     * @return a message stating that the player wants to take @route with @initialCards
+     */
     public String attemptsTunnelClaim(Route route, SortedBag<Card> initialCards) {
 
         String tunnel = routeName(route);
@@ -226,6 +269,12 @@ public final class Info {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @param drawnCards the 3 additional cards the pleyer drew
+     * @param additionalCost the cost of @drawnCards
+     * @return a message stating that the player drew @drawnCards and it implies a cost of @additionalCost
+     */
     public String drewAdditionalCards(SortedBag<Card> drawnCards, int additionalCost) {
         String cards = cardsDescription(drawnCards);
         if (additionalCost == 0) {
@@ -238,6 +287,11 @@ public final class Info {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @param route
+     * @return a message stating that the player couldn't or didn't want to claim @route
+     */
     public String didNotClaimRoute(Route route) {
         String gares = routeName(route);
         return String.format(StringsFr.DID_NOT_CLAIM_ROUTE, this.playerName, gares);
@@ -245,6 +299,11 @@ public final class Info {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @param carCount
+     * @return a message stating that the player only has @carCount wagons remainingand hence the last turn begins
+     */
     public String lastTurnBegins(int carCount) {
         Preconditions.checkArgument(carCount <= 2);
         return String.format(StringsFr.LAST_TURN_BEGINS, this.playerName, carCount, StringsFr.plural(carCount));
@@ -252,6 +311,11 @@ public final class Info {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @param longestTrail the longest or one of the longest trail of the game
+     * @return a message stating that the player earned a bonus for having @longestTrail
+     */
     public String getsLongestTrailBonus(Trail longestTrail) {
 
         String station1 = longestTrail.station1().name();
@@ -262,6 +326,12 @@ public final class Info {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @param points points of the player
+     * @param loserPoints points of its opponent
+     * @return a message stating that the player won the game with @points and its oppenent lost with @looserPoints
+     */
     public String won(int points, int loserPoints) {
 
         return String.format(StringsFr.WINS, this.playerName, points, StringsFr.plural(points), loserPoints, StringsFr.plural(loserPoints) );
