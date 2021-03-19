@@ -22,6 +22,13 @@ public final class PlayerState extends PublicPlayerState {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * build a PlayerState
+     * @param tickets sortedbag of ticksts
+     * @param cards sortedbag of cards
+     * @param routes list of routes
+     */
+
     public PlayerState(SortedBag<Ticket> tickets, SortedBag<Card> cards, List<Route> routes) {
 
         super(tickets.size(), cards.size(), routes);
@@ -31,6 +38,14 @@ public final class PlayerState extends PublicPlayerState {
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     * the initial state of a player to whom the given initial cards have been dealt; in this initial state,
+     * the player does not yet have any tickets, and has not taken any road
+     * @param initialCards
+     * @return initial state of a player
+     * @throws IllegalArgumentException if the number of initial cards is not equal to 4
+     */
 
     public static PlayerState initial(SortedBag<Card> initialCards) {
 
@@ -43,12 +58,23 @@ public final class PlayerState extends PublicPlayerState {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @return Sortedbag of tickets
+     */
+
     public SortedBag<Ticket> tickets(){
 
         return this.tickets;
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     * which returns an identical state to the receiver, except that the player also has the given tickets
+     * @param newTickets sortedbag of tickets
+     * @return
+     */
 
     public PlayerState withAddedTickets(SortedBag<Ticket> newTickets){
 
@@ -59,12 +85,23 @@ public final class PlayerState extends PublicPlayerState {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @return sortedbag of cards
+     */
+
     public SortedBag<Card> cards(){
 
         return this.cards;
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     * which returns an identical state to the receiver, except that the player also has the given card
+     * @param card
+     * @return
+     */
 
     public PlayerState withAddedCard(Card card){
 
@@ -82,6 +119,12 @@ public final class PlayerState extends PublicPlayerState {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * which returns an identical state to the receiver, except that the player also has the given cards,
+     * @param additionalCards sortedbag of card
+     * @return dentical state to the receiver with the cards
+     */
+
     public PlayerState withAddedCards(SortedBag<Card> additionalCards){
 
         PlayerState withAddedCards= new PlayerState(this.tickets, this.cards.union(additionalCards), routes());
@@ -91,6 +134,13 @@ public final class PlayerState extends PublicPlayerState {
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     * returns true iff the player can seize the given route, i.e. if he has enough cars left
+     * and if he has the necessary cards
+     * @param route route
+     * @return true or false
+     */
 
     public boolean canClaimRoute(Route route){
 
@@ -106,6 +156,13 @@ public final class PlayerState extends PublicPlayerState {
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     * returns the list of all the sets of cards that the player could use to take possession of the given route,
+     * @param route route
+     * @return list of all the sets of cards
+     * @throws IllegalArgumentException if the player does not have enough cars to seize the road,
+     */
 
     public List<SortedBag<Card>> possibleClaimCards(Route route){
 
@@ -125,6 +182,21 @@ public final class PlayerState extends PublicPlayerState {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * returns the list of all the sets of cards that the player could use to seize a tunnel,
+     * sorted in ascending order of the number of locomotive cards,
+     * knowing that he initially laid the cards initialCards,
+     * that the 3 cards drawn from the top of the deck are drawnCards,
+     * and these force the player to lay down additionalCardsCount cards
+     * @param additionalCardsCount additionalcardscount
+     * @param initialCards initialcards sortedbag of card
+     * @param drawnCards drawncards sortedbag of card
+     * @return the list of all the sets
+     * @throws IllegalArgumentException if the number of additional cards is not between 1 and 3 (inclusive),
+     * if the set of initial cards is empty or contains more than 2 different types of cards,
+     * or if the set of cards drawn does not contain exactly 3 cards
+     */
+
     public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards){
 
         Preconditions.checkArgument((additionalCardsCount <= 3 && additionalCardsCount >= 1)
@@ -140,7 +212,7 @@ public final class PlayerState extends PublicPlayerState {
             if(initialCards.contains(c)){
                builder.add(c);
             }
-            if(c == Card.LOCOMOTIVE){
+            if(c.equals(Card.LOCOMOTIVE) ){
                 builder.add(c);
 
             }
@@ -159,6 +231,14 @@ public final class PlayerState extends PublicPlayerState {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * returns an identical state to the receiver,
+     * except that the player has also seized the given route using the given cards,
+     * @param route route
+     * @param claimCards sortedbag of card
+     * @return an identical state to the receiver with less cards and more routes
+     */
+
     public PlayerState withClaimedRoute(Route route, SortedBag<Card> claimCards){
 
         List<Route> routes = routes();
@@ -171,6 +251,11 @@ public final class PlayerState extends PublicPlayerState {
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     * which returns the number of points — possibly negative — obtained by the player thanks to his tickets
+     * @return ticketPoints
+     */
 
     public int ticketPoints(){
 
@@ -206,6 +291,12 @@ public final class PlayerState extends PublicPlayerState {
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     * returns all of the points obtained by the player at the end of the game,
+     * namely the sum of the points returned by the claimPoints and ticketPoints methods
+     * @return finalPoints
+     */
 
     public int finalPoints(){
 
