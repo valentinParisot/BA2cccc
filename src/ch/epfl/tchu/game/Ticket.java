@@ -33,7 +33,7 @@ public final class Ticket implements Comparable<Ticket> {
 
         for (Trip t : trips) {
 
-            Preconditions.checkArgument(t.from.name() == pattern);
+            Preconditions.checkArgument(t.from.name().equals(pattern) );
 
         }
 

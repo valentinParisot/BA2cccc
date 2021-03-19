@@ -156,7 +156,7 @@ public final class Deck<C extends Comparable<C>> {
     /**
      * returns a heap identical to the receiver but without the top card count
      *
-     * @param count
+     * @param count count
      *
      * @throws IllegalArgumentException if count is superior than the current size or inferior than 0
      * @return a heap identical to the receiver but without the top card count

@@ -144,15 +144,7 @@ public final class PlayerState extends PublicPlayerState {
 
     public boolean canClaimRoute(Route route){
 
-        if(carCount() >= route.length()){
-            if(!(this.possibleClaimCards(route).isEmpty())){
-                return true;
-            }
-            else
-                return false;
-        }else{
-            return false;
-        }
+        return ((carCount() >= route.length()) && (!(this.possibleClaimCards(route).isEmpty())));
     }
 
     //----------------------------------------------------------------------------------------------------

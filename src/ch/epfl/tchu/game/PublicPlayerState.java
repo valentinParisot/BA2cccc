@@ -16,7 +16,7 @@ public class PublicPlayerState {
 
     private final int ticketCount, cardCount;
     private final List<Route> routes;
-    private int carCount;
+    private int  carCount;
     private int claimPoints;
 
     //----------------------------------------------------------------------------------------------------
