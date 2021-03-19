@@ -22,12 +22,19 @@ public final class Info {
 
     //----------------------------------------------------------------------------------------------------
 
+
     public Info(String playerName) {
         this.playerName = playerName;
     }
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @param card card
+     * @param count multiplicity of the card
+     * @return the name of the card (singular or plural depending on count)
+     */
     public static String cardName(Card card, int count) {
 
         Preconditions.checkArgument(card != null);
@@ -71,6 +78,12 @@ public final class Info {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @param playerNames names of the 2 players
+     * @param points their points
+     * @return a message stating that the 2 players finished the game ex æqo (+ "points")
+     */
     public static String draw(List<String> playerNames, int points) {
         String toDraw = String.join(StringsFr.AND_SEPARATOR, playerNames);
         return String.format(StringsFr.DRAW, toDraw, points);
@@ -78,12 +91,21 @@ public final class Info {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @return a message stating that the current player will play first
+     */
     public String willPlayFirst() {
         return String.format(StringsFr.WILL_PLAY_FIRST, this.playerName);
     }
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @param count number of tickets that the player kept
+     * @return a message stating that the player kept "count" tickets
+     */
     public String keptTickets(int count) {
         return String.format(StringsFr.KEPT_N_TICKETS, this.playerName, count, StringsFr.plural(count));
     }

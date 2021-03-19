@@ -15,25 +15,30 @@ import java.util.List;
 
 public final class StationPartition implements StationConnectivity {
 
-    private final List<Integer> integers;
+    private final int[] integers;
 
     //----------------------------------------------------------------------------------------------------
 
-    private StationPartition(List<Integer> integers) {
+    private StationPartition(int[] integers) {
         this.integers = integers;
     }
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * @param station1
+     * @param station2
+     * @return if 2 stations are connected or not
+     */
     public boolean connected(Station station1, Station station2) {
 
-        if (station1.id() > integers.size() || station2.id() > integers.size()) {
+        if (station1.id() > integers.length || station2.id() > integers.length) {
             if (station1.id() == station2.id()) {
                 return true;
             }
         }
 
-        if (integers.get(station1.id()) == integers.get(station2.id())) {
+        if (integers[station1.id()] == integers[station2.id()]) {
             return true;
         }
         return false;
@@ -42,44 +47,64 @@ public final class StationPartition implements StationConnectivity {
     //----------------------------------------------------------------------------------------------------
 
     public final static class Builder {
-        private List<Integer> integersBuilder;
+        private int[] integersBuilder;
 
         //------------------------------------------------------------------------------------------------
 
         public Builder(int stationCount) {
             Preconditions.checkArgument(stationCount >= 0);
-            integersBuilder = new ArrayList<Integer>() {};
+            integersBuilder = new int[stationCount];
             for (int i = 0; i < stationCount; i++) {
-                integersBuilder.add(i,i);
+                integersBuilder[i] = i;
             }
         }
 
         //------------------------------------------------------------------------------------------------
 
+        /**
+         * @param id the id of a station (its place in the list)
+         * @return the representative of a station
+         */
         private int representative(int id) {
-            return integersBuilder.get(id);
+            return integersBuilder[id];
         }
 
         //------------------------------------------------------------------------------------------------
 
+        /**
+         * @param s1 first staion
+         * @param s2 second station
+         * @return a Builder with the 2 station connected
+         */
         public Builder connect(Station s1, Station s2) {
 
-            int rpz = representative(s2.id());
-
-            for (int i = 0; i< integersBuilder.size(); ++i) {
-
-                if (representative(i) == rpz) {
-                    integersBuilder.set(i, representative(s1.id()));
-                    System.out.println(i + " pointe vers " + representative(i));
-                }
-            }
+            integersBuilder[representative(s2.id())] = integersBuilder[s1.id()];
             return this;
         }
 
         //------------------------------------------------------------------------------------------------
 
+        /**
+         * @return a partition with exactly one representative for each group of stations
+         */
         public StationPartition build() {
-            return new StationPartition(integersBuilder);
+
+            List<Integer> rpz = new ArrayList<>();
+
+            for (int i = 0; i < integersBuilder.length; ++i) {
+                if (integersBuilder[i] == i) {
+                    rpz.add(i);
+                }
+            }
+
+            for (int i = 0; i < integersBuilder.length; ++i) {
+                do{
+                    integersBuilder[i] = integersBuilder[representative(i)];
+                }
+                while (!rpz.contains(representative(i)));
+            }
+
+            return new StationPartition(integersBuilder.clone());
         }
 
         //------------------------------------------------------------------------------------------------
