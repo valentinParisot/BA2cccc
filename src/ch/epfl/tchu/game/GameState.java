@@ -2,18 +2,15 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.TreeMap;
+import java.util.*;
 
 public final class GameState extends PublicGameState {
 
     private final Deck<Ticket> ticketDeck;
     private final Map<PlayerId, PlayerState> playerState ;
     private final CardState cardstate ;
-    private final PlayerId id1;
-    private final PlayerId id2;
+    private final PlayerId currentPlayerId;
+    private final PlayerId lastPlayerId;
 
     private GameState ( Deck<Ticket> ticketDeck ,int ticketsCount, CardState cardState, PlayerId currentPlayerId, Map<PlayerId,
             PlayerState> playerState, PlayerId lastPlayer){
@@ -21,8 +18,8 @@ public final class GameState extends PublicGameState {
         super(ticketsCount, cardState, currentPlayerId, Map.copyOf(playerState),lastPlayer);
         this.ticketDeck = ticketDeck;
         this.playerState = playerState;
-        this.id1 = currentPlayerId;
-        this.id2 = lastPlayer;
+        this.currentPlayerId = currentPlayerId;
+        this.lastPlayerId = lastPlayer;
         this.cardstate = cardState;
 
     }
@@ -78,7 +75,7 @@ public final class GameState extends PublicGameState {
         Preconditions.checkArgument((count >= 0) && (count <= ticketsCount()));
 
         GameState withoutTopTickets = new GameState(ticketDeck.withoutTopCards(count),
-                ticketsCount() - count, cardstate, this.id1, this.playerState,this.id2);
+                ticketsCount() - count, cardstate, this.currentPlayerId, this.playerState,this.lastPlayerId);
 
         return withoutTopTickets;
     }
@@ -93,7 +90,7 @@ public final class GameState extends PublicGameState {
         Preconditions.checkArgument(!cardstate.isDeckEmpty());
 
         GameState withoutTopCard = new GameState(ticketDeck, ticketsCount() ,cardstate.withoutTopDeckCard(),
-                this.id1 , this.playerState, this.id2);
+                this.currentPlayerId, this.playerState, this.lastPlayerId);
 
         return withoutTopCard;
     }
@@ -102,7 +99,7 @@ public final class GameState extends PublicGameState {
     public GameState withMoreDiscardedCards(SortedBag<Card> discardedCards){
 
         GameState withMoreDiscardedCards = new GameState(ticketDeck, ticketsCount(),
-                cardstate.withMoreDiscardedCards(discardedCards), this.id1 , this.playerState, this.id2);
+                cardstate.withMoreDiscardedCards(discardedCards), this.currentPlayerId, this.playerState, this.lastPlayerId);
 
         return withMoreDiscardedCards;
     }
@@ -111,8 +108,8 @@ public final class GameState extends PublicGameState {
     public GameState withCardsDeckRecreatedIfNeeded(Random rng){
 
         if(cardstate.isDeckEmpty()){
-            GameState g = new GameState(ticketDeck, ticketsCount(), cardstate.withDeckRecreatedFromDiscards(rng), id1,
-                    playerState, id2);
+            GameState g = new GameState(ticketDeck, ticketsCount(), cardstate.withDeckRecreatedFromDiscards(rng), currentPlayerId,
+                    playerState, lastPlayerId);
             return g;
         }
 
@@ -121,6 +118,7 @@ public final class GameState extends PublicGameState {
 
     // modif ??
     // player id . next ?
+    // on modif playerstate ?
     public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets){
 
         Preconditions.checkArgument(playerState(playerId).ticketCount() == 0);
@@ -139,17 +137,87 @@ public final class GameState extends PublicGameState {
         return playerState1;
     }
 
+    //current id ?
+    //modif ?
+    //comment on modifie le deck de tickdt ?
     public GameState withChosenAdditionalTickets(SortedBag<Ticket> drawnTickets, SortedBag<Ticket> chosenTickets){
 
         for(Ticket t : chosenTickets){
             Preconditions.checkArgument(drawnTickets.contains(t));
         }
 
-        SortedBag<Ticket> ticketsNotchoose =  drawnTickets.difference(chosenTickets);
+        GameState withChosenAdditionalTickets = new GameState(this.ticketDeck, ticketsCount(), this.cardstate,
+                currentPlayerId(),modif(currentPlayerId, playerState.get(currentPlayerId()).withAddedTickets(chosenTickets)),
+                lastPlayerId);
 
+        withChosenAdditionalTickets.withoutTopTickets(drawnTickets.size());
 
+        return withChosenAdditionalTickets;
 
     }
+
+    //on peut modifier les attributs comme ca ? est ce que le code doit etre plus claire ?
+    public GameState withDrawnFaceUpCard(int slot){
+
+        Preconditions.checkArgument(canDrawnCards());
+
+        GameState withDrawnFaceUpCard = new GameState(this.ticketDeck, ticketsCount(), cardstate.withDrawnFaceUpCard(slot),currentPlayerId(),
+                modif(currentPlayerId, playerState.get(currentPlayerId()).withAddedCard(cardstate.faceUpCard(slot))),
+                lastPlayerId);
+
+        return withDrawnFaceUpCard;
+
+    }
+
+    //on doit modifier le cardstate ? ou ca se fait deja
+    public GameState withBlindlyDrawnCard(){
+
+        Preconditions.checkArgument(canDrawnCards());
+
+        GameState withBlindlyDrawnCard = new GameState(this.ticketDeck, ticketsCount(), cardstate.withoutTopDeckCard(), currentPlayerId,
+                modif(currentPlayerId, playerState.get(currentPlayerId()).withAddedCard(cardstate.topDeckCard())),
+                lastPlayerId);
+
+        return withBlindlyDrawnCard;
+    }
+
+    //modifier le card state ou pas ? ou with claimed route le fait
+    public GameState withClaimedRoute(Route route, SortedBag<Card> cards){
+
+        GameState withClaimedRoute = new GameState(this.ticketDeck, ticketsCount(), cardstate.withMoreDiscardedCards(cards),
+                currentPlayerId,
+                modif(currentPlayerId, playerState.get(currentPlayerId()).withClaimedRoute(route, cards)), lastPlayerId);
+
+        return withClaimedRoute;
+
+    }
+
+    public boolean lastTurnBegins(){
+
+        return (lastPlayerId == null && playerState.get(currentPlayerId()).carCount() <= 2);
+
+    }
+
+    //remplacer comment pour les id ? comme ca  ou avec une egalite de variable
+    // quand le current remplace pas on doit metttre null ?
+    //methode plus rapide ??
+    public GameState forNextTurn(){
+
+        if(lastTurnBegins()){
+            GameState forNextTurn = new GameState(this.ticketDeck, this.ticketsCount(), this.cardstate,
+                    lastPlayerId, playerState, currentPlayerId);
+            return forNextTurn;
+        }
+        else {
+            GameState forNextTurn = new GameState(this.ticketDeck, this.ticketsCount(), this.cardstate,
+                    lastPlayerId, playerState, null);
+            return forNextTurn;
+
+        }
+
+    }
+
+
 
 
 

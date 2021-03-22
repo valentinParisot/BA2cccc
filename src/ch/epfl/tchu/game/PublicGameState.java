@@ -40,7 +40,7 @@ public class PublicGameState {
         return cardState;
     }
 
-    public boolean canDrawnCards(){
+    public boolean canDrawCards(){
 
         return ((cardState.deckSize() + cardState.discardsSize() >= 5));
 
