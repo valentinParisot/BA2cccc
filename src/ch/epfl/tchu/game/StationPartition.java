@@ -36,6 +36,7 @@ public final class StationPartition implements StationConnectivity {
             if (station1.id() == station2.id()) {
                 return true;
             }
+            return false;
         }
 
         if (integers[station1.id()] == integers[station2.id()]) {
@@ -66,7 +67,11 @@ public final class StationPartition implements StationConnectivity {
          * @return the representative of a station
          */
         private int representative(int id) {
-            return integersBuilder[id];
+            int i = id;
+            while (i != integersBuilder[i]) {
+                i = integersBuilder[i];
+            }
+            return i;
         }
 
         //------------------------------------------------------------------------------------------------
@@ -78,7 +83,7 @@ public final class StationPartition implements StationConnectivity {
          */
         public Builder connect(Station s1, Station s2) {
 
-            integersBuilder[representative(s2.id())] = integersBuilder[s1.id()];
+            integersBuilder[representative(s2.id())] = representative(s1.id());
             return this;
         }
 
@@ -89,19 +94,9 @@ public final class StationPartition implements StationConnectivity {
          */
         public StationPartition build() {
 
-            List<Integer> rpz = new ArrayList<>();
-
             for (int i = 0; i < integersBuilder.length; ++i) {
-                if (integersBuilder[i] == i) {
-                    rpz.add(i);
-                }
-            }
 
-            for (int i = 0; i < integersBuilder.length; ++i) {
-                do{
-                    integersBuilder[i] = integersBuilder[representative(i)];
-                }
-                while (!rpz.contains(representative(i)));
+                integersBuilder[i] = representative(i);
             }
 
             return new StationPartition(integersBuilder.clone());
