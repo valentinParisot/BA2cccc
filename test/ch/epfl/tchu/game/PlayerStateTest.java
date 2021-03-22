@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class PlayerStateTest {
     private static final int INITIAL_CARD_COUNT = 4;
     private static final int TOTAL_CAR_COUNT = 40;
+    private static final int r = 40;
 
     private static final List<Color> COLORS =
             List.of(
