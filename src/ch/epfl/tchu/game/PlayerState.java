@@ -204,21 +204,30 @@ public final class PlayerState extends PublicPlayerState {
             if(initialCards.contains(c)){
                builder.add(c);
             }
-            if(c.equals(Card.LOCOMOTIVE) ){
+            if(Card.LOCOMOTIVE.equals(c)){
                 builder.add(c);
 
             }
         }
 
-        SortedBag<Card> cards3 = builder.build();
+            SortedBag<Card> cards3 = builder.build();
 
-        Set<SortedBag<Card>> set = cards3.subsetsOfSize(additionalCardsCount);
+        if (cards3.size() < additionalCardsCount){
 
-        List<SortedBag<Card>> listSubsets = new ArrayList<>(set);
+             return List.of();
+        }
 
-        listSubsets.sort(Comparator.comparingInt(cs -> cs.countOf(Card.LOCOMOTIVE)));
+            Set<SortedBag<Card>> set = cards3.subsetsOfSize(additionalCardsCount);
 
-        return listSubsets;
+            List<SortedBag<Card>> listSubsets = new ArrayList<>(set);
+
+            listSubsets.sort(Comparator.comparingInt(cs -> cs.countOf(Card.LOCOMOTIVE)));
+
+            return listSubsets;
+
+
+
+
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -233,10 +242,10 @@ public final class PlayerState extends PublicPlayerState {
 
     public PlayerState withClaimedRoute(Route route, SortedBag<Card> claimCards){
 
-        List<Route> routes = routes();
-        //routes.add(route);
+        List<Route> newRoutes = new ArrayList<>(routes());
+        newRoutes.add(route);
 
-        PlayerState withClaimedRoute= new PlayerState(this.tickets, this.cards.difference(claimCards), routes);
+        PlayerState withClaimedRoute= new PlayerState(this.tickets, cards.difference(claimCards),newRoutes);
 
         return withClaimedRoute;
 
