@@ -42,7 +42,9 @@ public class PublicGameState {
     }
 
     public boolean canDrawnCards(){
-        return ((cardState.discardsSize() + cardState.deckSize() >= INITIAL_TICKETS_COUNT));
+
+        return ((cardState.deckSize() + cardState.discardsSize() >= 5));
+
     }
 
     public PlayerId CurrentPlayerId(){
@@ -62,12 +64,11 @@ public class PublicGameState {
 
         List<Route> claimedRoutes = new ArrayList<>();
 
-        playerState(lastPlayer).routes();
-        playerState(currentPlayerId).routes();
+        for(PublicPlayerState p  : playerState.values()) {
 
-        claimedRoutes.addAll(playerState(lastPlayer).routes());
-        claimedRoutes.addAll(playerState(currentPlayerId).routes());
+           claimedRoutes.addAll(p.routes());
 
+        }
         return claimedRoutes;
 
     }

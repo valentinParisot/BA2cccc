@@ -8,14 +8,14 @@ import java.util.TreeMap;
 
 public final class GameState extends PublicGameState {
 
-    private final Deck ticketDeck;
+    private final Deck<Ticket> ticketDeck;
     private final Map<PlayerId, PlayerState> playerState ;
     private final CardState cardstate ;
     private final PlayerId id1;
     private final PlayerId id2;
     private final int ticketsCount;
 
-    private  GameState ( Deck ticketDeck ,int ticketsCount, CardState cardState, PlayerId currentPlayerId, Map<PlayerId,
+    private  GameState ( Deck<Ticket> ticketDeck ,int ticketsCount, CardState cardState, PlayerId currentPlayerId, Map<PlayerId,
             PlayerState> playerState, PlayerId lastPlayer){
 
         super(ticketsCount, cardState, currentPlayerId, Map.copyOf(playerState),lastPlayer);
@@ -28,15 +28,10 @@ public final class GameState extends PublicGameState {
 
     }
 
-    private Map<PlayerId, PublicPlayerState> makePublic(){
-        return null;
-    }
-
-
     public static GameState initial(SortedBag<Ticket> tickets, Random rng){
 
-         Deck ticketDeck = Deck.of(tickets, rng);
-         Deck cardDeck = Deck.of(Constants.ALL_CARDS, rng);
+         Deck<Ticket> ticketDeck = Deck.of(tickets, rng);
+         Deck<Card> cardDeck = Deck.of(Constants.ALL_CARDS, rng);
 
          PlayerId id1 = PlayerId.ALL.get(rng.nextInt(PlayerId.COUNT));
          PlayerId id2 = id1.next();
@@ -118,12 +113,12 @@ public final class GameState extends PublicGameState {
         else return this;
     }
 
-   /** public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets){
+    public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets){
 
         Preconditions.checkArgument(playerState(playerId).ticketCount() == 0);
 
-        GameState withInitiallyChosenTickets = new GameState(Deck.of(chosenTickets),chosenTickets.size(),cardstate,
-                playerId, playerState(playerId), playerId.next());
+        GameState withInitiallyChosenTickets = new GameState(ticketDeck ,chosenTickets.size(),cardstate,
+                playerId, withAddedTickets(chosenTickets), playerId.next());
 
         return  withInitiallyChosenTickets;
     }
@@ -137,7 +132,7 @@ public final class GameState extends PublicGameState {
 
     }
 
-**/
+
 
 
 

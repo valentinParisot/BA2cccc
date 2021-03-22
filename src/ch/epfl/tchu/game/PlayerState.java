@@ -201,13 +201,10 @@ public final class PlayerState extends PublicPlayerState {
         SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
 
         for(Card c : cards2) {
-            if(initialCards.contains(c)){
+            if(initialCards.contains(c) || Card.LOCOMOTIVE.equals(c)){
                builder.add(c);
             }
-            if(Card.LOCOMOTIVE.equals(c)){
-                builder.add(c);
 
-            }
         }
 
             SortedBag<Card> cards3 = builder.build();
