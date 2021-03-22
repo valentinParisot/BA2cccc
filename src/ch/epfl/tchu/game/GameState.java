@@ -42,9 +42,9 @@ public final class GameState extends PublicGameState {
 
         CardState cardstate = CardState.of(cardDeck);
 
-        GameState g = new GameState(ticketDeck, ticketDeck.size(), cardstate, id1, playerState, id2);
+        GameState initial = new GameState(ticketDeck, ticketDeck.size(), cardstate, id1, playerState, id2);
 
-        return g;
+        return initial;
 
     }
 
@@ -108,9 +108,9 @@ public final class GameState extends PublicGameState {
     public GameState withCardsDeckRecreatedIfNeeded(Random rng){
 
         if(cardstate.isDeckEmpty()){
-            GameState g = new GameState(ticketDeck, ticketsCount(), cardstate.withDeckRecreatedFromDiscards(rng), currentPlayerId,
+            GameState withCardsDeckRecreatedIfNeeded = new GameState(ticketDeck, ticketsCount(), cardstate.withDeckRecreatedFromDiscards(rng), currentPlayerId,
                     playerState, lastPlayerId);
-            return g;
+            return withCardsDeckRecreatedIfNeeded;
         }
 
         else return this;
@@ -159,7 +159,7 @@ public final class GameState extends PublicGameState {
     //on peut modifier les attributs comme ca ? est ce que le code doit etre plus claire ?
     public GameState withDrawnFaceUpCard(int slot){
 
-        Preconditions.checkArgument(canDrawnCards());
+        Preconditions.checkArgument(canDrawCards());
 
         GameState withDrawnFaceUpCard = new GameState(this.ticketDeck, ticketsCount(), cardstate.withDrawnFaceUpCard(slot),currentPlayerId(),
                 modif(currentPlayerId, playerState.get(currentPlayerId()).withAddedCard(cardstate.faceUpCard(slot))),
@@ -172,7 +172,7 @@ public final class GameState extends PublicGameState {
     //on doit modifier le cardstate ? ou ca se fait deja
     public GameState withBlindlyDrawnCard(){
 
-        Preconditions.checkArgument(canDrawnCards());
+        Preconditions.checkArgument(canDrawCards());
 
         GameState withBlindlyDrawnCard = new GameState(this.ticketDeck, ticketsCount(), cardstate.withoutTopDeckCard(), currentPlayerId,
                 modif(currentPlayerId, playerState.get(currentPlayerId()).withAddedCard(cardstate.topDeckCard())),
