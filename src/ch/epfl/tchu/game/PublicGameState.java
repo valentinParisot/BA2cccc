@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static ch.epfl.tchu.game.Constants.INITIAL_TICKETS_COUNT;
 
 public class PublicGameState {
 
@@ -29,7 +28,7 @@ public class PublicGameState {
         this.lastPlayer = lastPlayer;
     }
 
-    public int TicketsCount() {
+    public int ticketsCount() {
         return ticketsCount;
     }
 
@@ -37,7 +36,7 @@ public class PublicGameState {
         return (!(cardState.isDeckEmpty()));
     }
 
-    public PublicCardState CardState() {
+    public PublicCardState cardState() {
         return cardState;
     }
 
@@ -47,7 +46,7 @@ public class PublicGameState {
 
     }
 
-    public PlayerId CurrentPlayerId(){
+    public PlayerId currentPlayerId(){
         return currentPlayerId;
     }
 
@@ -75,12 +74,7 @@ public class PublicGameState {
 
     public PlayerId lastPlayer(){
 
-        if(lastPlayer == null) {
-            return null;
-        }
-        else {
-            return lastPlayer;
-        }
+       return lastPlayer;
     }
 
 

@@ -2,6 +2,7 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
@@ -13,9 +14,8 @@ public final class GameState extends PublicGameState {
     private final CardState cardstate ;
     private final PlayerId id1;
     private final PlayerId id2;
-    private final int ticketsCount;
 
-    private  GameState ( Deck<Ticket> ticketDeck ,int ticketsCount, CardState cardState, PlayerId currentPlayerId, Map<PlayerId,
+    private GameState ( Deck<Ticket> ticketDeck ,int ticketsCount, CardState cardState, PlayerId currentPlayerId, Map<PlayerId,
             PlayerState> playerState, PlayerId lastPlayer){
 
         super(ticketsCount, cardState, currentPlayerId, Map.copyOf(playerState),lastPlayer);
@@ -24,7 +24,6 @@ public final class GameState extends PublicGameState {
         this.id1 = currentPlayerId;
         this.id2 = lastPlayer;
         this.cardstate = cardState;
-        this.ticketsCount = ticketsCount;
 
     }
 
@@ -34,7 +33,7 @@ public final class GameState extends PublicGameState {
          Deck<Card> cardDeck = Deck.of(Constants.ALL_CARDS, rng);
 
          PlayerId id1 = PlayerId.ALL.get(rng.nextInt(PlayerId.COUNT));
-         PlayerId id2 = id1.next();
+         PlayerId id2 = null;
 
          Map<PlayerId, PlayerState> playerState = new TreeMap<>();
 
@@ -46,7 +45,7 @@ public final class GameState extends PublicGameState {
 
         CardState cardstate = CardState.of(cardDeck);
 
-        GameState g = new GameState(ticketDeck, ticketDeck.size(), cardstate, id1,playerState, id2);
+        GameState g = new GameState(ticketDeck, ticketDeck.size(), cardstate, id1, playerState, id2);
 
         return g;
 
@@ -59,23 +58,28 @@ public final class GameState extends PublicGameState {
 
     @Override
     public PlayerState currentPlayerState(){
-        return playerState.get(CurrentPlayerId());
+        return playerState.get(currentPlayerId());
 
     }
 
     public SortedBag<Ticket> topTickets(int count){
 
-        Preconditions.checkArgument((count >=0) && (count <= ticketsCount));
+        Preconditions.checkArgument((count >=0) && (count <= ticketsCount()));
 
         return ticketDeck.topCards(count);
 
     }
 
+    // - count ou pas
+    // cardstate change ?
+    // les id 1,2 ou current et last ? constructeur et la ?
     public GameState withoutTopTickets(int count){
 
-        Preconditions.checkArgument(count >= 0 && count <= cardstate.deckSize());
+        Preconditions.checkArgument((count >= 0) && (count <= ticketsCount()));
+
         GameState withoutTopTickets = new GameState(ticketDeck.withoutTopCards(count),
-                ticketsCount, this.cardstate, this.id1, this.playerState,this.id2);
+                ticketsCount() - count, cardstate, this.id1, this.playerState,this.id2);
+
         return withoutTopTickets;
     }
 
@@ -88,24 +92,26 @@ public final class GameState extends PublicGameState {
 
         Preconditions.checkArgument(!cardstate.isDeckEmpty());
 
-        GameState withoutTopCard = new GameState(ticketDeck, ticketsCount ,cardstate.withoutTopDeckCard(),
+        GameState withoutTopCard = new GameState(ticketDeck, ticketsCount() ,cardstate.withoutTopDeckCard(),
                 this.id1 , this.playerState, this.id2);
 
         return withoutTopCard;
     }
 
+    //on modifie ?
     public GameState withMoreDiscardedCards(SortedBag<Card> discardedCards){
 
-        GameState withMoreDiscardedCards = new GameState(ticketDeck, ticketsCount,
+        GameState withMoreDiscardedCards = new GameState(ticketDeck, ticketsCount(),
                 cardstate.withMoreDiscardedCards(discardedCards), this.id1 , this.playerState, this.id2);
 
         return withMoreDiscardedCards;
     }
 
+
     public GameState withCardsDeckRecreatedIfNeeded(Random rng){
 
         if(cardstate.isDeckEmpty()){
-            GameState g = new GameState(ticketDeck, ticketsCount, cardstate.withDeckRecreatedFromDiscards(rng), id1,
+            GameState g = new GameState(ticketDeck, ticketsCount(), cardstate.withDeckRecreatedFromDiscards(rng), id1,
                     playerState, id2);
             return g;
         }
@@ -113,21 +119,34 @@ public final class GameState extends PublicGameState {
         else return this;
     }
 
+    // modif ??
+    // player id . next ?
     public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets){
 
         Preconditions.checkArgument(playerState(playerId).ticketCount() == 0);
 
-        GameState withInitiallyChosenTickets = new GameState(ticketDeck ,chosenTickets.size(),cardstate,
-                playerId, withAddedTickets(chosenTickets), playerId.next());
+        GameState withInitiallyChosenTickets = new GameState(ticketDeck ,ticketsCount() ,cardstate,
+                playerId, modif(playerId, playerState.get(playerId).withAddedTickets(chosenTickets))
+                , playerId.next());
 
         return  withInitiallyChosenTickets;
     }
 
+    //id.next ?
+    private Map<PlayerId, PlayerState> modif(PlayerId playerId,PlayerState playerState ){
+        Map<PlayerId, PlayerState> playerState1 = new EnumMap<>(this.playerState);
+        playerState1.put(playerId, playerState);
+        return playerState1;
+    }
+
     public GameState withChosenAdditionalTickets(SortedBag<Ticket> drawnTickets, SortedBag<Ticket> chosenTickets){
 
-        Preconditions.checkArgument(!drawnTickets.union(chosenTickets).isEmpty());
-        SortedBag<Ticket> tickets =  drawnTickets.union(chosenTickets);
-        ticketDeck.differe
+        for(Ticket t : chosenTickets){
+            Preconditions.checkArgument(drawnTickets.contains(t));
+        }
+
+        SortedBag<Ticket> ticketsNotchoose =  drawnTickets.difference(chosenTickets);
+
 
 
     }
