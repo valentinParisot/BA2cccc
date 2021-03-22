@@ -14,6 +14,8 @@ public interface Player {
         public static final List<TurnKind> ALL = List.of(values());
     }
 
+    //------------------------------------------------------------------------------------------------
+
     /**
      * tells the player @ownID and @playerNames
      * @param ownId the ID of the player
@@ -21,11 +23,15 @@ public interface Player {
      */
     public abstract void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames);
 
+    //------------------------------------------------------------------------------------------------
+
     /**
      *tells the player @info
      * @param info any information the player should receive
      */
     public abstract void receiveInfo(String info);
+
+    //------------------------------------------------------------------------------------------------
 
     /**
      *when the game state changes, tells the player @newState and @ownState
@@ -34,11 +40,15 @@ public interface Player {
      */
     public abstract void updateState(/*PublicGameState newState, */PlayerState ownState);
 
+    //------------------------------------------------------------------------------------------------
+
     /**
      * at the begenning of the game, tells the player she/he received @tickets
      * @param tickets the 5 initial tickets distributed to the player
      */
     public abstract void setInitialTicketChoice(SortedBag<Ticket> tickets);
+
+    //------------------------------------------------------------------------------------------------
 
     /**
      *only called at the begenning of the game
@@ -46,12 +56,16 @@ public interface Player {
      */
     public abstract SortedBag<Ticket> chooseInitialTickets();
 
+    //------------------------------------------------------------------------------------------------
+
     /**
      * called before every turn of the player,
      * asks the player what kind of turn she/he wants to play next
      * @return the player's answer
      */
     public abstract TurnKind nextTurn();
+
+    //------------------------------------------------------------------------------------------------
 
     /**
      * callled when the player choose to draw additional tickets (@option),
@@ -61,6 +75,8 @@ public interface Player {
      */
     public abstract SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options);
 
+    //------------------------------------------------------------------------------------------------
+
     /**
      * called when the player decided to draw some locomotive/wagon cards,
      * asks the player where does she/he wants to draw the cards from
@@ -69,17 +85,23 @@ public interface Player {
      */
     public abstract int drawSlot();
 
+    //------------------------------------------------------------------------------------------------
+
     /**
      * called when the players tries to claim a route
      * @return the route the players tries to claim
      */
     public abstract Route claimedRoute();
 
+    //------------------------------------------------------------------------------------------------
+
     /**
      * called when the players tries to claim a route
      * @return which initial cards the player wants to take the route with
      */
     public abstract SortedBag<Card> initialClaimCards();
+
+    //------------------------------------------------------------------------------------------------
 
     /**
      * called when the players tries to claim a tunnel,
