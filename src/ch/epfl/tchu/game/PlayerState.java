@@ -159,16 +159,16 @@ public final class PlayerState extends PublicPlayerState {
     public List<SortedBag<Card>> possibleClaimCards(Route route){
 
         Preconditions.checkArgument((carCount() >= route.length()));
+        List<SortedBag<Card>> routepossible = route.possibleClaimCards();
+        List<SortedBag<Card>> possibleClaimCards = new ArrayList<>();
 
-        List<SortedBag<Card>> p = route.possibleClaimCards();
-
-        for(SortedBag<Card> s : p){
-            if(!(cards.contains(s))){
-                p.remove(s);
+        for(SortedBag<Card> s : routepossible){
+            if((cards.contains(s))){
+                possibleClaimCards.add(s);
             }
 
         }
-        return p;
+        return possibleClaimCards;
 
     }
 
@@ -234,7 +234,7 @@ public final class PlayerState extends PublicPlayerState {
     public PlayerState withClaimedRoute(Route route, SortedBag<Card> claimCards){
 
         List<Route> routes = routes();
-        routes.add(route);
+        //routes.add(route);
 
         PlayerState withClaimedRoute= new PlayerState(this.tickets, this.cards.difference(claimCards), routes);
 
