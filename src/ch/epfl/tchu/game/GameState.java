@@ -139,7 +139,7 @@ public final class GameState extends PublicGameState {
 
     //current id ?
     //modif ?
-    //comment on modifie le deck de tickdt ?
+    //comment on modifie le deck de ticket ?
     public GameState withChosenAdditionalTickets(SortedBag<Ticket> drawnTickets, SortedBag<Ticket> chosenTickets){
 
         for(Ticket t : chosenTickets){
@@ -150,9 +150,7 @@ public final class GameState extends PublicGameState {
                 currentPlayerId(),modif(currentPlayerId, playerState.get(currentPlayerId()).withAddedTickets(chosenTickets)),
                 lastPlayerId);
 
-        withChosenAdditionalTickets.withoutTopTickets(drawnTickets.size());
-
-        return withChosenAdditionalTickets;
+        return withChosenAdditionalTickets.withoutTopTickets(drawnTickets.size());
 
     }
 
@@ -184,7 +182,7 @@ public final class GameState extends PublicGameState {
     //modifier le card state ou pas ? ou with claimed route le fait
     public GameState withClaimedRoute(Route route, SortedBag<Card> cards){
 
-        GameState withClaimedRoute = new GameState(this.ticketDeck, ticketsCount(), cardstate.withMoreDiscardedCards(cards),
+        GameState withClaimedRoute = new GameState(this.ticketDeck, ticketsCount(), cardstate/*.withMoreDiscardedCards(cards)*/,
                 currentPlayerId,
                 modif(currentPlayerId, playerState.get(currentPlayerId()).withClaimedRoute(route, cards)), lastPlayerId);
 
@@ -204,13 +202,14 @@ public final class GameState extends PublicGameState {
     public GameState forNextTurn(){
 
         if(lastTurnBegins()){
+
             GameState forNextTurn = new GameState(this.ticketDeck, this.ticketsCount(), this.cardstate,
-                    lastPlayerId, playerState, currentPlayerId);
+                    currentPlayerId.next(), playerState, currentPlayerId);
             return forNextTurn;
         }
         else {
             GameState forNextTurn = new GameState(this.ticketDeck, this.ticketsCount(), this.cardstate,
-                    lastPlayerId, playerState, null);
+                    currentPlayerId.next(), playerState, null);
             return forNextTurn;
 
         }

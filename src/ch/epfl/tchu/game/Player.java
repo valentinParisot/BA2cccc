@@ -38,7 +38,7 @@ public interface Player {
      * @param newState the new state of the game
      * @param ownState the new state of the player
      */
-    public abstract void updateState(/*PublicGameState newState, */PlayerState ownState);
+    public abstract void updateState(PublicGameState newState, PlayerState ownState);
 
     //------------------------------------------------------------------------------------------------
 
