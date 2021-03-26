@@ -4,7 +4,7 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import java.util.*;
 
-public final class GameState extends PublicGameState {
+public final class GameState  extends PublicGameState {
 
     private final Deck<Ticket> ticketDeck;
     private final Map<PlayerId, PlayerState> playerState ;
