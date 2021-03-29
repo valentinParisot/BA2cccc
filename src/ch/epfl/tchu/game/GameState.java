@@ -201,7 +201,7 @@ public final class GameState  extends PublicGameState {
         }
         else {
             GameState forNextTurn = new GameState(ticketDeck, cardstate,
-                    currentPlayerId().next(), playerState, null);
+                    currentPlayerId().next(), playerState, lastPlayer());
             return forNextTurn;
 
         }
