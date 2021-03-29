@@ -33,7 +33,7 @@ public class PublicGameState {
     }
 
     public boolean canDrawTickets(){
-        return (!(cardState.isDeckEmpty()));
+        return (!(ticketsCount() == 0));
     }
 
     public PublicCardState cardState() {
