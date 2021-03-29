@@ -1,12 +1,21 @@
 package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.SortedBag;
+import ch.epfl.tchu.gui.Info;
 
 import java.util.*;
 
 public final class Game {
 
     public static void play(Map<PlayerId, Player> players, Map<PlayerId, String> playerNames, SortedBag<Ticket> tickets, Random rng){
+
+        Player player1 = players.get(PlayerId.PLAYER_1);
+        Player player2 = players.get(PlayerId.PLAYER_2);
+        String name1 = playerNames.get(PlayerId.PLAYER_1);
+        String name2 = playerNames.get(PlayerId.PLAYER_2);
+        Info i1 = new Info(name1);
+        Info i2 = new Info(name2);
+
 
     }
 
