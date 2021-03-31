@@ -9,7 +9,7 @@ public interface Player {
 
     public enum TurnKind{
 
-        DRAW_TICKETS, DRAW_CARDS, CLAIM_ROUT;
+        DRAW_TICKETS, DRAW_CARDS, CLAIM_ROUTE;
 
         public static final List<TurnKind> ALL = List.of(values());
     }

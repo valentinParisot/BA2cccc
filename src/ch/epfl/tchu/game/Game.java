@@ -58,7 +58,7 @@ public final class Game {
                     } while (n <= 1);
                     break;
 
-                case CLAIM_ROUT:
+                case CLAIM_ROUTE:
                     Route route = current.claimedRoute();
                     SortedBag<Card> initialClaimCards = current.initialClaimCards();
                     SortedBag.Builder<Card> additional = new SortedBag.Builder<>();
