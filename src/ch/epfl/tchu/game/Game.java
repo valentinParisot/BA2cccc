@@ -78,7 +78,7 @@ public final class Game {
 
                     if(route.additionalClaimCardsCount(initialClaimCards, additional.build()) >= 1 && !current.chooseAdditionalCards(List.of(c)).isEmpty()){
 
-                        canclaimedroute
+                       myState = myState.
 
                     }
 
