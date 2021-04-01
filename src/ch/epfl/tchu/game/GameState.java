@@ -329,8 +329,8 @@ public final class GameState  extends PublicGameState {
 
     public boolean lastTurnBegins(){
 
-        return (playerState.get(currentPlayerId()).carCount() <= 2);
-        //lastPlayer() == null &&
+        return (lastPlayer() == null && playerState.get(currentPlayerId()).carCount() <= 2);
+
 
     }
 

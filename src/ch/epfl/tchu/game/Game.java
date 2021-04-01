@@ -64,6 +64,7 @@ public final class Game {
         do {
 
             Info currentInfo = new Info(playerNames.get(myState.currentPlayerId()));
+
             sendInfo(currentInfo.canPlay(), players);
 
             if(myState.lastTurnBegins()){
@@ -178,11 +179,14 @@ public final class Game {
 
                             break;
                         }
+
                 }
 
                 //normal que ici on call jamais uptdate ?
 
             if(endgame){
+
+                //faire jouer le dernier tour a l'autre car un seul a jouer le dernier tour
 
                 informState(myState, players);
 
@@ -236,6 +240,7 @@ public final class Game {
             //les points ? et bonus ?
             // 1 tour == les 2 joueurs qui jouent alors que la 1 tour c'est juste un joueur
         } while (!endgame);
+        //peut gerer ici le score
 
         //lastTurnBeggins() && currentPlayer.equals(lastPlayer)
         //!myState.currentPlayerId().equals(myState.lastPlayer())
