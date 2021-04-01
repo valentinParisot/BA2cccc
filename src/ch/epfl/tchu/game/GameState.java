@@ -4,11 +4,30 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import java.util.*;
 
+/**
+ * GameState
+ * class
+ *
+ * @author Valentin Parisot (326658)
+ * @author Hugo Jeannin (329220)
+ */
+
 public final class GameState  extends PublicGameState {
 
     private final Deck<Ticket> ticketDeck;
     private final Map<PlayerId, PlayerState> playerState ;
     private final CardState cardstate ;
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param ticketDeck
+     * @param cardState
+     * @param currentPlayerId
+     * @param playerState
+     * @param lastPlayer
+     */
 
     private GameState ( Deck<Ticket> ticketDeck , CardState cardState, PlayerId currentPlayerId, Map<PlayerId,
             PlayerState> playerState, PlayerId lastPlayer){
@@ -19,6 +38,15 @@ public final class GameState  extends PublicGameState {
         this.cardstate = cardState;
 
     }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param tickets
+     * @param rng
+     * @return
+     */
 
     public static GameState initial(SortedBag<Ticket> tickets, Random rng){
 
@@ -43,16 +71,39 @@ public final class GameState  extends PublicGameState {
 
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param playerId given identity
+     * @return
+     */
+
     @Override
     public PlayerState playerState(PlayerId playerId){
         return playerState.get(playerId);
     }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @return
+     */
 
     @Override
     public PlayerState currentPlayerState(){
         return playerState.get(currentPlayerId());
 
     }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param count
+     * @return
+     */
 
     public SortedBag<Ticket> topTickets(int count){
 
@@ -61,6 +112,14 @@ public final class GameState  extends PublicGameState {
         return ticketDeck.topCards(count);
 
     }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param count
+     * @return
+     */
 
     public GameState withoutTopTickets(int count){
 
@@ -72,10 +131,24 @@ public final class GameState  extends PublicGameState {
         return withoutTopTickets;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @return
+     */
+
     public Card topCard(){
         Preconditions.checkArgument(!cardstate.isDeckEmpty());
         return cardstate.topDeckCard();
     }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @return
+     */
 
     public GameState withoutTopCard(){
 
@@ -87,6 +160,14 @@ public final class GameState  extends PublicGameState {
         return withoutTopCard;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param discardedCards
+     * @return
+     */
+
     public GameState withMoreDiscardedCards(SortedBag<Card> discardedCards){
 
         GameState withMoreDiscardedCards = new GameState(ticketDeck,
@@ -96,6 +177,13 @@ public final class GameState  extends PublicGameState {
         return withMoreDiscardedCards;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param rng
+     * @return
+     */
 
     public GameState withCardsDeckRecreatedIfNeeded(Random rng){
 
@@ -115,6 +203,14 @@ public final class GameState  extends PublicGameState {
         }
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param playerId
+     * @param chosenTickets
+     * @return
+     */
 
     public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets){
 
@@ -127,6 +223,14 @@ public final class GameState  extends PublicGameState {
         return  withInitiallyChosenTickets;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param playerId
+     * @param playerState
+     * @return
+     */
 
     private Map<PlayerId, PlayerState> modif(PlayerId playerId,PlayerState playerState ){
         Map<PlayerId, PlayerState> playerState1 = new EnumMap<>(this.playerState);
@@ -134,6 +238,14 @@ public final class GameState  extends PublicGameState {
         return playerState1;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param drawnTickets
+     * @param chosenTickets
+     * @return
+     */
 
     public GameState withChosenAdditionalTickets(SortedBag<Ticket> drawnTickets, SortedBag<Ticket> chosenTickets){
 
@@ -150,6 +262,14 @@ public final class GameState  extends PublicGameState {
 
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param slot
+     * @return
+     */
+
     public GameState withDrawnFaceUpCard(int slot){
 
         Preconditions.checkArgument(canDrawCards());
@@ -161,6 +281,13 @@ public final class GameState  extends PublicGameState {
         return withDrawnFaceUpCard;
 
     }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @return
+     */
 
     public GameState withBlindlyDrawnCard(){
 
@@ -174,6 +301,14 @@ public final class GameState  extends PublicGameState {
         return withBlindlyDrawnCard;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param route
+     * @param cards
+     * @return
+     */
 
     public GameState withClaimedRoute(Route route, SortedBag<Card> cards){
 
@@ -185,12 +320,26 @@ public final class GameState  extends PublicGameState {
 
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @return
+     */
+
     public boolean lastTurnBegins(){
 
         return (playerState.get(currentPlayerId()).carCount() <= 2);
         //lastPlayer() == null &&
 
     }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @return
+     */
 
     public GameState forNextTurn(){
 
@@ -208,6 +357,8 @@ public final class GameState  extends PublicGameState {
         }
 
     }
+
+    //----------------------------------------------------------------------------------------------------
 
 
 }

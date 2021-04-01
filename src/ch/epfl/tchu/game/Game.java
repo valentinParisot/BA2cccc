@@ -3,10 +3,27 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.gui.Info;
-
 import java.util.*;
 
+/**
+ * Game
+ * class
+ *
+ * @author Valentin Parisot (326658)
+ * @author Hugo Jeannin (329220)
+ */
+
 public final class Game {
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param players
+     * @param playerNames
+     * @param tickets
+     * @param rng
+     */
 
     public static void play(Map<PlayerId, Player> players, Map<PlayerId, String> playerNames, SortedBag<Ticket> tickets, Random rng) {
 
@@ -217,7 +234,7 @@ public final class Game {
             }
             // comment gerer la fin
             //les points ? et bonus ?
-            // 1 tour == les 2 joueurs qui jouent;
+            // 1 tour == les 2 joueurs qui jouent alors que la 1 tour c'est juste un joueur
         } while (!endgame);
 
         //lastTurnBeggins() && currentPlayer.equals(lastPlayer)
@@ -225,6 +242,13 @@ public final class Game {
 
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param info
+     * @param players
+     */
 
     private static void sendInfo(String info, Map<PlayerId, Player> players) {
         for (Map.Entry<PlayerId, Player> entry : players.entrySet()) {
@@ -232,9 +256,19 @@ public final class Game {
         }
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param newState
+     * @param players
+     */
+
     private static void informState(GameState newState, Map<PlayerId, Player> players) {
         for (Map.Entry<PlayerId, Player> entry : players.entrySet()) {
             entry.getValue().updateState(newState, newState.playerState(entry.getKey()));
         }
     }
+
+    //----------------------------------------------------------------------------------------------------
 }
