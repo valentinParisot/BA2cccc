@@ -33,8 +33,10 @@ public final class Game {
         Info i1 = new Info(playerNames.get(PlayerId.PLAYER_1));
         Info i2 = new Info(playerNames.get(PlayerId.PLAYER_2));
 
+        //enum mnap
+
         List<String> nameList = new ArrayList<>();
-        for(Map.Entry<PlayerId, String> entry : playerNames.entrySet()){
+        for (Map.Entry<PlayerId, String> entry : playerNames.entrySet()) {
             nameList.add(entry.getValue());
         }
 
@@ -85,32 +87,32 @@ public final class Game {
 
             switch (current.nextTurn()) {
 
-                case DRAW_TICKETS: // besoin d'appeler chooseTickets de Player autrement?
-                    sendInfo(currentInfo.drewTickets(3), players);
+                case DRAW_TICKETS:
+                    sendInfo(currentInfo.drewTickets(Constants.IN_GAME_TICKETS_COUNT), players);
 
-                    SortedBag<Ticket> chooseTickets = current.chooseTickets(myState.topTickets(3));
+                    SortedBag<Ticket> chooseTickets = current.chooseTickets(myState.topTickets(Constants.IN_GAME_TICKETS_COUNT));
 
-                    myState = myState.withChosenAdditionalTickets(myState.topTickets(3),
-                            chooseTickets);
+                    myState = myState.withChosenAdditionalTickets(myState.topTickets(Constants.IN_GAME_TICKETS_COUNT), chooseTickets);
 
                     sendInfo(currentInfo.keptTickets(chooseTickets.size()), players);
 
                     break;
 
                 case DRAW_CARDS:
+
                     int n = 0;
+
                     do {
                         int drawCount = current.drawSlot();
                         if (0 <= drawCount && drawCount <= 4) {
 
                             sendInfo(currentInfo.drewVisibleCard(myState.cardState().faceUpCard(drawCount)), players); // comment choper la carte qui prend
-
                             myState = myState.withDrawnFaceUpCard(drawCount);
 
                         } else if (drawCount == Constants.DECK_SLOT) {
 
                             sendInfo(currentInfo.drewBlindCard(), players);
-
+                            myState = myState.withCardsDeckRecreatedIfNeeded(rng);
                             myState = myState.withBlindlyDrawnCard();
                         }
 
@@ -129,51 +131,48 @@ public final class Game {
                     SortedBag<Card> initialClaimCards = current.initialClaimCards();
                     SortedBag.Builder<Card> additional = new SortedBag.Builder<>();
 
-
                     if (route.level() == Route.Level.UNDERGROUND) {
 
                         sendInfo(currentInfo.attemptsTunnelClaim(route, initialClaimCards), players);
 
-                        for (int i = 0; i < 3; ++i) {
+                        for (int i = 0; i < Constants.ADDITIONAL_TUNNEL_CARDS; ++i) {
                             myState = myState.withCardsDeckRecreatedIfNeeded(rng);
                             additional.add(myState.topCard());
                             myState = myState.withoutTopCard();
                         }
-                        SortedBag<Card> c = additional.build();
+                        SortedBag<Card> drawnCards = additional.build();
 
-                        sendInfo(currentInfo.attemptsTunnelClaim(route, initialClaimCards.union(c)), players);
+                        int adittionalCardsCount = route.additionalClaimCardsCount(initialClaimCards, drawnCards);
 
-                        int adittionalCardsCount = route.additionalClaimCardsCount(initialClaimCards, c);
-                        List<SortedBag<Card>> possibleAdditionalCards = myState.currentPlayerState().possibleAdditionalCards(adittionalCardsCount, initialClaimCards, c);
+                        sendInfo(currentInfo.drewAdditionalCards(drawnCards, adittionalCardsCount), players);
+
+                        List<SortedBag<Card>> possibleAdditionalCards = myState.currentPlayerState().possibleAdditionalCards(adittionalCardsCount, initialClaimCards, drawnCards);
 
                         //contains ? ou empty
-                        if (route.additionalClaimCardsCount(initialClaimCards, c) >= 1 &&
-                                !possibleAdditionalCards.isEmpty()) {
+                        if (adittionalCardsCount >= 1 && !(possibleAdditionalCards.isEmpty())) {
                             //pas utile si il choisit rien rien se passe // ici ca va
                             if (current.chooseAdditionalCards(possibleAdditionalCards).isEmpty()) {
 
                                 sendInfo(currentInfo.didNotClaimRoute(route), players);
 
-                                myState = myState;
-
-
                             } else if (!current.chooseAdditionalCards(possibleAdditionalCards).isEmpty()) {
 
-                                myState = myState.withClaimedRoute(route, current.chooseAdditionalCards(possibleAdditionalCards));
+                                myState = myState.withClaimedRoute(route, current.chooseAdditionalCards(possibleAdditionalCards).union(initialClaimCards)); //union ou pas ?
 
-                                sendInfo(currentInfo.claimedRoute(route, initialClaimCards.union(c)), players);
+                                sendInfo(currentInfo.claimedRoute(route, initialClaimCards.union(drawnCards)), players);
 
 
                             }
                         }
-                        if (route.additionalClaimCardsCount(initialClaimCards, c) == 0) {
-                            //carte aditiionelles que les joeurs doit jouer ? ou c'est bon? // pas union(c) à initialClaimCards
+                        if (adittionalCardsCount == 0) {
+                            //carte aditiionelles que les joeurs doit jouer ? ou c'est bon? // pas union(drawncards) à initialClaimCards
                             myState = myState.withClaimedRoute(route, initialClaimCards);
 
                             sendInfo(currentInfo.claimedRoute(route, initialClaimCards), players);
 
-
                         }
+                        // le cas ou c'est pas == 0 et c'est empty
+
                     }
                     if (route.level() == Route.Level.OVERGROUND) {
 
@@ -184,9 +183,11 @@ public final class Game {
 
                     }
 
-            }
+                    break;
 
-            //normal que ici on call jamais uptdate ?
+                default:
+                    break;
+            }
 
             if (myState.currentPlayerId().equals(myState.lastPlayer())) {
 
@@ -206,15 +207,15 @@ public final class Game {
                 //bonus 10? // c bien comme t'as fait
                 if (p1longestSize > p2longestSize) {
                     sendInfo(i1.getsLongestTrailBonus(p1longest), players);
-                    p1final += 10;
+                    p1final += Constants.LONGEST_TRAIL_BONUS_POINTS;
                 } else if (p1longestSize < p2longestSize) {
                     sendInfo(i2.getsLongestTrailBonus(p2longest), players);
-                    p2final += 10;
+                    p2final += Constants.LONGEST_TRAIL_BONUS_POINTS;
                 } else if (p1longestSize == p2longestSize) {
                     sendInfo(i1.getsLongestTrailBonus(p1longest), players);
                     sendInfo(i2.getsLongestTrailBonus(p2longest), players);
-                    p1final += 10;
-                    p2final += 10;
+                    p1final += Constants.LONGEST_TRAIL_BONUS_POINTS;
+                    p2final += Constants.LONGEST_TRAIL_BONUS_POINTS;
 
                 }
 
@@ -228,7 +229,7 @@ public final class Game {
                 }
                 //comment dire que les 2 ont won ? // avc draw
                 if (p2final == p1final) {
-                    sendInfo(i1.draw(nameList,p1final), players);
+                    sendInfo(i1.draw(nameList, p1final), players);
                 }
 
             } else {
@@ -240,6 +241,49 @@ public final class Game {
             // 1 tour == les 2 joueurs qui jouent alors que la 1 tour c'est juste un joueur
         } while (!myState.currentPlayerId().equals(myState.lastPlayer()));
         //peut gerer ici le score
+
+
+        //faire jouer le dernier tour a l'autre car un seul a jouer le dernier tour
+
+        informState(myState, players); // ou avant la comparaison des scores
+
+        Trail p1longest = Trail.longest(myState.playerState(PlayerId.PLAYER_1).routes());
+        Trail p2longest = Trail.longest(myState.playerState(PlayerId.PLAYER_2).routes());
+
+        int p1longestSize = p1longest.length();
+        int p2longestSize = p2longest.length();
+
+        int p1final = myState.playerState(PlayerId.PLAYER_1).finalPoints();
+        int p2final = myState.playerState(PlayerId.PLAYER_2).finalPoints();
+
+        //bonus 10? // c bien comme t'as fait
+        if (p1longestSize > p2longestSize) {
+            sendInfo(i1.getsLongestTrailBonus(p1longest), players);
+            p1final += Constants.LONGEST_TRAIL_BONUS_POINTS;
+        } else if (p1longestSize < p2longestSize) {
+            sendInfo(i2.getsLongestTrailBonus(p2longest), players);
+            p2final += Constants.LONGEST_TRAIL_BONUS_POINTS;
+        } else if (p1longestSize == p2longestSize) {
+            sendInfo(i1.getsLongestTrailBonus(p1longest), players);
+            sendInfo(i2.getsLongestTrailBonus(p2longest), players);
+            p1final += Constants.LONGEST_TRAIL_BONUS_POINTS;
+            p2final += Constants.LONGEST_TRAIL_BONUS_POINTS;
+
+        }
+
+        if (p1final > p2final) {
+            sendInfo(i1.won(p1final, p2final), players);
+
+        }
+        if (p2final > p1final) {
+            sendInfo(i2.won(p2final, p1final), players);
+
+        }
+        //comment dire que les 2 ont won ? // avc draw
+        if (p2final == p1final) {
+            sendInfo(i1.draw(nameList, p1final), players);
+        }
+
     }
     //lastTurnBeggins() && currentPlayer.equals(lastPlayer)
     //!myState.currentPlayerId().equals(myState.lastPlayer())

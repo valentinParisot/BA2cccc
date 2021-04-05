@@ -2,9 +2,6 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * StationPartition & Builder
  * class
@@ -26,29 +23,27 @@ public final class StationPartition implements StationConnectivity {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param station1
-     * @param station2
+     * @param station1 station1
+     * @param station2 station2
      * @return if 2 stations are connected or not
      */
     public boolean connected(Station station1, Station station2) {
 
         if (station1.id() >= integers.length || station2.id() >= integers.length) {
-            if (station1.id() == station2.id()) {
-                return true;
-            }
-            return false;
+            return (station1.id() == station2.id());
         }
 
         if (integers[station1.id()] == integers[station2.id()]) {
             return true;
         }
+
         return false;
     }
 
     //----------------------------------------------------------------------------------------------------
 
     public final static class Builder {
-        private int[] integersBuilder;
+        private final int[] integersBuilder;
 
         //------------------------------------------------------------------------------------------------
 

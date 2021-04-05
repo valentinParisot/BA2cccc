@@ -1,6 +1,7 @@
 package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,14 +27,15 @@ public class PublicGameState {
 
     /**
      * constructs the public part of the state of a game of tCHu
-     * @param ticketsCount the bank of tickets has a size of ticketsCount
-     * @param cardState the public state of the wagon / locomotive cards is cardState
+     *
+     * @param ticketsCount    the bank of tickets has a size of ticketsCount
+     * @param cardState       the public state of the wagon / locomotive cards is cardState
      * @param currentPlayerId the current player is currentPlayerId
-     * @param playerState the public state of the players is contained in playerState
-     * @param lastPlayer the identity of the last player is lastPlayer
+     * @param playerState     the public state of the players is contained in playerState
+     * @param lastPlayer      the identity of the last player is lastPlayer
      * @throws IllegalArgumentException if the size of the draw pile is strictly negative or if playerState
-     * does not contain exactly two key / value pairs
-     * @throws NullPointerException if one of the other arguments (except lastPlayer) Is null
+     *                                  does not contain exactly two key / value pairs
+     * @throws NullPointerException     if one of the other arguments (except lastPlayer) Is null
      */
 
     public PublicGameState(int ticketsCount, PublicCardState cardState, PlayerId currentPlayerId, Map<PlayerId,
@@ -50,7 +52,6 @@ public class PublicGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @return the size of the bank of banknotes
      */
 
@@ -61,18 +62,16 @@ public class PublicGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @return true if it is possible to draw banknotes, i.e. if the draw pile is not empty
      */
 
-    public boolean canDrawTickets(){
+    public boolean canDrawTickets() {
         return (!(ticketsCount() == 0));
     }
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @return the public part of the state of the wagon / locomotive cards
      */
 
@@ -83,12 +82,11 @@ public class PublicGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @return true iff it is possible to draw cards, i.e. if the draw pile and the discard pile contain
      * at least 5 cards between them
      */
 
-    public boolean canDrawCards(){
+    public boolean canDrawCards() {
 
         return ((cardState.deckSize() + cardState.discardsSize() >= 5));
 
@@ -97,23 +95,21 @@ public class PublicGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @return the identity of the current player
      */
 
-    public PlayerId currentPlayerId(){
+    public PlayerId currentPlayerId() {
         return currentPlayerId;
     }
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param playerId given identity
      * @return the public part of the player's state of given identity
      */
 
-    public PublicPlayerState playerState(PlayerId playerId){
+    public PublicPlayerState playerState(PlayerId playerId) {
 
         return playerState.get(playerId);
     }
@@ -121,30 +117,29 @@ public class PublicGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @return the public part of the current player's state
      */
 
-    public PublicPlayerState currentPlayerState(){
-         return playerState.get(currentPlayerId);
+    public PublicPlayerState currentPlayerState() {
+        return playerState.get(currentPlayerId);
     }
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @return the totality of the roads which one or the other of the players seized
      */
 
-    public List<Route> claimedRoutes(){
+    public List<Route> claimedRoutes() {
 
         List<Route> claimedRoutes = new ArrayList<>();
 
-        for(PublicPlayerState p  : playerState.values()) {
+        for (PublicPlayerState p : playerState.values()) {
 
-           claimedRoutes.addAll(p.routes());
+            claimedRoutes.addAll(p.routes());
 
         }
+
         return claimedRoutes;
 
     }
@@ -152,13 +147,12 @@ public class PublicGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @return the identity of the last player, or null if it is not yet known because the last round has not started
      */
 
-    public PlayerId lastPlayer(){
+    public PlayerId lastPlayer() {
 
-       return lastPlayer;
+        return lastPlayer;
     }
 
     //----------------------------------------------------------------------------------------------------

@@ -1,7 +1,9 @@
 package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
+
 import java.util.List;
+
 import static java.util.Objects.checkIndex;
 
 /**
@@ -23,14 +25,13 @@ public class PublicCardState {
     /**
      * constructor
      *
-     *
-     * @param faceUpCards face up cards are those given
-     * @param deckSize size of the deck
+     * @param faceUpCards  face up cards are those given
+     * @param deckSize     size of the deck
      * @param discardsSize size of the discard
      * @throws IllegalArgumentException if the number of faceup cards is not 5 or if the size of the deck or the discard is less than 0
      */
 
-    public PublicCardState(List<Card> faceUpCards, int deckSize, int discardsSize){
+    public PublicCardState(List<Card> faceUpCards, int deckSize, int discardsSize) {
 
         Preconditions.checkArgument(faceUpCards.size() == Constants.FACE_UP_CARDS_COUNT && deckSize >= 0 && discardsSize >= 0);
 
@@ -38,7 +39,7 @@ public class PublicCardState {
 
         this.discardsize = discardsSize;
 
-        this.decksize = deckSize ;
+        this.decksize = deckSize;
 
     }
 
@@ -50,7 +51,7 @@ public class PublicCardState {
      * @return number of cards that are not in the players hand
      */
 
-    public int totalSize(){
+    public int totalSize() {
 
         return (Constants.FACE_UP_CARDS_COUNT + decksize + discardsize);
 
@@ -64,7 +65,7 @@ public class PublicCardState {
      * @return a list of cards the size is 5
      */
 
-    public List<Card> faceUpCards(){
+    public List<Card> faceUpCards() {
 
         return faceUpCards;
 
@@ -76,14 +77,13 @@ public class PublicCardState {
      * return the card face up at the given index
      *
      * @param slot index of the card
-     *
-     * @throws IndexOutOfBoundsException if slot is less than 0 or bigger than 5
      * @return faceUpcards
+     * @throws IndexOutOfBoundsException if slot is less than 0 or bigger than 5
      */
 
-    public Card faceUpCard(int slot){
+    public Card faceUpCard(int slot) {
 
-       return faceUpCards.get(checkIndex(slot , Constants.FACE_UP_CARDS_COUNT));
+        return faceUpCards.get(checkIndex(slot, Constants.FACE_UP_CARDS_COUNT));
 
 
     }
@@ -96,7 +96,7 @@ public class PublicCardState {
      * @return the size of the deck
      */
 
-    public int deckSize(){
+    public int deckSize() {
 
         return decksize;
     }
@@ -109,7 +109,7 @@ public class PublicCardState {
      * @return true if the deck is empty
      */
 
-    public boolean isDeckEmpty(){
+    public boolean isDeckEmpty() {
 
         return (decksize == 0);
 
@@ -123,7 +123,7 @@ public class PublicCardState {
      * @return discard size
      */
 
-    public int discardsSize(){
+    public int discardsSize() {
 
         return discardsize;
     }

@@ -22,9 +22,10 @@ public enum Card {
     WHITE(Color.WHITE),
     LOCOMOTIVE(null);
 
-    public static final List<Card> ALL =  List.of(values());
+    private static final int MAX_SIZE = 8;
+    public static final List<Card> ALL = List.of(values());
     public static final int COUNT = ALL.size();
-    public final static List<Card> CARS =  ALL.subList(0,8);
+    public final static List<Card> CARS = ALL.subList(0, MAX_SIZE);
     private final Color c;
 
 
@@ -32,38 +33,35 @@ public enum Card {
 
     /**
      * build a card, the color is given
-     * @param b
+     *
+     * @param color given color
      */
 
-    private Card(Color b) {
-        this.c = b;
+    Card(Color color) {
+        this.c = color;
     }
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
-     * @param color
+     * @param color given color
      * @return type of the card
      */
 
     //----------------------------------------------------------------------------------------------------
-
-    public static Card of (Color color){
+    public static Card of(Color color) {
         return Card.valueOf(color.toString());
     }
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @return color of the type od the card
      */
 
     //----------------------------------------------------------------------------------------------------
-
-    public Color color(){
-    return c;
+    public Color color() {
+        return c;
     }
 
     //----------------------------------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
+
 import java.util.List;
 import java.util.TreeSet;
 
@@ -20,9 +21,10 @@ public final class Ticket implements Comparable<Ticket> {
 
     /**
      * creates a ticket (list of trips)
+     *
+     * @param trips trips
      * @throws IllegalArgumentException if the size of the trips list is 0
      *                                  or if all starting stations don't have the same name
-     * @param trips
      */
 
     public Ticket(List<Trip> trips) {
@@ -33,7 +35,7 @@ public final class Ticket implements Comparable<Ticket> {
 
         for (Trip t : trips) {
 
-            Preconditions.checkArgument(t.from.name().equals(pattern) );
+            Preconditions.checkArgument(t.from.name().equals(pattern));
 
         }
 
@@ -47,9 +49,9 @@ public final class Ticket implements Comparable<Ticket> {
     /**
      * creates a ticket with one trip
      *
-     * @param from
-     * @param to
-     * @param points
+     * @param from from
+     * @param to to
+     * @param points points
      */
 
     public Ticket(Station from, Station to, int points) {
@@ -61,6 +63,7 @@ public final class Ticket implements Comparable<Ticket> {
 
     /**
      * return the name of the sations with setting
+     *
      * @return the String to print on the ticket
      */
 
@@ -102,6 +105,7 @@ public final class Ticket implements Comparable<Ticket> {
 
     /**
      * returns the number of points the ticket is worth, knowing that the connectivity given is that of the player owning the ticket
+     *
      * @param connectivity connected or not
      * @return the amount of points earned with the ticket
      */
@@ -119,10 +123,12 @@ public final class Ticket implements Comparable<Ticket> {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * which compares the post to which it is applied (this) to the one passed as argument (that) in alphabetical order of their textual representation
+     * which compares the post to which it is applied (this) to the one passed as argument
+     * (that) in alphabetical order of their textual representation
      *
      * @param that post compare with the current
-     * @return returns a strictly negative integer if this is strictly less than that, a strictly positive integer if this is strictly greater than that, and zero if the two are equal
+     * @return returns a strictly negative integer if this is strictly less than that,
+     * a strictly positive integer if this is strictly greater than that, and zero if the two are equal
      */
 
     public int compareTo(Ticket that) {

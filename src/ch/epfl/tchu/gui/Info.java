@@ -34,6 +34,7 @@ public final class Info {
      * @param card card
      * @param count multiplicity of the card
      * @return the name of the card (singular or plural depending on count)
+     * @throws IllegalArgumentException id card is null
      */
     public static String cardName(Card card, int count) {
 
@@ -67,6 +68,8 @@ public final class Info {
                 break;
             case LOCOMOTIVE:
                 name = StringsFr.LOCOMOTIVE_CARD;
+                break;
+            default:
                 break;
 
         }
@@ -191,8 +194,9 @@ public final class Info {
 
     /**
      *
-     * @param route
+     * @param route route
      * @return the 2 stations of @route separeted by " - "
+     * @throws IllegalArgumentException if route is null
      */
     private static String routeName(Route route) {
         Preconditions.checkArgument(route != null);
@@ -221,8 +225,7 @@ public final class Info {
             return cartes.get(0);
         }
 
-        List<String> minusOne = new ArrayList<>();
-        minusOne.addAll(cartes);
+        List<String> minusOne = new ArrayList<>(cartes);
         minusOne.remove(minusOne.size() - 1);
 
         String textMinusOne = String.join(", ", minusOne);
@@ -289,7 +292,7 @@ public final class Info {
 
     /**
      *
-     * @param route
+     * @param route route
      * @return a message stating that the player couldn't or didn't want to claim @route
      */
     public String didNotClaimRoute(Route route) {
@@ -301,8 +304,9 @@ public final class Info {
 
     /**
      *
-     * @param carCount
+     * @param carCount car count
      * @return a message stating that the player only has @carCount wagons remainingand hence the last turn begins
+     * @throws IllegalArgumentException if car count is less or equal to 2
      */
     public String lastTurnBegins(int carCount) {
         Preconditions.checkArgument(carCount <= 2);
