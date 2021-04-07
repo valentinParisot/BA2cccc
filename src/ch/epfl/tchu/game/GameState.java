@@ -195,7 +195,7 @@ public final class GameState extends PublicGameState {
 
             GameState gamestate = new GameState(ticketDeck, cardstate, currentPlayerId(), playerState, lastPlayer());
 
-            return gamestate;
+            return this; // lequle ????????'
         }
     }
 
@@ -313,10 +313,10 @@ public final class GameState extends PublicGameState {
     public GameState withClaimedRoute(Route route, SortedBag<Card> cards) {
 
         GameState withClaimedRoute = new GameState(ticketDeck,
-                cardstate.withMoreDiscardedCards(cards), currentPlayerId(),
+                cardstate, currentPlayerId(),
                 modif(currentPlayerId(), playerState.get(currentPlayerId()).withClaimedRoute(route, cards)), lastPlayer());
 
-        return withClaimedRoute;
+        return withClaimedRoute.withMoreDiscardedCards(cards);
 
     }
 

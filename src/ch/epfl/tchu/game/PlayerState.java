@@ -194,7 +194,7 @@ public final class PlayerState extends PublicPlayerState {
 
     public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
 
-        Preconditions.checkArgument((additionalCardsCount <= 3 && additionalCardsCount >= 1)
+       Preconditions.checkArgument((additionalCardsCount <= 3 && additionalCardsCount >= 1)
                 && (!(initialCards.size() == 0))
                 && (initialCards.toSet().size() <= 2)
                 && (drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS));
