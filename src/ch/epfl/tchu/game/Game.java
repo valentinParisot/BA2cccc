@@ -123,6 +123,7 @@ public final class Game {
 
 
                             gameState = gameState.withDrawnFaceUpCard(drawCount);
+                            updateState(gameState, players);
 
                         } else if (drawCount == Constants.DECK_SLOT) {
 
@@ -131,6 +132,8 @@ public final class Game {
                             gameState = gameState.withCardsDeckRecreatedIfNeeded(rng);
                             System.out.println(gameState.cardState().deckSize() + " carte ds le deck et  " + gameState.cardState().discardsSize() + " ds discard. Suivant ");
                             gameState = gameState.withBlindlyDrawnCard();
+
+
                             System.out.println("taille card " + gameState.currentPlayerState().cards().size());
                             System.out.println("taille tick " + gameState.currentPlayerState().tickets().size());
                         }
@@ -169,63 +172,73 @@ public final class Game {
                         //List<SortedBag<Card>> possibleAdditionalCards = gameState.currentPlayerState().possibleAdditionalCards(adittionalCardsCount, initialClaimCards, drawnCards);
 
                         //contains ? ou empty
-                        if (adittionalCardsCount >= 1 && !(gameState.currentPlayerState().canClaimRoute(route))) {
+                        if (adittionalCardsCount >= 1 /*&& !(gameState.currentPlayerState().canClaimRoute(route))*/) {
                             //pas utile si il choisit rien rien se passe // ici ca va
-                            if (current.chooseAdditionalCards(gameState.currentPlayerState().possibleAdditionalCards(adittionalCardsCount, initialClaimCards, drawnCards)).isEmpty()) {
+                            List<SortedBag<Card>> possibleAdditionalCards = gameState
+                                    .currentPlayerState()
+                                    .possibleAdditionalCards(adittionalCardsCount, initialClaimCards, drawnCards);
+
+                            SortedBag<Card> selectedAddCards = current.chooseAdditionalCards(possibleAdditionalCards);
+
+                            if (selectedAddCards.isEmpty()) {
 
                                 sendInfo(currentInfo.didNotClaimRoute(route), players);
-                                gameState = gameState.withMoreDiscardedCards(drawnCards);
+                                gameState = gameState.withMoreDiscardedCards(drawnCards.union(initialClaimCards));
+                                gameState = gameState.withMoreDiscardedCards(drawnCards.union(drawnCards));
+                                break;
 
-                            } else if (!current.chooseAdditionalCards(gameState.currentPlayerState().possibleAdditionalCards(adittionalCardsCount, initialClaimCards, drawnCards)).isEmpty()) {
+                            }
+                            else {
 
-                                System.out.println("CHOOSE EST OK" + gameState.cardState().deckSize() + " carte ds le deck et  " + gameState.cardState().discardsSize() + " ds discard. Suivant ");
-                                List<SortedBag<Card>> possibleAdditionalCards = gameState.currentPlayerState().possibleAdditionalCards(adittionalCardsCount, initialClaimCards, drawnCards);
+                                //System.out.println("CHOOSE EST OK" + gameState.cardState().deckSize() + " carte ds le deck et  " + gameState.cardState().discardsSize() + " ds discard. Suivant ");
 
-                                gameState = gameState.withClaimedRoute(route, current.chooseAdditionalCards(possibleAdditionalCards).union(initialClaimCards));
-                                //union ou pas
+                                //System.out.println("CHOOSEMAISAPRESUPDATE" + gameState.cardState().deckSize() + " carte ds le deck et  " + gameState.cardState().discardsSize() + " ds discard. Suivant ");
 
-                                System.out.println("CHOOSEMAISAPRESUPDATE" + gameState.cardState().deckSize() + " carte ds le deck et  " + gameState.cardState().discardsSize() + " ds discard. Suivant ");
+                                initialClaimCards = initialClaimCards.union(selectedAddCards);
+                                gameState = gameState.withMoreDiscardedCards(drawnCards.difference(selectedAddCards));
 
-                                // gameState = gameState.withMoreDiscardedCards(current.chooseAdditionalCards(possibleAdditionalCards).union(initialClaimCards));
-
-                                sendInfo(currentInfo.claimedRoute(route, current.chooseAdditionalCards(possibleAdditionalCards).union(initialClaimCards)), players);
+                                /*gameState = gameState.withClaimedRoute(route, selectedAddCards.union(initialClaimCards));*/
+                                //sendInfo(currentInfo.claimedRoute(route, selectedAddCards.union(initialClaimCards)), players);
 
 
                             }
                         }
-                        if (adittionalCardsCount == 0) {
+                        else  /*(adittionalCardsCount == 0)*/ {
 
                             System.out.println("CHOOSE PAS EST OK" + gameState.cardState().deckSize() + " carte ds le deck et  " + gameState.cardState().discardsSize() + " ds discard. Suivant ");
                             //carte aditiionelles que les joeurs doit jouer ? ou c'est bon? // pas union(drawncards) à initialClaimCards
-                            gameState = gameState.withClaimedRoute(route, initialClaimCards);
-                            //gameState = gameState.withMoreDiscardedCards(initialClaimCards);
 
-                            sendInfo(currentInfo.claimedRoute(route, initialClaimCards), players);
+                           //gameState = gameState.withClaimedRoute(route, initialClaimCards);
+                            gameState = gameState.withMoreDiscardedCards(initialClaimCards);
+
+                           // sendInfo(currentInfo.claimedRoute(route, initialClaimCards), players);
 
                         }
                         // le cas ou c'est pas == 0 et c'est empty
 
                     }
-                    if (route.level() == Route.Level.OVERGROUND) {
+                    sendInfo(currentInfo.claimedRoute(route, initialClaimCards), players);
+                    gameState = gameState.withClaimedRoute(route, initialClaimCards);
+
+                    /*if (route.level() == Route.Level.OVERGROUND) {
 
                         gameState = gameState.withClaimedRoute(route, initialClaimCards);
-                        //gameState = gameState.withMoreDiscardedCards(initialClaimCards);
 
                         sendInfo(currentInfo.claimedRoute(route, initialClaimCards), players);
 
-                    }
+                    }*/
 
                     break;
 
                 default:
                     break;
             }
+
             if (gameState.lastTurnBegins()) {
 
                 sendInfo(currentInfo.lastTurnBegins(gameState.playerState(gameState.currentPlayerId()).carCount()), players);
                 gameState = gameState.forNextTurn();
-              /*for(int u = 0 ; u<2;++u){
-
+              for(int u = 0 ; u<2;++u){
 
 
 
@@ -233,6 +246,12 @@ public final class Game {
 
                   sendInfo(currentInfo2.canPlay(), players);
 
+                  if (gameState.lastTurnBegins()) {
+
+                      sendInfo(currentInfo2.lastTurnBegins(gameState.playerState(gameState.currentPlayerId()).carCount()), players);
+                      endgame = true;
+
+                  }
 
                   Player current2 = players.get(gameState.currentPlayerId());
 
@@ -258,6 +277,10 @@ public final class Game {
 
                           do {
 
+                              if (n == 1) {
+                                  updateState(gameState, players);
+                              }
+
                               int drawCount = current2.drawSlot();
                               if (0 <= drawCount && drawCount <= 4) {
 
@@ -274,6 +297,7 @@ public final class Game {
 
 
                                   gameState = gameState.withDrawnFaceUpCard(drawCount);
+                                  updateState(gameState, players);
 
                               } else if (drawCount == Constants.DECK_SLOT) {
 
@@ -282,6 +306,8 @@ public final class Game {
                                   gameState = gameState.withCardsDeckRecreatedIfNeeded(rng);
                                   System.out.println(gameState.cardState().deckSize() + " carte ds le deck et  " + gameState.cardState().discardsSize() + " ds discard. Suivant ");
                                   gameState = gameState.withBlindlyDrawnCard();
+
+
                                   System.out.println("taille card " + gameState.currentPlayerState().cards().size());
                                   System.out.println("taille tick " + gameState.currentPlayerState().tickets().size());
                               }
@@ -320,69 +346,77 @@ public final class Game {
                               //List<SortedBag<Card>> possibleAdditionalCards = gameState.currentPlayerState().possibleAdditionalCards(adittionalCardsCount, initialClaimCards, drawnCards);
 
                               //contains ? ou empty
-                              if (adittionalCardsCount >= 1 && !(gameState.currentPlayerState().canClaimRoute(route))) {
+                              if (adittionalCardsCount >= 1 /*&& !(gameState.currentPlayerState().canClaimRoute(route))*/) {
                                   //pas utile si il choisit rien rien se passe // ici ca va
-                                  if (current2.chooseAdditionalCards(gameState.currentPlayerState().possibleAdditionalCards(adittionalCardsCount, initialClaimCards, drawnCards)).isEmpty()) {
+                                  List<SortedBag<Card>> possibleAdditionalCards = gameState
+                                          .currentPlayerState()
+                                          .possibleAdditionalCards(adittionalCardsCount, initialClaimCards, drawnCards);
+
+                                  SortedBag<Card> selectedAddCards = current2.chooseAdditionalCards(possibleAdditionalCards);
+
+                                  if (selectedAddCards.isEmpty()) {
 
                                       sendInfo(currentInfo2.didNotClaimRoute(route), players);
-                                      gameState = gameState.withMoreDiscardedCards(drawnCards);
+                                      gameState = gameState.withMoreDiscardedCards(drawnCards.union(initialClaimCards));
+                                      gameState = gameState.withMoreDiscardedCards(drawnCards.union(drawnCards));
+                                      break;
 
-                                  } else if (!current2.chooseAdditionalCards(gameState.currentPlayerState().possibleAdditionalCards(adittionalCardsCount, initialClaimCards, drawnCards)).isEmpty()) {
+                                  }
+                                  else {
 
-                                      System.out.println("CHOOSE EST OK" + gameState.cardState().deckSize() + " carte ds le deck et  " + gameState.cardState().discardsSize() + " ds discard. Suivant ");
-                                      List<SortedBag<Card>> possibleAdditionalCards = gameState.currentPlayerState().possibleAdditionalCards(adittionalCardsCount, initialClaimCards, drawnCards);
+                                      //System.out.println("CHOOSE EST OK" + gameState.cardState().deckSize() + " carte ds le deck et  " + gameState.cardState().discardsSize() + " ds discard. Suivant ");
 
-                                      gameState = gameState.withClaimedRoute(route, current2.chooseAdditionalCards(possibleAdditionalCards).union(initialClaimCards));
-                                      //union ou pas
+                                      //System.out.println("CHOOSEMAISAPRESUPDATE" + gameState.cardState().deckSize() + " carte ds le deck et  " + gameState.cardState().discardsSize() + " ds discard. Suivant ");
 
-                                      System.out.println("CHOOSEMAISAPRESUPDATE" + gameState.cardState().deckSize() + " carte ds le deck et  " + gameState.cardState().discardsSize() + " ds discard. Suivant ");
+                                      initialClaimCards = initialClaimCards.union(selectedAddCards);
+                                      gameState = gameState.withMoreDiscardedCards(drawnCards.difference(selectedAddCards));
 
-                                      // gameState = gameState.withMoreDiscardedCards(current.chooseAdditionalCards(possibleAdditionalCards).union(initialClaimCards));
-
-                                      sendInfo(currentInfo2.claimedRoute(route, current2.chooseAdditionalCards(possibleAdditionalCards).union(initialClaimCards)), players);
+                                      /*gameState = gameState.withClaimedRoute(route, selectedAddCards.union(initialClaimCards));*/
+                                      //sendInfo(currentInfo.claimedRoute(route, selectedAddCards.union(initialClaimCards)), players);
 
 
                                   }
                               }
-                              if (adittionalCardsCount == 0) {
+                              else  /*(adittionalCardsCount == 0)*/ {
 
                                   System.out.println("CHOOSE PAS EST OK" + gameState.cardState().deckSize() + " carte ds le deck et  " + gameState.cardState().discardsSize() + " ds discard. Suivant ");
                                   //carte aditiionelles que les joeurs doit jouer ? ou c'est bon? // pas union(drawncards) à initialClaimCards
-                                  gameState = gameState.withClaimedRoute(route, initialClaimCards);
-                                  //gameState = gameState.withMoreDiscardedCards(initialClaimCards);
 
-                                  sendInfo(currentInfo2.claimedRoute(route, initialClaimCards), players);
+                                  //gameState = gameState.withClaimedRoute(route, initialClaimCards);
+                                  gameState = gameState.withMoreDiscardedCards(initialClaimCards);
+
+                                  // sendInfo(currentInfo.claimedRoute(route, initialClaimCards), players);
 
                               }
                               // le cas ou c'est pas == 0 et c'est empty
 
                           }
-                          if (route.level() == Route.Level.OVERGROUND) {
+                          sendInfo(currentInfo2.claimedRoute(route, initialClaimCards), players);
+                          gameState = gameState.withClaimedRoute(route, initialClaimCards);
 
-                              gameState = gameState.withClaimedRoute(route, initialClaimCards);
-                              //gameState = gameState.withMoreDiscardedCards(initialClaimCards);
+                    /*if (route.level() == Route.Level.OVERGROUND) {
 
-                              sendInfo(currentInfo2.claimedRoute(route, initialClaimCards), players);
+                        gameState = gameState.withClaimedRoute(route, initialClaimCards);
 
-                          }
+                        sendInfo(currentInfo.claimedRoute(route, initialClaimCards), players);
+
+                    }*/
 
                           break;
 
                       default:
                           break;
                   }
+
+
+
+
                   gameState = gameState.forNextTurn();
 
 
 
 
-
-
-
-
-
-
-              }*/
+              }
 
 
             }
@@ -396,6 +430,11 @@ public final class Game {
 
              gameState = gameState.withMoreDiscardedCards(cards);**/
             if (!gameState.currentPlayerId().equals(gameState.lastPlayer())) {
+
+                System.out.println("le 1 " + gameState.playerState(PlayerId.PLAYER_1).carCount());
+                System.out.println("le 2 " + gameState.playerState(PlayerId.PLAYER_2).carCount());
+                System.out.print("last turn " + gameState.lastTurnBegins());
+                System.out.println(gameState.cardState().deckSize() + " carte ds le deck et  " + gameState.cardState().discardsSize() + " ds discard. Suivant ");
                 gameState = gameState.forNextTurn();
             }
             //mment gerer la fin

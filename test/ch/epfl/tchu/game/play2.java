@@ -4,11 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-public class PlayTest {
+public class play2 {
 
-    PlayTest.TestPlayer testPlayer1 = new TestPlayer(10, ChMap.routes(),PlayerId.PLAYER_2);
-    PlayTest.TestPlayer testPlayer2 = new TestPlayer(10, ChMap.routes(),PlayerId.PLAYER_1);
-
+    play2.TestPlayer testPlayer1 = new TestPlayer(10, ChMap.routes(),PlayerId.PLAYER_2);
+    play2.TestPlayer testPlayer2 = new TestPlayer(10, ChMap.routes(),PlayerId.PLAYER_1);
     Map<PlayerId, Player> players = Map.of(PlayerId.PLAYER_1, testPlayer1, PlayerId.PLAYER_2, testPlayer2);
     Map<PlayerId, String> playerNames = Map.of(PlayerId.PLAYER_1, "valentin", PlayerId.PLAYER_2, "hugo");
     SortedBag<Ticket> tickets = SortedBag.of(ChMap.tickets());
@@ -16,7 +15,6 @@ public class PlayTest {
 
 
     @Test
-
     void game(){
         Game.play(players, playerNames, tickets, rng);
     }
@@ -35,17 +33,13 @@ public class PlayTest {
         private SortedBag<Card> initialClaimCards;
         private SortedBag<Ticket> tickets ;
         private final int id;
-        private static List<Route> availableRoutes = new ArrayList<>(ChMap.routes());
 
 
         public TestPlayer(long randomSeed, List<Route> allRoutes,PlayerId id) {
             this.rng = new Random(randomSeed);
             this.allRoutes = List.copyOf(allRoutes);
-
             this.turnCounter = 0;
-            this.id = (id == PlayerId.PLAYER_1)?
-                    1:
-                    2;
+            this.id = (id == PlayerId.PLAYER_1)? 1: 2;
         }
 
         @Override
@@ -99,29 +93,19 @@ public class PlayTest {
             // Détermine les routes dont ce joueur peut s'emparer
 
             List<Route> allRoutesOfGame = allRoutes;
-            //List<Route> claimableRoutes = new ArrayList<>();
-
-            availableRoutes.removeIf(gameState.claimedRoutes()::contains);
             List<Route> claimableRoutes = new ArrayList<>();
-            for(int i = 0; i< availableRoutes.size(); i++){
-                if(ownState.canClaimRoute(availableRoutes.get(i))){
-                    claimableRoutes.add(availableRoutes.get(i));
-                }
-            }
-
-
-          /**  for(int i=0;i<allRoutes.size();i++){
+            for(int i=0;i<allRoutes.size();i++){
                 if(ownState.canClaimRoute(allRoutesOfGame.get(i))){
                     claimableRoutes.add(allRoutes.get(i));
                 }
-            }**/
+            }
 
             if (claimableRoutes.isEmpty() && gameState.canDrawCards()) {
 
                 return TurnKind.DRAW_CARDS;
 
             } else {
-                int routeIndex = rng.nextInt(claimableRoutes.size());
+                int routeIndex = Math.abs(rng.nextInt(claimableRoutes.size()));
                 System.out.println("RNG FAUX " + routeIndex);
                 Route route = claimableRoutes.get(routeIndex);
                 List<SortedBag<Card>> cards = ownState.possibleClaimCards(route);
@@ -138,25 +122,25 @@ public class PlayTest {
         @Override
         public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
 
-           /** Random random = new Random();
-            int number = random.nextInt(6);
-            int r = -1 + number;
-            if(r <2) {
-                final Station BER = new Station(3, "Berne");
-                final Station COI = new Station(6, "Coire");
-                return SortedBag.of(new Ticket(BER, COI, 10));
-            }
-            else if (r<5 && r> 1){
-                final Station BAL = new Station(1, "Bâle");
-                final Station BEL = new Station(2, "Bellinzone");
-                return SortedBag.of(new Ticket(BAL, BEL, 10));
+            /** Random random = new Random();
+             int number = random.nextInt(6);
+             int r = -1 + number;
+             if(r <2) {
+             final Station BER = new Station(3, "Berne");
+             final Station COI = new Station(6, "Coire");
+             return SortedBag.of(new Ticket(BER, COI, 10));
+             }
+             else if (r<5 && r> 1){
+             final Station BAL = new Station(1, "Bâle");
+             final Station BEL = new Station(2, "Bellinzone");
+             return SortedBag.of(new Ticket(BAL, BEL, 10));
 
-            }else {
-                final Station KRE = new Station(12, "Kreuzlingen");
-                final Station LAU = new Station(13, "Lausanne");
-                return SortedBag.of(new Ticket(KRE, LAU, 10));
-            }
-            **/
+             }else {
+             final Station KRE = new Station(12, "Kreuzlingen");
+             final Station LAU = new Station(13, "Lausanne");
+             return SortedBag.of(new Ticket(KRE, LAU, 10));
+             }
+             **/
 
             SortedBag.Builder bagBuilder = new SortedBag.Builder();
             int randomAmountOfTickets = rng.nextInt(Constants.IN_GAME_TICKETS_COUNT)+1;
@@ -185,40 +169,29 @@ public class PlayTest {
             return initialClaimCards;
         }
 
-      /**  @Override
+        @Override
         public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
 
-                SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
-                for (SortedBag<Card> option : options) {
-                    builder.add(option);
-                }
-                return builder.build();
+            SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
+            for (SortedBag<Card> option : options) {
+                builder.add(option);
             }
-        } **/
-
-      @Override
-      public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
-          if (options.isEmpty()){
-              return null;
-          }
-          int optionChoice = rng.nextInt(options.size());
-          return options.get(optionChoice);
-
-      }
-
-        private static final List<Card> ALL_CARDS = List.of(Card.values());
-        private SortedBag<Card> allCards() {
-            var cardsBuilder = new SortedBag.Builder<Card>();
-            cardsBuilder.add(14, Card.LOCOMOTIVE);
-            for (Card card : Card.CARS)
-                cardsBuilder.add(12, card);
-            var cards = cardsBuilder.build();
-            return cards;
+            return builder.build();
         }
-        SortedBag<Card> cards = allCards();
-
-
     }
+
+    private static final List<Card> ALL_CARDS = List.of(Card.values());
+    private SortedBag<Card> allCards() {
+        var cardsBuilder = new SortedBag.Builder<Card>();
+        cardsBuilder.add(14, Card.LOCOMOTIVE);
+        for (Card card : Card.CARS)
+            cardsBuilder.add(12, card);
+        var cards = cardsBuilder.build();
+        return cards;
+    }
+    SortedBag<Card> cards = allCards();
+
+
 }
 
 
