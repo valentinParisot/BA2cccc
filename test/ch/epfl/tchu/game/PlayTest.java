@@ -99,16 +99,19 @@ public class PlayTest {
 
             List<Route> allRoutesOfGame = allRoutes;
             List<Route> claimableRoutes = new ArrayList<>();
-            for(int i=0;i<10;i++){
+            for(int i=0;i<allRoutes.size();i++){
                 if(ownState.canClaimRoute(allRoutesOfGame.get(i))){
                     claimableRoutes.add(allRoutes.get(i));
                 }
             }
 
-            if (claimableRoutes.isEmpty() ) {
+            if (claimableRoutes.isEmpty() && gameState.canDrawCards()) {
+
                 return TurnKind.DRAW_CARDS;
+
             } else {
-                int routeIndex = rng.nextInt(claimableRoutes.size());
+                int routeIndex = Math.abs(rng.nextInt(claimableRoutes.size()));
+                System.out.println("RNG FAUX " + routeIndex);
                 Route route = claimableRoutes.get(routeIndex);
                 List<SortedBag<Card>> cards = ownState.possibleClaimCards(route);
 
@@ -117,6 +120,8 @@ public class PlayTest {
                 return TurnKind.CLAIM_ROUTE;
             }
         }
+
+
 
 
         @Override
