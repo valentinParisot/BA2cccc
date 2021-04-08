@@ -103,6 +103,10 @@ public final class Game {
 
                     do {
 
+                        if (n == 1) {
+                            updateState(gameState, players);
+                        }
+
                         int drawCount = current.drawSlot();
                         if (0 <= drawCount && drawCount <= 4) {
 
@@ -220,7 +224,7 @@ public final class Game {
 
                 sendInfo(currentInfo.lastTurnBegins(gameState.playerState(gameState.currentPlayerId()).carCount()), players);
                 gameState = gameState.forNextTurn();
-              for(int u = 0 ; u<2;++u){
+              /*for(int u = 0 ; u<2;++u){
 
 
 
@@ -378,16 +382,10 @@ public final class Game {
 
 
 
-              }
-
+              }*/
 
 
             }
-
-
-
-
-
 
 
             /** var cardsBuilder = new SortedBag.Builder<Card>();
@@ -397,8 +395,9 @@ public final class Game {
              var cards = cardsBuilder.build();
 
              gameState = gameState.withMoreDiscardedCards(cards);**/
-
-            gameState = gameState.forNextTurn();
+            if (!gameState.currentPlayerId().equals(gameState.lastPlayer())) {
+                gameState = gameState.forNextTurn();
+            }
             //mment gerer la fin
             //les points ? et bonus ?
             // 1 tour == les 2 joueurs qui jouent alors que la 1 tour c'est juste un joueur
@@ -412,7 +411,7 @@ public final class Game {
         //sendInfo(currentInfo.lastTurnBegins(gameState.playerState(gameState.currentPlayerId()).carCount()), players);
         //faire jouer le dernier tour a l'autre car un seul a jouer le dernier tour
 
-        updateState(gameState, players); // ou avant la comparaison des scores
+
 
         Trail p1longest = Trail.longest(gameState.playerState(PlayerId.PLAYER_1).routes());
         Trail p2longest = Trail.longest(gameState.playerState(PlayerId.PLAYER_2).routes());
@@ -423,6 +422,7 @@ public final class Game {
         int p1final = gameState.playerState(PlayerId.PLAYER_1).finalPoints();
         int p2final = gameState.playerState(PlayerId.PLAYER_2).finalPoints();
 
+        updateState(gameState, players);
 
         if (p1longestSize > p2longestSize) {
             sendInfo(i1.getsLongestTrailBonus(p1longest), players);
