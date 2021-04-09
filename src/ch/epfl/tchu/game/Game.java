@@ -172,7 +172,7 @@ public final class Game {
                         //List<SortedBag<Card>> possibleAdditionalCards = gameState.currentPlayerState().possibleAdditionalCards(adittionalCardsCount, initialClaimCards, drawnCards);
 
                         //contains ? ou empty
-                        if (adittionalCardsCount >= 1 /*&& !(gameState.currentPlayerState().canClaimRoute(route))*/) {
+                        if (adittionalCardsCount >= 1 && !(gameState.currentPlayerState().canClaimRoute(route))) {
                             //pas utile si il choisit rien rien se passe // ici ca va
                             List<SortedBag<Card>> possibleAdditionalCards = gameState
                                     .currentPlayerState()
@@ -208,16 +208,21 @@ public final class Game {
                             System.out.println("CHOOSE PAS EST OK" + gameState.cardState().deckSize() + " carte ds le deck et  " + gameState.cardState().discardsSize() + " ds discard. Suivant ");
                             //carte aditiionelles que les joeurs doit jouer ? ou c'est bon? // pas union(drawncards) à initialClaimCards
 
-                           //gameState = gameState.withClaimedRoute(route, initialClaimCards);
+
                             gameState = gameState.withMoreDiscardedCards(initialClaimCards);
+
 
                            // sendInfo(currentInfo.claimedRoute(route, initialClaimCards), players);
 
                         }
+
+
+
                         // le cas ou c'est pas == 0 et c'est empty
 
                     }
                     sendInfo(currentInfo.claimedRoute(route, initialClaimCards), players);
+
                     gameState = gameState.withClaimedRoute(route, initialClaimCards);
 
                     /*if (route.level() == Route.Level.OVERGROUND) {
@@ -346,7 +351,7 @@ public final class Game {
                               //List<SortedBag<Card>> possibleAdditionalCards = gameState.currentPlayerState().possibleAdditionalCards(adittionalCardsCount, initialClaimCards, drawnCards);
 
                               //contains ? ou empty
-                              if (adittionalCardsCount >= 1 /*&& !(gameState.currentPlayerState().canClaimRoute(route))*/) {
+                              if (adittionalCardsCount >= 1 && !(gameState.currentPlayerState().canClaimRoute(route))) {
                                   //pas utile si il choisit rien rien se passe // ici ca va
                                   List<SortedBag<Card>> possibleAdditionalCards = gameState
                                           .currentPlayerState()
@@ -354,7 +359,7 @@ public final class Game {
 
                                   SortedBag<Card> selectedAddCards = current2.chooseAdditionalCards(possibleAdditionalCards);
 
-                                  if (selectedAddCards.isEmpty()) {
+                                  if (selectedAddCards.isEmpty() ) {
 
                                       sendInfo(currentInfo2.didNotClaimRoute(route), players);
                                       gameState = gameState.withMoreDiscardedCards(drawnCards.union(initialClaimCards));
