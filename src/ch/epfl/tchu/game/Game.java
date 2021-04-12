@@ -150,7 +150,11 @@ public final class Game {
 
                         sendInfo(currentInfo.drewAdditionalCards(drawnCards, addCardsCount), players);
 
-                        if (addCardsCount >= 1 && !(gameState.currentPlayerState().canClaimRoute(route))) {
+                        if (addCardsCount >= 1 && !gameState
+                                .currentPlayerState()
+                                .possibleAdditionalCards(addCardsCount, initialClaimCards, drawnCards).isEmpty() ) {
+
+                            //!(gameState.currentPlayerState().canClaimRoute(route))
 
                             List<SortedBag<Card>> possibleAdditionalCards = gameState
                                     .currentPlayerState()
