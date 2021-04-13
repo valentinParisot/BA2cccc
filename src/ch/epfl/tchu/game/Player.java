@@ -7,13 +7,15 @@ import java.util.Map;
 
 /**
  * PublicGameState
- * class
+ * interface
  *
  * @author Valentin Parisot (326658)
  * @author Hugo Jeannin (329220)
  */
 
 public interface Player {
+
+    //----------------------------------------------------------------------------------------------------
 
     public enum TurnKind {
 
@@ -130,5 +132,6 @@ public interface Player {
      */
     public abstract SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options);
 
+    //------------------------------------------------------------------------------------------------
 
 }

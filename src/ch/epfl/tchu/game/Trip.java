@@ -16,6 +16,40 @@ import java.util.Objects;
 
 public final class Trip {
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     * creates a list of trips (with starting and ending stations)
+     *
+     * @param from   from
+     * @param to     to
+     * @param points points
+     * @return a list of trips
+     */
+
+    public static List<Trip> all(List<Station> from, List<Station> to, int points) {
+
+        List<Trip> path = new ArrayList<>();
+
+        if (from == null || to == null || points <= 0) {
+
+            throw new IllegalArgumentException();
+        } else {
+
+            for (Station f : from) {
+
+                for (Station t : to) {
+
+                    path.add(new Trip(f, t, points));
+                }
+            }
+        }
+
+        return path;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
     public final Station from;
     public final Station to;
     public final int points;
@@ -30,38 +64,11 @@ public final class Trip {
 
     public Trip(Station from, Station to, int points) {
 
-        this.from = Objects.requireNonNull(from);
-
-        this.to = Objects.requireNonNull(to);
-
         Preconditions.checkArgument(points > 0);
 
+        this.from = Objects.requireNonNull(from);
+        this.to = Objects.requireNonNull(to);
         this.points = points;
-    }
-
-    //----------------------------------------------------------------------------------------------------
-
-    /**
-     * creates a list of trips (with starting and ending stations)
-     *
-     * @param from from
-     * @param to to
-     * @param points points
-     * @return a list of trips
-     */
-
-    public static List<Trip> all(List<Station> from, List<Station> to, int points) {
-        List<Trip> path = new ArrayList<>();
-        if (from == null || to == null || points <= 0) {
-            throw new IllegalArgumentException();
-        } else {
-            for (Station f : from) {
-                for (Station t : to) {
-                    path.add(new Trip(f, t, points));
-                }
-            }
-        }
-        return path;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -104,11 +111,12 @@ public final class Trip {
      */
 
     public int points(StationConnectivity connectivity) {
+
         if (connectivity.connected(from, to)) {
             return points();
         }
-        int malus = (-points());
-        return malus;
+
+        return (-points());
     }
 
     //----------------------------------------------------------------------------------------------------

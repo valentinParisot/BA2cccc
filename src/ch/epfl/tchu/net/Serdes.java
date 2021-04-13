@@ -6,7 +6,7 @@ import ch.epfl.tchu.game.*;
 import java.util.List;
 
   class Serdes {
-
+/*
 
     public static final Serde<Integer> intSerde = Serde.of(
              i -> Integer.toString(i),
@@ -38,6 +38,6 @@ import java.util.List;
     public static final Serde<PlayerState> PlayerStateSerde =
     public static final Serde<PublicGameState> PublicGameStateSerde =
 
-
+*/
 
 }

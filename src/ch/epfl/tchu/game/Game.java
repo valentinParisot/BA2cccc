@@ -19,10 +19,13 @@ public final class Game {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param players
-     * @param playerNames
-     * @param tickets
-     * @param rng
+     * makes given players play a game of tCHu
+     * @param players given players
+     * @param playerNames given players name
+     * @param tickets tickets available for this game
+     * @param rng the random generator is used to create the initial state of the game
+     *            and to shuffle cards from the discard pile to make a new draw when necessary
+     * @throws IllegalArgumentException if one of the two associative tables has a size other than 2
      */
 
     public static void play(Map<PlayerId, Player> players, Map<PlayerId, String> playerNames, SortedBag<Ticket> tickets, Random rng) {
@@ -371,8 +374,9 @@ public final class Game {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param info
-     * @param players
+     * send an information to everyone in the game
+     * @param info information sent
+     * @param players players in game
      */
 
     private static void sendInfo(String info, Map<PlayerId, Player> players) {
@@ -387,8 +391,9 @@ public final class Game {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param newState
-     * @param players
+     * let everyone in the game know that there is a changement in the game state
+     * @param newState new gamestate
+     * @param players players in game
      */
 
     private static void updateState(GameState newState, Map<PlayerId, Player> players) {

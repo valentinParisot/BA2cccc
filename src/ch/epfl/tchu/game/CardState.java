@@ -19,27 +19,6 @@ import static java.util.Objects.checkIndex;
 
 public final class CardState extends PublicCardState {
 
-    private final Deck<Card> deck;
-    private final SortedBag<Card> discard;
-
-    //----------------------------------------------------------------------------------------------------
-
-    /**
-     * constructor
-     *
-     * @param deck        the deck
-     * @param discard     the discard sorted
-     * @param faceUpCards list of facupcards
-     */
-
-    private CardState(Deck<Card> deck, SortedBag<Card> discard, List<Card> faceUpCards) {
-
-        super(faceUpCards, deck.size(), discard.size());
-        this.deck = deck;
-        this.discard = discard;
-
-    }
-
     //----------------------------------------------------------------------------------------------------
 
     /**
@@ -63,6 +42,28 @@ public final class CardState extends PublicCardState {
 
     //----------------------------------------------------------------------------------------------------
 
+    private final Deck<Card> deck;
+    private final SortedBag<Card> discard;
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     * constructor
+     *
+     * @param deck        the deck
+     * @param discard     the discard sorted
+     * @param faceUpCards list of facUpCards
+     */
+
+    private CardState(Deck<Card> deck, SortedBag<Card> discard, List<Card> faceUpCards) {
+
+        super(faceUpCards, deck.size(), discard.size());
+        this.deck = deck;
+        this.discard = discard;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
     /**
      * set of cards identical to the receiver,
      * except that the face-up index slot card has been replaced by the one at the top of the draw pile,
@@ -78,13 +79,9 @@ public final class CardState extends PublicCardState {
         Preconditions.checkArgument(!deck.isEmpty());
 
         ArrayList<Card> newFaceUpCard = new ArrayList<>(faceUpCards());
-
         newFaceUpCard.set(checkIndex(slot, 5), deck.topCard());
 
-        CardState withDrawnFaceUpCard = new CardState(deck.withoutTopCard(), discard, newFaceUpCard);
-
-        return withDrawnFaceUpCard;
-
+        return new CardState(deck.withoutTopCard(), discard, newFaceUpCard);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -99,7 +96,6 @@ public final class CardState extends PublicCardState {
         Preconditions.checkArgument(!deck.isEmpty());
 
         return deck.topCard();
-
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -115,10 +111,7 @@ public final class CardState extends PublicCardState {
 
         Preconditions.checkArgument(!deck.isEmpty());
 
-        CardState withoutTopDeckCard = new CardState(deck.withoutTopCard(), this.discard, faceUpCards());
-
-        return withoutTopDeckCard;
-
+        return new CardState(deck.withoutTopCard(), this.discard, faceUpCards());
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -135,9 +128,7 @@ public final class CardState extends PublicCardState {
 
         Preconditions.checkArgument(deck.isEmpty());
 
-        CardState withDeckRecreatedFromDiscards = new CardState(Deck.of(discard, rng), SortedBag.of(), faceUpCards());
-
-        return withDeckRecreatedFromDiscards;
+        return new CardState(Deck.of(discard, rng), SortedBag.of(), faceUpCards());
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -153,12 +144,8 @@ public final class CardState extends PublicCardState {
 
         SortedBag<Card> newDiscard = discard.union(additionalDiscards);
 
-        CardState withMoreDiscardedCards = new CardState(this.deck, newDiscard, faceUpCards());
-
-        return withMoreDiscardedCards;
-
+        return new CardState(this.deck, newDiscard, faceUpCards());
     }
 
     //----------------------------------------------------------------------------------------------------
-
 }

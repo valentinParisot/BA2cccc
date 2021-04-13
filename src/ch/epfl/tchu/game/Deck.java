@@ -17,24 +17,6 @@ import java.util.Random;
 
 public final class Deck<C extends Comparable<C>> {
 
-    private final int size;
-    private final List<C> cards;
-
-    //----------------------------------------------------------------------------------------------------
-
-    /**
-     * constructor
-     *
-     * @param size  size of the deck
-     * @param cards List of cards in the deck
-     */
-
-    private Deck(int size, List<C> cards) {
-
-        this.cards = cards;
-        this.size = size;
-    }
-
     //----------------------------------------------------------------------------------------------------
 
     /**
@@ -51,11 +33,26 @@ public final class Deck<C extends Comparable<C>> {
         List<C> cards2 = cards.toList();
         Collections.shuffle(cards2, rng);
 
-        Deck<C> deckSchuffled = new Deck<>(cards.size(), cards2);
+        return new Deck<>(cards.size(), cards2);
+    }
 
-        return deckSchuffled;
+    //----------------------------------------------------------------------------------------------------
 
+    private final int size;
+    private final List<C> cards;
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     * constructor
+     *
+     * @param size  size of the deck
+     * @param cards List of cards in the deck
+     */
+
+    private Deck(int size, List<C> cards) {
+        this.cards = cards;
+        this.size = size;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -67,21 +64,7 @@ public final class Deck<C extends Comparable<C>> {
      */
 
     public int size() {
-
         return this.size;
-    }
-
-    //----------------------------------------------------------------------------------------------------
-
-    /**
-     * true if there is nothing in the deck
-     *
-     * @return true if its empty
-     */
-
-    public boolean isEmpty() {
-
-        return (cards.size() == 0);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -98,7 +81,6 @@ public final class Deck<C extends Comparable<C>> {
         Preconditions.checkArgument(!this.isEmpty());
 
         return cards.get(cards.size() - 1);
-
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -114,10 +96,7 @@ public final class Deck<C extends Comparable<C>> {
 
         Preconditions.checkArgument(!this.isEmpty());
 
-        Deck<C> deckwithoutTopCard = new Deck<>(this.size() - 1, cards.subList(0, cards.size() - 1));
-
-        return deckwithoutTopCard;
-
+        return new Deck<>(this.size() - 1, cards.subList(0, cards.size() - 1));
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -144,10 +123,7 @@ public final class Deck<C extends Comparable<C>> {
 
         }
 
-        SortedBag<C> topCards = builder.build();
-
-        return topCards;
-
+        return builder.build();
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -162,12 +138,21 @@ public final class Deck<C extends Comparable<C>> {
 
     public Deck<C> withoutTopCards(int count) {
 
-        Preconditions.checkArgument(count >= 0 && count <= this.size());
+        Preconditions.checkArgument((count >= 0) && (count <= this.size()));
 
-        Deck<C> deckwithoutTopCards = new Deck<>(this.size() - count, cards.subList(0, cards.size() - count));
+        return new Deck<>(this.size() - count, cards.subList(0, cards.size() - count));
+    }
 
-        return deckwithoutTopCards;
+    //----------------------------------------------------------------------------------------------------
 
+    /**
+     * true if there is nothing in the deck
+     *
+     * @return true if its empty
+     */
+
+    public boolean isEmpty() {
+        return (cards.size() == 0);
     }
 
     //----------------------------------------------------------------------------------------------------

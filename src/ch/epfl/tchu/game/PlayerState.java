@@ -18,6 +18,26 @@ import java.util.Set;
 
 public final class PlayerState extends PublicPlayerState {
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     * the initial state of a player to whom the given initial cards have been dealt; in this initial state,
+     * the player does not yet have any tickets, and has not taken any road
+     *
+     * @param initialCards initial cards
+     * @return initial state of a player
+     * @throws IllegalArgumentException if the number of initial cards is not equal to 4
+     */
+
+    public static PlayerState initial(SortedBag<Card> initialCards) {
+
+        Preconditions.checkArgument(initialCards.size() == Constants.INITIAL_CARDS_COUNT);
+
+        return new PlayerState(SortedBag.of(), initialCards, List.of());
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
     private final SortedBag<Ticket> tickets;
     private final SortedBag<Card> cards;
 
@@ -42,33 +62,10 @@ public final class PlayerState extends PublicPlayerState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * the initial state of a player to whom the given initial cards have been dealt; in this initial state,
-     * the player does not yet have any tickets, and has not taken any road
-     *
-     * @param initialCards initial cards
-     * @return initial state of a player
-     * @throws IllegalArgumentException if the number of initial cards is not equal to 4
-     */
-
-    public static PlayerState initial(SortedBag<Card> initialCards) {
-
-        Preconditions.checkArgument(initialCards.size() == Constants.INITIAL_CARDS_COUNT);
-        PlayerState initial = new PlayerState(SortedBag.of(), initialCards, List.of());
-
-        return initial;
-
-    }
-
-    //----------------------------------------------------------------------------------------------------
-
-    /**
      * @return Sorted bag of tickets
      */
 
-    public SortedBag<Ticket> tickets() {
-
-        return this.tickets;
-    }
+    public SortedBag<Ticket> tickets() {return this.tickets;}
 
     //----------------------------------------------------------------------------------------------------
 
@@ -79,9 +76,7 @@ public final class PlayerState extends PublicPlayerState {
 
     public PlayerState withAddedTickets(SortedBag<Ticket> newTickets) {
 
-        PlayerState withAddedTickets = new PlayerState(tickets.union(newTickets), this.cards, routes());
-
-        return withAddedTickets;
+        return new PlayerState(tickets.union(newTickets), this.cards, routes());
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -90,10 +85,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return sorted bag of cards
      */
 
-    public SortedBag<Card> cards() {
-
-        return this.cards;
-    }
+    public SortedBag<Card> cards() { return this.cards; }
 
     //----------------------------------------------------------------------------------------------------
 
@@ -107,13 +99,9 @@ public final class PlayerState extends PublicPlayerState {
         SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
         builder.add(card);
         builder.build();
-
         SortedBag<Card> c = builder.build();
 
-        PlayerState withAddedCard = new PlayerState(this.tickets, this.cards.union(c), routes());
-
-        return withAddedCard;
-
+        return new PlayerState(this.tickets, this.cards.union(c), routes());
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -127,10 +115,7 @@ public final class PlayerState extends PublicPlayerState {
 
     public PlayerState withAddedCards(SortedBag<Card> additionalCards) {
 
-        PlayerState withAddedCards = new PlayerState(this.tickets, this.cards.union(additionalCards), routes());
-
-        return withAddedCards;
-
+        return new PlayerState(this.tickets, this.cards.union(additionalCards), routes());
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -161,6 +146,7 @@ public final class PlayerState extends PublicPlayerState {
     public List<SortedBag<Card>> possibleClaimCards(Route route) {
 
         Preconditions.checkArgument((carCount() >= route.length()));
+
         List<SortedBag<Card>> routePossible = route.possibleClaimCards();
         List<SortedBag<Card>> possibleClaimCards = new ArrayList<>();
 
@@ -171,7 +157,6 @@ public final class PlayerState extends PublicPlayerState {
         }
 
         return possibleClaimCards;
-
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -200,20 +185,17 @@ public final class PlayerState extends PublicPlayerState {
                 && (drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS));
 
         SortedBag<Card> cards2 = cards.difference(initialCards);
-
         SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
 
         for (Card c : cards2) {
             if (initialCards.contains(c) || Card.LOCOMOTIVE.equals(c)) {
                 builder.add(c);
             }
-
         }
 
         SortedBag<Card> cards3 = builder.build();
 
         if (cards3.size() < additionalCardsCount) {
-
             return List.of();
         }
 
@@ -224,8 +206,6 @@ public final class PlayerState extends PublicPlayerState {
         listSubsets.sort(Comparator.comparingInt(cs -> cs.countOf(Card.LOCOMOTIVE)));
 
         return listSubsets;
-
-
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -244,10 +224,7 @@ public final class PlayerState extends PublicPlayerState {
         List<Route> newRoutes = new ArrayList<>(routes());
         newRoutes.add(route);
 
-        PlayerState withClaimedRoute = new PlayerState(this.tickets, cards.difference(claimCards), newRoutes);
-
-        return withClaimedRoute;
-
+        return new PlayerState(this.tickets, cards.difference(claimCards), newRoutes);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -288,7 +265,6 @@ public final class PlayerState extends PublicPlayerState {
         }
 
         return ticketPoints;
-
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -300,11 +276,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return finalPoints
      */
 
-    public int finalPoints() {
-
-        return claimPoints() + ticketPoints();
-
-    }
+    public int finalPoints() { return claimPoints() + ticketPoints(); }
 
     //----------------------------------------------------------------------------------------------------
 

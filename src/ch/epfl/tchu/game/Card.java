@@ -22,12 +22,11 @@ public enum Card {
     WHITE(Color.WHITE),
     LOCOMOTIVE(null);
 
-    private static final int MAX_SIZE = 8;
-    public static final List<Card> ALL = List.of(values());
-    public static final int COUNT = ALL.size();
+    private final static int MAX_SIZE = 8;
+    public final static List<Card> ALL = List.of(values());
+    public final static int COUNT = ALL.size();
     public final static List<Card> CARS = ALL.subList(0, MAX_SIZE);
     private final Color c;
-
 
     //----------------------------------------------------------------------------------------------------
 
@@ -48,7 +47,6 @@ public enum Card {
      * @return type of the card
      */
 
-    //----------------------------------------------------------------------------------------------------
     public static Card of(Color color) {
         return Card.valueOf(color.toString());
     }
@@ -59,7 +57,6 @@ public enum Card {
      * @return color of the type od the card
      */
 
-    //----------------------------------------------------------------------------------------------------
     public Color color() {
         return c;
     }

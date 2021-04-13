@@ -4,13 +4,14 @@ import java.util.List;
 
 /**
  * PlayerId
- * class
+ * enum
  *
  * @author Valentin Parisot (326658)
  * @author Hugo Jeannin (329220)
  */
 
 public enum PlayerId {
+
     PLAYER_1,
     PLAYER_2;
 
@@ -22,7 +23,9 @@ public enum PlayerId {
     /**
      * @return the other player (the one who will play next turn)
      */
+
     public PlayerId next() {
+
         if (this.equals(PLAYER_1)) {
             return PLAYER_2;
         } else {
@@ -31,5 +34,4 @@ public enum PlayerId {
     }
 
     //----------------------------------------------------------------------------------------------------
-
 }

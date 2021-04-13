@@ -13,43 +13,22 @@ import java.util.List;
 
 public final class Trail {
 
-    private final int length;
-    private final List<Route> routeList;
-    private final Station station1;
-    private final Station station2;
-
-
-    //----------------------------------------------------------------------------------------------------
-
-    /**
-     * constructor
-     *
-     * @param routeList list of roads that belong to the player
-     * @param station1  first station of the trail
-     * @param station2  last station of the trail
-     * @param length    length of the trail (sum of the length of each road)
-     */
-
-    private Trail(List<Route> routeList, Station station1, Station station2, int length) {
-        this.routeList = routeList;
-        this.station1 = station1;
-        this.station2 = station2;
-        this.length = length;
-    }
-
     //----------------------------------------------------------------------------------------------------
 
     /**
      * returns the longest path of the network made up of the given routes; if there are more than one of maximum
      * length, the returned one is not specified; if the list of given routes is empty, returns a zero-length path,
      * whose stations are both equal to null
+     *
      * @param routes list of roads that belong to the player
      * @return the longest trail possible (even if there may have several)
      */
 
     public static Trail longest(List<Route> routes) {
+
         Trail longest = new Trail(List.of(), null, null, 0);
         List<Trail> cs = new ArrayList<>();
+
         for (Route r : routes) {
             cs.add(new Trail(List.of(r), r.station1(), r.station2(), r.length()));
 
@@ -85,15 +64,43 @@ public final class Trail {
 
     //----------------------------------------------------------------------------------------------------
 
+    private final int length;
+    private final List<Route> routeList;
+    private final Station station1;
+    private final Station station2;
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     * constructor
+     *
+     * @param routeList list of roads that belong to the player
+     * @param station1  first station of the trail
+     * @param station2  last station of the trail
+     * @param length    length of the trail (sum of the length of each road)
+     */
+
+    private Trail(List<Route> routeList, Station station1, Station station2, int length) {
+
+        this.routeList = routeList;
+        this.station1 = station1;
+        this.station2 = station2;
+        this.length = length;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
     /**
      * @return the length of the trail
      */
 
     public int length() {
+
         int size = 0;
         for (Route r : routeList) {
             size = (size + r.length());
         }
+
         return size;
     }
 
@@ -104,9 +111,11 @@ public final class Trail {
      */
 
     public Station station1() {
+
         if (this.length() == 0) {
             return null;
         }
+
         return station1;
     }
 
@@ -116,9 +125,11 @@ public final class Trail {
      * @return the last station of the trail
      */
     public Station station2() {
+
         if (this.length() == 0) {
             return null;
         }
+
         return station2;
     }
 
@@ -136,7 +147,6 @@ public final class Trail {
         }
 
         String n = (station1.name() + station2.name());
-
         n = (n + "(" + length() + ")");
 
         return n;

@@ -14,13 +14,14 @@ import java.util.*;
 
 public final class Route {
 
+    //----------------------------------------------------------------------------------------------------
+
     private final String id;
     private final Station station1;
     private final Station station2;
     private final int length;
     private final Level level;
     private final Color color;
-
 
     //----------------------------------------------------------------------------------------------------
 
@@ -34,7 +35,6 @@ public final class Route {
 
         OVERGROUND,
         UNDERGROUND
-
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -123,9 +123,7 @@ public final class Route {
      * @return the color of the route
      */
 
-    public Color color() {
-        return color;
-    }
+    public Color color() { return color; }
 
     //----------------------------------------------------------------------------------------------------
 
@@ -136,6 +134,7 @@ public final class Route {
      */
 
     public List<Station> stations() {
+
         List<Station> stations = new ArrayList<>();
         stations.add(station1);
         stations.add(station2);
@@ -161,7 +160,6 @@ public final class Route {
             return station2;
         } else
             return station1;
-
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -178,35 +176,43 @@ public final class Route {
         List<SortedBag<Card>> cards1 = new ArrayList<>();
 
         if (level.equals(Level.UNDERGROUND)) {
-            for (int i = 0; i <= length; i++) {
-                if (color != null) {
-                    cards1.add(SortedBag.of(length - i, Card.of(color), i, Card.LOCOMOTIVE));
 
+            for (int i = 0; i <= length; i++) {
+
+                if (color != null) {
+
+                    cards1.add(SortedBag.of(length - i, Card.of(color), i, Card.LOCOMOTIVE));
                 } else {
+
                     if (i != length) {
+
                         for (Card card : Card.CARS) {
+
                             cards1.add(SortedBag.of(length - i, card, i, Card.LOCOMOTIVE));
                         }
                     } else {
+
                         cards1.add(SortedBag.of(i, Card.LOCOMOTIVE));
                     }
                 }
             }
-
         }
-        if (level.equals(Level.OVERGROUND)) {
-            if (color != null) {
-                cards1.add(SortedBag.of(length, Card.of(color)));
 
+        if (level.equals(Level.OVERGROUND)) {
+
+            if (color != null) {
+
+                cards1.add(SortedBag.of(length, Card.of(color)));
             } else {
+
                 for (Card card : Card.CARS) {
+
                     cards1.add(SortedBag.of(length, card));
                 }
             }
-
         }
-        return cards1;
 
+        return cards1;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -223,18 +229,19 @@ public final class Route {
 
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
 
-        Preconditions.checkArgument((level.equals(Level.UNDERGROUND)) && drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS);
+        Preconditions.checkArgument((level.equals(Level.UNDERGROUND))
+                                    && (drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS));
 
         Card card = claimCards.get(0);
 
         int count = 0;
         for (int i = 0; i < 3; ++i) {
-            if ((drawnCards.get(i)).equals(card)) {
-                count++;
 
+            if ((drawnCards.get(i)).equals(card)) {
+
+                count++;
             } else if ((drawnCards.get(i)).equals(Card.LOCOMOTIVE)) {
                 count++;
-
             }
         }
 
@@ -257,10 +264,7 @@ public final class Route {
      * @return points
      */
 
-    public int claimPoints() {
-
-        return Constants.ROUTE_CLAIM_POINTS.get(length);
-    }
+    public int claimPoints() { return Constants.ROUTE_CLAIM_POINTS.get(length); }
 
     //----------------------------------------------------------------------------------------------------
 }

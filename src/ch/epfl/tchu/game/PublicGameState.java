@@ -17,6 +17,8 @@ import java.util.Objects;
 
 public class PublicGameState {
 
+    //----------------------------------------------------------------------------------------------------
+
     private final int ticketsCount;
     private final PublicCardState cardState;
     private final PlayerId currentPlayerId;
@@ -38,10 +40,14 @@ public class PublicGameState {
      * @throws NullPointerException     if one of the other arguments (except lastPlayer) Is null
      */
 
-    public PublicGameState(int ticketsCount, PublicCardState cardState, PlayerId currentPlayerId, Map<PlayerId,
-            PublicPlayerState> playerState, PlayerId lastPlayer) {
+    public PublicGameState(int ticketsCount,
+                           PublicCardState cardState,
+                           PlayerId currentPlayerId,
+                           Map<PlayerId, PublicPlayerState> playerState,
+                           PlayerId lastPlayer) {
 
         Preconditions.checkArgument((ticketsCount >= 0) && (playerState.size() == 2));
+
         this.ticketsCount = ticketsCount;
         this.cardState = Objects.requireNonNull(cardState);
         this.currentPlayerId = Objects.requireNonNull(currentPlayerId);
@@ -87,9 +93,7 @@ public class PublicGameState {
      */
 
     public boolean canDrawCards() {
-
         return ((cardState.deckSize() + cardState.discardsSize() >= 5));
-
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -110,7 +114,6 @@ public class PublicGameState {
      */
 
     public PublicPlayerState playerState(PlayerId playerId) {
-
         return playerState.get(playerId);
     }
 
@@ -141,7 +144,6 @@ public class PublicGameState {
         }
 
         return claimedRoutes;
-
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -151,11 +153,9 @@ public class PublicGameState {
      */
 
     public PlayerId lastPlayer() {
-
         return lastPlayer;
     }
 
     //----------------------------------------------------------------------------------------------------
-
 
 }

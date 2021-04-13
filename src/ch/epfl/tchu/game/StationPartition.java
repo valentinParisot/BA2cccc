@@ -12,44 +12,19 @@ import ch.epfl.tchu.Preconditions;
 
 public final class StationPartition implements StationConnectivity {
 
-    private final int[] integers;
-
-    //----------------------------------------------------------------------------------------------------
-
-    private StationPartition(int[] integers) {
-        this.integers = integers;
-    }
-
-    //----------------------------------------------------------------------------------------------------
-
-    /**
-     * @param station1 station1
-     * @param station2 station2
-     * @return if 2 stations are connected or not
-     */
-    public boolean connected(Station station1, Station station2) {
-
-        if (station1.id() >= integers.length || station2.id() >= integers.length) {
-            return (station1.id() == station2.id());
-        }
-
-        if (integers[station1.id()] == integers[station2.id()]) {
-            return true;
-        }
-
-        return false;
-    }
-
-    //----------------------------------------------------------------------------------------------------
-
     public final static class Builder {
+
+        //----------------------------------------------------------------------------------------------------
+
         private final int[] integersBuilder;
 
         //------------------------------------------------------------------------------------------------
 
         public Builder(int stationCount) {
+
             Preconditions.checkArgument(stationCount >= 0);
             integersBuilder = new int[stationCount];
+
             for (int i = 0; i < stationCount; i++) {
                 integersBuilder[i] = i;
             }
@@ -62,17 +37,19 @@ public final class StationPartition implements StationConnectivity {
          * @return the representative of a station
          */
         private int representative(int id) {
+
             int i = id;
             while (i != integersBuilder[i]) {
                 i = integersBuilder[i];
             }
+
             return i;
         }
 
         //------------------------------------------------------------------------------------------------
 
         /**
-         * @param s1 first staion
+         * @param s1 first station
          * @param s2 second station
          * @return a Builder with the 2 station connected
          */
@@ -97,9 +74,35 @@ public final class StationPartition implements StationConnectivity {
             return new StationPartition(integersBuilder.clone());
         }
 
-        //------------------------------------------------------------------------------------------------
+        //----------------------------------------------------------------------------------------------------
     }
 
     //----------------------------------------------------------------------------------------------------
 
+    private final int[] integers;
+
+    //----------------------------------------------------------------------------------------------------
+
+    private StationPartition(int[] integers) {
+        this.integers = integers;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     * @param station1 station1
+     * @param station2 station2
+     * @return if 2 stations are connected or not
+     */
+
+    public boolean connected(Station station1, Station station2) {
+
+        if (station1.id() >= integers.length || station2.id() >= integers.length) {
+            return (station1.id() == station2.id());
+        }
+
+        return integers[station1.id()] == integers[station2.id()];
+    }
+
+    //----------------------------------------------------------------------------------------------------
 }
