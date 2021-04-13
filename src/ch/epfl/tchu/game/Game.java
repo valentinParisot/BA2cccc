@@ -61,18 +61,15 @@ public final class Game {
         sendInfo(i1.keptTickets(gameState.playerState(PlayerId.PLAYER_1).ticketCount()), players);
         sendInfo(i2.keptTickets(gameState.playerState(PlayerId.PLAYER_2).ticketCount()), players);
 
+        int end = 0;
+        boolean endwhile = false;
+
 
         do {
 
             Info currentInfo = new Info(playerNames.get(gameState.currentPlayerId()));
 
             sendInfo(currentInfo.canPlay(), players);
-
-            if (gameState.lastTurnBegins()) {
-
-                sendInfo(currentInfo.lastTurnBegins(gameState.playerState(gameState.currentPlayerId()).carCount()), players);
-
-            }
 
             Player current = players.get(gameState.currentPlayerId());
 
@@ -152,9 +149,7 @@ public final class Game {
 
                         if (addCardsCount >= 1 && !gameState
                                 .currentPlayerState()
-                                .possibleAdditionalCards(addCardsCount, initialClaimCards, drawnCards).isEmpty() ) {
-
-                            //!(gameState.currentPlayerState().canClaimRoute(route))
+                                .possibleAdditionalCards(addCardsCount, initialClaimCards, drawnCards).isEmpty()) {
 
                             List<SortedBag<Card>> possibleAdditionalCards = gameState
                                     .currentPlayerState()
@@ -192,22 +187,17 @@ public final class Game {
                     break;
             }
 
+
             if (gameState.lastTurnBegins()) {
 
                 sendInfo(currentInfo.lastTurnBegins(gameState.playerState(gameState.currentPlayerId()).carCount()), players);
-                gameState = gameState.forNextTurn();
 
-                for (int u = 0; u < 2; ++u) {
+               for (int u = 0; u < 2; ++u) {
 
                     Info currentInfo2 = new Info(playerNames.get(gameState.currentPlayerId()));
 
                     sendInfo(currentInfo2.canPlay(), players);
 
-                  /*if (gameState.lastTurnBegins()) {
-
-                      sendInfo(currentInfo2.lastTurnBegins(gameState.playerState(gameState.currentPlayerId()).carCount()), players);
-
-                  }*/
 
                     Player current2 = players.get(gameState.currentPlayerId());
 
@@ -330,12 +320,13 @@ public final class Game {
             }
 
 
-            if (!gameState.currentPlayerId().equals(gameState.lastPlayer())) {
-
+            else {
                 gameState = gameState.forNextTurn();
             }
 
+
         } while (!gameState.currentPlayerId().equals(gameState.lastPlayer()));
+
 
         Trail p1longest = Trail.longest(gameState.playerState(PlayerId.PLAYER_1).routes());
         Trail p2longest = Trail.longest(gameState.playerState(PlayerId.PLAYER_2).routes());

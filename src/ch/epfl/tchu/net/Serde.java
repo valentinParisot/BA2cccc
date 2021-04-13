@@ -57,7 +57,7 @@ public interface Serde<Obj> {
         };
     }
 
-    public static <Obj> Serde bagOf() {
+    public static <Obj> Serde bagOf(Serde<Obj> serde, String separation) {
         return new Serde<Obj>() {
             @Override
             public String serialize(Obj o) {
