@@ -84,13 +84,15 @@ public final class Info {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     *
      * @param playerNames names of the 2 players
-     * @param points      their points
+     * @param points their points
      * @return a message stating that the 2 players finished the game ex æqo (+ @points)
      */
     public static String draw(List<String> playerNames, int points) {
 
-        return String.join(StringsFr.AND_SEPARATOR, playerNames);
+        String toDraw = String.join(StringsFr.AND_SEPARATOR, playerNames);
+        return String.format(StringsFr.DRAW, toDraw, points);
     }
 
     //----------------------------------------------------------------------------------------------------
