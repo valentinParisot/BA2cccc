@@ -17,6 +17,9 @@ import java.util.*;
 public final class Game {
 
     //----------------------------------------------------------------------------------------------------
+    private final static int EXACT_SIZE_MAP_PLAYER = 4;
+
+    //----------------------------------------------------------------------------------------------------
 
     /**
      * makes given players play a game of tCHu
@@ -31,7 +34,7 @@ public final class Game {
 
     public static void play(Map<PlayerId, Player> players, Map<PlayerId, String> playerNames, SortedBag<Ticket> tickets, Random rng) {
 
-        Preconditions.checkArgument((players.size() == 2) && (playerNames.size() == 2));
+        Preconditions.checkArgument((players.size() == EXACT_SIZE_MAP_PLAYER) && (playerNames.size() == EXACT_SIZE_MAP_PLAYER));
 
         GameState gameState = GameState.initial(tickets, rng);
 

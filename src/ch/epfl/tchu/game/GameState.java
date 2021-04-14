@@ -18,6 +18,7 @@ public final class GameState extends PublicGameState {
     //----------------------------------------------------------------------------------------------------
 
     private final static int TOP_CARDS_CHOSEN = 4;
+    private final static int MIN_CAR = 2;
 
     //----------------------------------------------------------------------------------------------------
 
@@ -280,7 +281,7 @@ public final class GameState extends PublicGameState {
      */
 
     public boolean lastTurnBegins() {
-        return ((lastPlayer() == null) && (playerState.get(currentPlayerId()).carCount() <= 2));
+        return ((lastPlayer() == null) && (playerState.get(currentPlayerId()).carCount() <= MIN_CAR));
     }
 
     //----------------------------------------------------------------------------------------------------

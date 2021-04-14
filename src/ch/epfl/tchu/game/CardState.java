@@ -33,11 +33,11 @@ public final class CardState extends PublicCardState {
 
     public static CardState of(Deck<Card> deck) {
 
-        Preconditions.checkArgument(deck.size() >= 5);
+        Preconditions.checkArgument(deck.size() >= Constants.FACE_UP_CARDS_COUNT);
 
-        List<Card> listTopCards = deck.topCards(5).toList();
+        List<Card> listTopCards = deck.topCards(Constants.FACE_UP_CARDS_COUNT).toList();
 
-        return (new CardState(deck.withoutTopCards(5), new SortedBag.Builder<Card>().build(), listTopCards));
+        return (new CardState(deck.withoutTopCards(Constants.FACE_UP_CARDS_COUNT), new SortedBag.Builder<Card>().build(), listTopCards));
     }
 
     //----------------------------------------------------------------------------------------------------

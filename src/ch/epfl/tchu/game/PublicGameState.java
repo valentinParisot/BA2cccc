@@ -24,6 +24,8 @@ public class PublicGameState {
     private final PlayerId currentPlayerId;
     private final Map<PlayerId, PublicPlayerState> playerState;
     private final PlayerId lastPlayer;
+    private final static int MIN_DECK_DISCARD = 5;
+    private final static int EXACT_NUMBER_OF_KEY = 2;
 
     //----------------------------------------------------------------------------------------------------
 
@@ -46,7 +48,7 @@ public class PublicGameState {
                            Map<PlayerId, PublicPlayerState> playerState,
                            PlayerId lastPlayer) {
 
-        Preconditions.checkArgument((ticketsCount >= 0) && (playerState.size() == 2));
+        Preconditions.checkArgument((ticketsCount >= 0) && (playerState.size() == EXACT_NUMBER_OF_KEY));
 
         this.ticketsCount = ticketsCount;
         this.cardState = Objects.requireNonNull(cardState);
@@ -93,7 +95,7 @@ public class PublicGameState {
      */
 
     public boolean canDrawCards() {
-        return ((cardState.deckSize() + cardState.discardsSize() >= 5));
+        return ((cardState.deckSize() + cardState.discardsSize() >= MIN_DECK_DISCARD ));
     }
 
     //----------------------------------------------------------------------------------------------------
