@@ -65,7 +65,7 @@ public interface Serde<Obj> {
                 for(String string : list){
                     objs.add(serde.deSerialize(string));
                 }
-                return null;
+                return objs;
             }
         };
     }
