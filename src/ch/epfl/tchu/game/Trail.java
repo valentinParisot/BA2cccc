@@ -27,20 +27,20 @@ public final class Trail {
     public static Trail longest(List<Route> routes) {
 
         Trail longest = new Trail(List.of(), null, null, 0);
-        List<Trail> cs = new ArrayList<>();
+        List<Trail> helper = new ArrayList<>();
 
         for (Route r : routes) {
-            cs.add(new Trail(List.of(r), r.station1(), r.station2(), r.length()));
+            helper.add(new Trail(List.of(r), r.station1(), r.station2(), r.length()));
 
             if (r.length() > longest.length) {
                 longest = new Trail(List.of(r), r.station1(), r.station2(), r.length());
             }
-            cs.add(new Trail(List.of(r), r.station2(), r.station1(), r.length()));
+            helper.add(new Trail(List.of(r), r.station2(), r.station1(), r.length()));
         }
 
-        while (cs.size() != 0) {
-            List<Trail> csPrime = new ArrayList<>();
-            for (Trail t : cs) {
+        while (helper.size() != 0) {
+            List<Trail> helperPrime = new ArrayList<>();
+            for (Trail t : helper) {
 
 
                 for (Route r : routes) {
@@ -48,7 +48,7 @@ public final class Trail {
 
                         List<Route> rs = new ArrayList<>(t.routeList);
                         rs.add(r);
-                        csPrime.add(new Trail(rs, t.station1, r.stationOpposite(t.station2), t.length + r.length()));
+                        helperPrime.add(new Trail(rs, t.station1, r.stationOpposite(t.station2), t.length + r.length()));
 
                         if (t.length + r.length() > longest.length) {
                             longest = new Trail(rs, t.station1, r.stationOpposite(t.station2), t.length + r.length());
@@ -57,7 +57,7 @@ public final class Trail {
                 }
 
             }
-            cs = csPrime;
+            helper = helperPrime;
         }
         return longest;
     }

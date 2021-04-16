@@ -188,7 +188,12 @@ public final class Route {
 
     //----------------------------------------------------------------------------------------------------
 
-    public List<SortedBag<Card>> undergroundCards() {
+    /**
+     * used by possibleClaimCards() in the case of ab underground level
+     * @return the possible clai cards of an underground level
+     */
+
+    private List<SortedBag<Card>> undergroundCards() {
 
         List<SortedBag<Card>> cards1 = new ArrayList<>();
         for (int i = 0; i <= length; i++) {
@@ -216,7 +221,12 @@ public final class Route {
 
     //----------------------------------------------------------------------------------------------------
 
-    public List<SortedBag<Card>> overgroundCards() {
+    /**
+     * used by possibleClaimCards() in the case of ab overderground level
+     * @return the possible clai cards of an overground level
+     */
+
+    private List<SortedBag<Card>> overgroundCards() {
 
         List<SortedBag<Card>> cards1 = new ArrayList<>();
         if (color != null) {
