@@ -17,7 +17,7 @@ import java.util.*;
 public final class Game {
 
     //----------------------------------------------------------------------------------------------------
-    private final static int EXACT_SIZE_MAP_PLAYER = 4;
+    private final static int EXACT_SIZE_MAP_PLAYER = 2;
 
     //----------------------------------------------------------------------------------------------------
 

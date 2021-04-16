@@ -162,14 +162,8 @@ public final class GameState extends PublicGameState {
 
     public GameState withCardsDeckRecreatedIfNeeded(Random rng) {
 
-        if (cardstate.isDeckEmpty()) {
-
-            return new GameState(ticketDeck, cardstate.withDeckRecreatedFromDiscards(rng),
-                    currentPlayerId(), playerState, lastPlayer());
-        } else {
-
-            return this;
-        }
+        return (cardstate.isDeckEmpty()) ? new GameState(ticketDeck, cardstate.withDeckRecreatedFromDiscards(rng),
+                currentPlayerId(), playerState, lastPlayer()) : this;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -294,13 +288,9 @@ public final class GameState extends PublicGameState {
 
     public GameState forNextTurn() {
 
-        if (lastTurnBegins()) {
-
-            return new GameState(ticketDeck, cardstate, currentPlayerId().next(), playerState, currentPlayerId());
-        } else {
-
-            return new GameState(ticketDeck, cardstate, currentPlayerId().next(), playerState, lastPlayer());
-        }
+        return (lastTurnBegins()) ?
+                new GameState(ticketDeck, cardstate, currentPlayerId().next(), playerState, currentPlayerId())
+                : new GameState(ticketDeck, cardstate, currentPlayerId().next(), playerState, lastPlayer());
     }
 
     //----------------------------------------------------------------------------------------------------

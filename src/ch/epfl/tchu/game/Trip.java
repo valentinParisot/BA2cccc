@@ -112,11 +112,7 @@ public final class Trip {
 
     public int points(StationConnectivity connectivity) {
 
-        if (connectivity.connected(from, to)) {
-            return points();
-        }
-
-        return (-points());
+        return (connectivity.connected(from, to)) ? points() : (-points());
     }
 
     //----------------------------------------------------------------------------------------------------

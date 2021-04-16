@@ -97,11 +97,8 @@ public final class StationPartition implements StationConnectivity {
 
     public boolean connected(Station station1, Station station2) {
 
-        if (station1.id() >= integers.length || station2.id() >= integers.length) {
-            return (station1.id() == station2.id());
-        }
-
-        return integers[station1.id()] == integers[station2.id()];
+        return (station1.id() >= integers.length || station2.id() >= integers.length) ? (station1.id() == station2.id())
+                : integers[station1.id()] == integers[station2.id()];
     }
 
     //----------------------------------------------------------------------------------------------------

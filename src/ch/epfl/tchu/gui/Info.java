@@ -288,6 +288,7 @@ public final class Info {
 
         return (String.format(StringsFr.ADDITIONAL_CARDS_ARE, cards) +
                 String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost, StringsFr.plural(additionalCost)));
+
     }
 
     //----------------------------------------------------------------------------------------------------

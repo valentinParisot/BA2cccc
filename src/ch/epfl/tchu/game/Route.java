@@ -123,7 +123,9 @@ public final class Route {
      * @return the color of the route
      */
 
-    public Color color() { return color; }
+    public Color color() {
+        return color;
+    }
 
     //----------------------------------------------------------------------------------------------------
 
@@ -156,10 +158,7 @@ public final class Route {
 
         Preconditions.checkArgument(stations().contains(station));
 
-        if (station.equals(station1)) {
-            return station2;
-        } else
-            return station1;
+        return (station.equals(station1)) ? station2 : station1;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -230,7 +229,7 @@ public final class Route {
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
 
         Preconditions.checkArgument((level.equals(Level.UNDERGROUND))
-                                    && (drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS));
+                && (drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS));
 
         Card card = claimCards.get(0);
 
@@ -264,7 +263,9 @@ public final class Route {
      * @return points
      */
 
-    public int claimPoints() { return Constants.ROUTE_CLAIM_POINTS.get(length); }
+    public int claimPoints() {
+        return Constants.ROUTE_CLAIM_POINTS.get(length);
+    }
 
     //----------------------------------------------------------------------------------------------------
 }

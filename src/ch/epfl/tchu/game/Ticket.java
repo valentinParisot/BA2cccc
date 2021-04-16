@@ -56,7 +56,6 @@ public final class Ticket implements Comparable<Ticket> {
      */
 
     public Ticket(Station from, Station to, int points) {
-
         this(List.of(new Trip(from, to, points)));
     }
 
@@ -123,11 +122,7 @@ public final class Ticket implements Comparable<Ticket> {
 
         String text = String.join(", ", s);
 
-        if (s.size() == 1) {
-            return String.format("%s - %s", n, text);
-        }
-
-        return String.format("%s - {%s}", n, text);
+        return (s.size() == 1) ? String.format("%s - %s", n, text) : String.format("%s - {%s}", n, text);
     }
 
     //----------------------------------------------------------------------------------------------------

@@ -111,12 +111,7 @@ public final class Trail {
      */
 
     public Station station1() {
-
-        if (this.length() == 0) {
-            return null;
-        }
-
-        return station1;
+        return (this.length() == 0) ? null : station1;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -125,12 +120,7 @@ public final class Trail {
      * @return the last station of the trail
      */
     public Station station2() {
-
-        if (this.length() == 0) {
-            return null;
-        }
-
-        return station2;
+        return (this.length() == 0) ? null : station2;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -142,14 +132,10 @@ public final class Trail {
     @Override
     public String toString() {
 
-        if (this == null) {
-            return "Nothing to see there...";
-        }
-
         String n = (station1.name() + station2.name());
         n = (n + "(" + length() + ")");
 
-        return n;
+        return (this == null) ? "Nothing to see there..." : n;
     }
 
     //----------------------------------------------------------------------------------------------------
