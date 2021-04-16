@@ -84,6 +84,8 @@ class InfoTest {
     void infoDrawWorks() {
         var actual = Info.draw(List.of("Ada", "Ada"), 17);
         var expected = "\nAda et Ada sont ex æqo avec 17 points !\n";
+        System.out.println(actual);
+        System.out.println(expected);
         assertEquals(expected, actual);
     }
 
