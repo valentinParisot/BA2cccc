@@ -172,47 +172,66 @@ public final class Route {
 
     public List<SortedBag<Card>> possibleClaimCards() {
 
-        List<SortedBag<Card>> cards1 = new ArrayList<>();
+
 
         if (level.equals(Level.UNDERGROUND)) {
 
-            for (int i = 0; i <= length; i++) {
-
-                if (color != null) {
-
-                    cards1.add(SortedBag.of(length - i, Card.of(color), i, Card.LOCOMOTIVE));
-                } else {
-
-                    if (i != length) {
-
-                        for (Card card : Card.CARS) {
-
-                            cards1.add(SortedBag.of(length - i, card, i, Card.LOCOMOTIVE));
-                        }
-                    } else {
-
-                        cards1.add(SortedBag.of(i, Card.LOCOMOTIVE));
-                    }
-                }
-            }
+           return undergroundCards();
         }
 
-        if (level.equals(Level.OVERGROUND)) {
+        else {
+
+           return overgroundCards();
+        }
+
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
+    public List<SortedBag<Card>> undergroundCards() {
+
+        List<SortedBag<Card>> cards1 = new ArrayList<>();
+        for (int i = 0; i <= length; i++) {
 
             if (color != null) {
 
-                cards1.add(SortedBag.of(length, Card.of(color)));
+                cards1.add(SortedBag.of(length - i, Card.of(color), i, Card.LOCOMOTIVE));
             } else {
 
-                for (Card card : Card.CARS) {
+                if (i != length) {
 
-                    cards1.add(SortedBag.of(length, card));
+                    for (Card card : Card.CARS) {
+
+                        cards1.add(SortedBag.of(length - i, card, i, Card.LOCOMOTIVE));
+                    }
+                } else {
+
+                    cards1.add(SortedBag.of(i, Card.LOCOMOTIVE));
                 }
             }
         }
+        return cards1;
 
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
+    public List<SortedBag<Card>> overgroundCards() {
+
+        List<SortedBag<Card>> cards1 = new ArrayList<>();
+        if (color != null) {
+
+            cards1.add(SortedBag.of(length, Card.of(color)));
+        } else {
+
+            for (Card card : Card.CARS) {
+
+                cards1.add(SortedBag.of(length, card));
+            }
+        }
         return cards1;
     }
+
 
     //----------------------------------------------------------------------------------------------------
 
