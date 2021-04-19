@@ -8,12 +8,45 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
+/**
+ * Serde
+ * interface
+ *
+ * @author Valentin Parisot (326658)
+ * @author Hugo Jeannin (329220)
+ */
+
 public interface Serde<Obj> {
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param o
+     * @return
+     */
 
     public abstract String serialize(Obj o);
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param s
+     * @return
+     */
+
     public abstract Obj deSerialize(String s);
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param serialize
+     * @param deSerialize
+     * @param <Obj>
+     * @return
+     */
 
     public static <Obj> Serde<Obj> of(Function<Obj, String> serialize, Function<String, Obj> deSerialize) {
         return new Serde<Obj>() {
@@ -29,6 +62,14 @@ public interface Serde<Obj> {
         };
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param list
+     * @param <Obj>
+     * @return
+     */
 
     public static <Obj> Serde<Obj> oneOf(List<Obj> list) {
         return new Serde<Obj>() {
@@ -46,6 +87,15 @@ public interface Serde<Obj> {
         };
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param serde
+     * @param separation
+     * @param <Obj>
+     * @return
+     */
 
     public static <Obj> Serde<List<Obj>> listOf(Serde<Obj> serde, String separation) {
         return new Serde<List<Obj>>() {
@@ -70,6 +120,16 @@ public interface Serde<Obj> {
         };
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param serde
+     * @param separation
+     * @param <Obj>
+     * @return
+     */
+
     public static <Obj extends Comparable<Obj>> Serde<SortedBag<Obj>> bagOf(Serde<Obj> serde, String separation) {
         return new Serde<SortedBag<Obj>>() {
 
@@ -88,4 +148,6 @@ public interface Serde<Obj> {
             }
         };
     }
+
+    //----------------------------------------------------------------------------------------------------
 }
