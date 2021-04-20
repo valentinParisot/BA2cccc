@@ -39,8 +39,7 @@ public final class Serdes {
 
     public static final Serde<String> STRING_SERDE = Serde.of(
             s -> Base64.getEncoder().encodeToString(s.getBytes(StandardCharsets.UTF_8)),
-            s -> new String(Base64.getDecoder().decode(s),
-                    StandardCharsets.UTF_8));
+            s -> new String(Base64.getDecoder().decode(s),StandardCharsets.UTF_8));
 
     //----------------------------------------------------------------------------------------------------
 
@@ -78,7 +77,7 @@ public final class Serdes {
                         + COMMA + INT_SERDE.serialize(discardsSize);
             }
             , s -> {
-                String[] tab = s.split(Pattern.quote(SEMICOLON));
+                String[] tab = s.split(Pattern.quote(SEMICOLON), -1);
 
                 return new PublicCardState(LIST_OF_CARD_SERDE.deSerialize(tab[0]),
                         INT_SERDE.deSerialize(tab[1]),
@@ -104,7 +103,7 @@ public final class Serdes {
                         + COMMA + STRING_SERDE.serialize(s);
             }
             , s -> {
-                String[] tab = s.split(Pattern.quote(SEMICOLON));
+                String[] tab = s.split(Pattern.quote(SEMICOLON), -1);
 
                 return new PublicPlayerState(INT_SERDE.deSerialize(tab[0]),
                         INT_SERDE.deSerialize(tab[1]),
@@ -129,7 +128,7 @@ public final class Serdes {
                         + COMMA + STRING_SERDE.serialize(route);
             }
             , s -> {
-                String[] tab = s.split(Pattern.quote(SEMICOLON));
+                String[] tab = s.split(Pattern.quote(SEMICOLON), -1);
 
                 return new PlayerState(BAG_OF_TICKET_SERDE.deSerialize(tab[0]),
                         BAG_OF_CARD_SERDE.deSerialize(tab[1]),
@@ -152,14 +151,23 @@ public final class Serdes {
                 currentPlayerId = publicGameState.currentPlayerId();
                 playerStateUn = publicGameState.playerState(PLAYER_1);
                 playerStateDeux = publicGameState.playerState(PLAYER_2);
+
                 lastPlayer = publicGameState.lastPlayer();
 
-                return INT_SERDE.serialize(ticketCount)
-                        + DOUBLE_POINT + PUBLIC_CARD_STATE_SERDE.serialize(publicCardState)
-                        + DOUBLE_POINT + PLAYER_ID_SERDE.serialize(currentPlayerId)
-                        + DOUBLE_POINT + PUBLIC_PLAYER_STATE_SERDE.serialize(playerStateUn)
-                        + DOUBLE_POINT + PUBLIC_PLAYER_STATE_SERDE.serialize(playerStateDeux)
-                        + DOUBLE_POINT + PLAYER_ID_SERDE.serialize(lastPlayer);
+                if((publicGameState.lastPlayer()== null)) { // gerer comme ca quand null est last player ou alors mettre le stringnull?
+                    return INT_SERDE.serialize(ticketCount)
+                            + DOUBLE_POINT + PUBLIC_CARD_STATE_SERDE.serialize(publicCardState)
+                            + DOUBLE_POINT + PLAYER_ID_SERDE.serialize(currentPlayerId)
+                            + DOUBLE_POINT + PUBLIC_PLAYER_STATE_SERDE.serialize(playerStateUn)
+                            + DOUBLE_POINT + PUBLIC_PLAYER_STATE_SERDE.serialize(playerStateDeux)
+                            + DOUBLE_POINT +STRING_SERDE.serialize("");
+                }else
+                    return INT_SERDE.serialize(ticketCount)
+                            + DOUBLE_POINT + PUBLIC_CARD_STATE_SERDE.serialize(publicCardState)
+                            + DOUBLE_POINT + PLAYER_ID_SERDE.serialize(currentPlayerId)
+                            + DOUBLE_POINT + PUBLIC_PLAYER_STATE_SERDE.serialize(playerStateUn)
+                            + DOUBLE_POINT + PUBLIC_PLAYER_STATE_SERDE.serialize(playerStateDeux)
+                            + DOUBLE_POINT + PLAYER_ID_SERDE.serialize(lastPlayer);
             }
             , s -> {
                 String[] tab = s.split(Pattern.quote(DOUBLE_POINT), -1);

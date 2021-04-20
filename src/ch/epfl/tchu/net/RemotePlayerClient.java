@@ -65,7 +65,7 @@ public final class RemotePlayerClient {
 
         while (!(reader.readLine() == null)) {
             String s = reader.readLine();
-            String[] tab = s.split(Pattern.quote(SPACE));
+            String[] tab = s.split(Pattern.quote(SPACE),-1);
 
             switch (MessageId.valueOf(tab[0])) { // valut a utiliser ocmme ca ?e of es
 
