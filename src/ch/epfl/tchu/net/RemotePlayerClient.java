@@ -63,7 +63,7 @@ public final class RemotePlayerClient {
                         new OutputStreamWriter(socket.getOutputStream(),
                                 US_ASCII));
 
-        while (!(reader.readLine() == null)) {
+        while (reader.readLine() != null) {
             String s = reader.readLine();
             String[] tab = s.split(Pattern.quote(SPACE),-1);
 

@@ -66,15 +66,17 @@ public final class Serdes {
                 String s;
                 int deckSize;
                 int discardsSize;
+                List<Card> card;
 
-                s = String.join(publicCardState.faceUpCards().toString(), COMMA);
+                //s = String.join(publicCardState.faceUpCards().toString(), COMMA);
+                card = publicCardState.faceUpCards();
                 deckSize = publicCardState.deckSize();
                 discardsSize = publicCardState.discardsSize();
 
 
-                return STRING_SERDE.serialize(s)
-                        + COMMA + INT_SERDE.serialize(deckSize)
-                        + COMMA + INT_SERDE.serialize(discardsSize);
+                return LIST_OF_CARD_SERDE.serialize(card)
+                        + SEMICOLON + INT_SERDE.serialize(deckSize)
+                        + SEMICOLON + INT_SERDE.serialize(discardsSize);
             }
             , s -> {
                 String[] tab = s.split(Pattern.quote(SEMICOLON), -1);
@@ -90,17 +92,18 @@ public final class Serdes {
 
     public static final Serde<PublicPlayerState> PUBLIC_PLAYER_STATE_SERDE = Serde.of(
             publicPlayerState -> {
-                String s;
+                List<Route> routes;
                 int ticketCount;
                 int cardCount;
 
-                s = String.join(publicPlayerState.routes().toString(), COMMA);
+                //s = String.join(publicPlayerState.routes().toString(), COMMA);
+                routes = publicPlayerState.routes();
                 ticketCount = publicPlayerState.ticketCount();
                 cardCount = publicPlayerState.cardCount();
 
                 return INT_SERDE.serialize(ticketCount)
-                        + COMMA + INT_SERDE.serialize(cardCount)
-                        + COMMA + STRING_SERDE.serialize(s);
+                        + SEMICOLON + INT_SERDE.serialize(cardCount)
+                        + SEMICOLON + LIST_OF_ROUTE_SERDE.serialize(routes);
             }
             , s -> {
                 String[] tab = s.split(Pattern.quote(SEMICOLON), -1);
@@ -115,17 +118,25 @@ public final class Serdes {
 
     public static final Serde<PlayerState> PLAYER_STATE_SERDE = Serde.of(
             playerState -> {
-                String route;
-                String ticket;
-                String card;
+                SortedBag<Ticket> ticket;
+                SortedBag<Card> card;
+                List<Route> route;
 
-                route = String.join(playerState.routes().toString(), COMMA);
-                ticket = String.join(playerState.tickets().toString(), COMMA);
-                card = String.join(playerState.cards().toString(), COMMA);
+                //route = String.join(playerState.routes().toString(), COMMA);
+                //ticket = String.join(playerState.tickets().toString(), COMMA);
+                //card = String.join(playerState.cards().toString(), COMMA);
 
-                return STRING_SERDE.serialize(ticket)
-                        + COMMA + STRING_SERDE.serialize(card)
-                        + COMMA + STRING_SERDE.serialize(route);
+                ticket = playerState.tickets();
+                card = playerState.cards();
+                route = playerState.routes();
+
+                //return STRING_SERDE.serialize(ticket)
+                //        + SEMICOLON + STRING_SERDE.serialize(card)
+                //        + SEMICOLON + STRING_SERDE.serialize(route);
+
+                return BAG_OF_TICKET_SERDE.serialize(ticket)
+                        + SEMICOLON + BAG_OF_CARD_SERDE.serialize(card)
+                        +SEMICOLON + LIST_OF_ROUTE_SERDE.serialize(route);
             }
             , s -> {
                 String[] tab = s.split(Pattern.quote(SEMICOLON), -1);
@@ -174,8 +185,9 @@ public final class Serdes {
 
                 Map<PlayerId, PublicPlayerState> playerStateMap = new HashMap<>();
 
+                int i = 3;
                 for (PlayerId id : PlayerId.ALL) {
-                    int i = 3;
+
                     playerStateMap.put(PLAYER_ID_SERDE.deSerialize(id.toString()),
                             PUBLIC_PLAYER_STATE_SERDE.deSerialize(tab[i]));
                     i++;
