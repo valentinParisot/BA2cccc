@@ -14,12 +14,11 @@ public final class TestServer {
         System.out.println("Starting server!");
         try (ServerSocket serverSocket = new ServerSocket(5108);
              Socket socket = serverSocket.accept()) {
-            /**Player playerProxy = new RemotePlayerProxy(socket);
+            Player playerProxy = new RemotePlayerProxy(socket);
             var playerNames = Map.of(PLAYER_1, "Ada",
                     PLAYER_2, "Charles");
             playerProxy.initPlayers(PLAYER_1, playerNames);
         }
-        System.out.println("Server done!");**/
+        System.out.println("Server done!");
     }
-}
 }
