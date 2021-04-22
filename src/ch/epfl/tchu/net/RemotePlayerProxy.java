@@ -30,11 +30,11 @@ public class RemotePlayerProxy implements Player {
         list.add(playerNames.get(PlayerId.PLAYER_1));
         list.add(playerNames.get(PlayerId.PLAYER_2));
 
-        String iP = (idSerde.serialize(ownId)
+        String initPlayers = (idSerde.serialize(ownId)
                 + " "
                 + listSerde.serialize(list));
 
-        send(MessageId.INIT_PLAYERS, iP);
+        send(MessageId.INIT_PLAYERS, initPlayers);
 
     }
 
@@ -42,9 +42,9 @@ public class RemotePlayerProxy implements Player {
     public void receiveInfo(String info) {
 
         Serde<String> stringSerde = Serdes.STRING_SERDE;
-        String rInf = stringSerde.serialize(info);
+        String rInfo = stringSerde.serialize(info);
 
-        send(MessageId.RECEIVE_INFO, rInf);
+        send(MessageId.RECEIVE_INFO, rInfo);
     }
 
     @Override
@@ -53,11 +53,11 @@ public class RemotePlayerProxy implements Player {
         Serde<PublicGameState> pgsSerde = Serdes.PUBLIC_GAME_STATE_SERDE;
         Serde<PlayerState> stringSerde = Serdes.PLAYER_STATE_SERDE;
 
-        String uS = (pgsSerde.serialize(newState)
+        String updateState = (pgsSerde.serialize(newState)
                 + " "
                 + stringSerde.serialize(ownState));
 
-        send(MessageId.UPDATE_STATE, uS);
+        send(MessageId.UPDATE_STATE, updateState);
 
     }
 
@@ -65,46 +65,94 @@ public class RemotePlayerProxy implements Player {
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
 
         Serde<SortedBag<Ticket>> ticketSerde = Serdes.BAG_OF_TICKET_SERDE;
-        String sITC = ticketSerde.serialize(tickets);
+        String sITChoice = ticketSerde.serialize(tickets);
 
-        send(MessageId.SET_INITIAL_TICKETS, sITC);
+        send(MessageId.SET_INITIAL_TICKETS, sITChoice);
 
     }
 
     @Override
-    public SortedBag<Ticket> chooseInitialTickets() {
-        return null;
+    public SortedBag<Ticket> chooseInitialTickets() {  // correct pour les retours non void? r.readLine() bien utilisé?
+
+        Serde<SortedBag<Ticket>> ticketSerde = Serdes.BAG_OF_TICKET_SERDE;
+        send(MessageId.CHOOSE_INITIAL_TICKETS, "");
+
+        SortedBag<Ticket> cITickets = ticketSerde.deSerialize(receive());
+
+        return cITickets;
     }
 
     @Override
     public TurnKind nextTurn() {
-        return null;
+
+        Serde<TurnKind> ticketSerde = Serdes.TURN_KIND_SERDE;
+        send(MessageId.NEXT_TURN, "");
+
+        TurnKind nextTurn = ticketSerde.deSerialize(receive());
+
+        return nextTurn;
     }
 
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
-        return null;
+
+        Serde<SortedBag<Ticket>> ticketSerde = Serdes.BAG_OF_TICKET_SERDE;
+        send(MessageId.CHOOSE_TICKETS, ticketSerde.serialize(options));
+
+        SortedBag<Ticket> chooseTickets = ticketSerde.deSerialize(receive());
+
+        return chooseTickets;
     }
 
     @Override
     public int drawSlot() {
-        return 0;
+
+        Serde<Integer> intSerde = Serdes.INT_SERDE;
+        send(MessageId.DRAW_SLOT, "");
+
+        int drawSlot = intSerde.deSerialize(receive()).intValue();
+
+        return drawSlot;
     }
 
     @Override
     public Route claimedRoute() {
-        return null;
+
+        Serde<Route> routeSerde = Serdes.ROUTE_SERDE;
+        send(MessageId.ROUTE, "");
+
+        Route cRoute = routeSerde.deSerialize(receive());
+
+        return cRoute;
     }
 
     @Override
     public SortedBag<Card> initialClaimCards() {
-        return null;
+
+        Serde<SortedBag<Card>> cardSerde = Serdes.BAG_OF_CARD_SERDE;
+        send(MessageId.CARDS, "");
+
+        SortedBag<Card> iCCards = cardSerde.deSerialize(receive());
+
+        return iCCards;
     }
 
     @Override
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
-        return null;
+
+        Serde<SortedBag<Card>> cardSerde = Serdes.BAG_OF_CARD_SERDE;
+        Serde<List<SortedBag<Card>>> listSerde = Serdes.LIST_OF_SORTED_BAG_CARD_SERDE;
+
+        send(MessageId.CHOOSE_ADDITIONAL_CARDS, listSerde.serialize(options));
+        SortedBag<Card> cACards = cardSerde.deSerialize(receive());
+
+        return cACards;
     }
+
+
+
+
+
 
     private void send(MessageId id, String serialized) {
 
@@ -119,7 +167,11 @@ public class RemotePlayerProxy implements Player {
                              new OutputStreamWriter(s.getOutputStream(),
                                      US_ASCII))) {
 
-            w.write(id.name() + " " + serialized);
+            String message = (serialized.equals(""))
+                    ? (id.name())
+                    : (id.name() + " " + serialized);
+
+            w.write(message);
             w.write('\n');
             w.flush();
 
@@ -128,7 +180,7 @@ public class RemotePlayerProxy implements Player {
         }
     }
 
-    private void receive() {
+    private String receive() {  // receive = string?
 
         try (ServerSocket s0 = new ServerSocket(5108);
              Socket s = s0.accept();
@@ -141,10 +193,12 @@ public class RemotePlayerProxy implements Player {
                              new OutputStreamWriter(s.getOutputStream(),
                                      US_ASCII))) {
 
-            r.readLine();
+            String message = r.readLine();
+            return message;
 
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+
     }
 }
