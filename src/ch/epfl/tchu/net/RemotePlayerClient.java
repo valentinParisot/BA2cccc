@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static ch.epfl.tchu.net.MessageId.*;
 
 import static ch.epfl.tchu.net.Serdes.*;
 import static java.nio.charset.StandardCharsets.US_ASCII;
@@ -52,7 +51,8 @@ public final class RemotePlayerClient {
      * @throws IOException
      */
 
-    public void run() throws IOException {//ca suffit pour l'exception ?
+    public void run() {
+    try {//ca suffit pour l'exception ?
         Socket socket = new Socket(name, portNumber);
         BufferedReader reader =
                 new BufferedReader(
@@ -65,7 +65,7 @@ public final class RemotePlayerClient {
 
         while (reader.readLine() != null) {
             String s = reader.readLine();
-            String[] tab = s.split(Pattern.quote(SPACE),-1);
+            String[] tab = s.split(Pattern.quote(SPACE), -1);
 
             switch (MessageId.valueOf(tab[0])) { // valut a utiliser ocmme ca ?e of es
 
@@ -92,7 +92,7 @@ public final class RemotePlayerClient {
 
                     PublicGameState publicGameState = PUBLIC_GAME_STATE_SERDE.deSerialize(tab[1]);
                     PlayerState playerState = PLAYER_STATE_SERDE.deSerialize(tab[2]);
-                    player.updateState(publicGameState,playerState);
+                    player.updateState(publicGameState, playerState);
 
                     break;
                 case SET_INITIAL_TICKETS:
@@ -150,6 +150,9 @@ public final class RemotePlayerClient {
                     break;
             }
         }
+    }catch (IOException e) {
+        throw new UncheckedIOException(e);
+    }
     }
     //----------------------------------------------------------------------------------------------------
 }
