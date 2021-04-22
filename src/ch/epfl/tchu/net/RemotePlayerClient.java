@@ -150,7 +150,7 @@ public final class RemotePlayerClient {
                     break;
             }
         }
-    }catch (IOException e) {
+    } catch (IOException e) {
         throw new UncheckedIOException(e);
     }
     }
