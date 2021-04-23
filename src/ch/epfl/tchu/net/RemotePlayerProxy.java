@@ -42,7 +42,7 @@ public class RemotePlayerProxy implements Player {
         list.add(playerNames.get(PlayerId.PLAYER_2));
 
         String initPlayers = (idSerde.serialize(ownId)
-                + " "
+                + SPACE
                 + listSerde.serialize(list));
 
         send(MessageId.INIT_PLAYERS, initPlayers);
@@ -65,7 +65,7 @@ public class RemotePlayerProxy implements Player {
         Serde<PlayerState> stringSerde = Serdes.PLAYER_STATE_SERDE;
 
         String updateState = (pgsSerde.serialize(newState)
-                + " "
+                + SPACE
                 + stringSerde.serialize(ownState));
 
         send(MessageId.UPDATE_STATE, updateState);
