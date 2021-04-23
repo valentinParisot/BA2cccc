@@ -8,6 +8,4 @@ public final class TestClient {
         playerClient.run();
         System.out.println("Client done!");
     }
-
-
 }
