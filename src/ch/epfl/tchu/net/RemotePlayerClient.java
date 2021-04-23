@@ -32,7 +32,6 @@ public final class RemotePlayerClient {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param player
      * @param name
      * @param port
@@ -47,113 +46,113 @@ public final class RemotePlayerClient {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @throws IOException
      */
 
     public void run() {
-    try {//ca suffit pour l'exception ?
-        Socket socket = new Socket(name, portNumber);
-        BufferedReader reader =
-                new BufferedReader(
-                        new InputStreamReader(socket.getInputStream(),
-                                US_ASCII));
-        BufferedWriter writer =
-                new BufferedWriter(
-                        new OutputStreamWriter(socket.getOutputStream(),
-                                US_ASCII));
+        try {
+            Socket socket = new Socket(name, portNumber);
+            BufferedReader reader =
+                    new BufferedReader(
+                            new InputStreamReader(socket.getInputStream(),
+                                    US_ASCII));
+            BufferedWriter writer =
+                    new BufferedWriter(
+                            new OutputStreamWriter(socket.getOutputStream(),
+                                    US_ASCII));
 
-        while (reader.readLine() != null) {
-            String s = reader.readLine();
-            String[] tab = s.split(Pattern.quote(SPACE), -1);
+            while (reader.readLine() != null) {
 
-            switch (MessageId.valueOf(tab[0])) { // valut a utiliser ocmme ca ?e of es
+                System.out.print("la");
+                String s = reader.readLine();
+                String[] tab = s.split(Pattern.quote(SPACE), -1);
 
-                case INIT_PLAYERS: //non
-                    PlayerId ownId = PLAYER_ID_SERDE.deSerialize(tab[1]);
-                    Map<PlayerId, String> playersNames = new HashMap<>();
+                switch (MessageId.valueOf(tab[0])) { // valut a utiliser ocmme ca ?e of es
 
-                    for (PlayerId id : PlayerId.ALL) {
+                    case INIT_PLAYERS: //non
+                        PlayerId ownId = PLAYER_ID_SERDE.deSerialize(tab[1]);
+                        Map<PlayerId, String> playersNames = new HashMap<>();
 
-                        playersNames.put(PLAYER_ID_SERDE.deSerialize(id.toString()),
-                                name);
-                    }
-                    player.initPlayers(ownId, playersNames);
+                        for (PlayerId id : PlayerId.ALL) {
 
+                            playersNames.put(PLAYER_ID_SERDE.deSerialize(id.toString()),
+                                    name);
+                        }
+                        player.initPlayers(ownId, playersNames);
 
-                    break;
-                case RECEIVE_INFO:
+                        break;
+                    case RECEIVE_INFO:
 
-                    String info = STRING_SERDE.deSerialize(tab[1]);
-                    player.receiveInfo(info);
+                        String info = STRING_SERDE.deSerialize(tab[1]);
+                        player.receiveInfo(info);
 
-                    break;
-                case UPDATE_STATE:  //comment est rangé la tab voir avec le class de hugo ?
+                        break;
+                    case UPDATE_STATE:  //comment est rangé la tab voir avec le class de hugo ?
 
-                    PublicGameState publicGameState = PUBLIC_GAME_STATE_SERDE.deSerialize(tab[1]);
-                    PlayerState playerState = PLAYER_STATE_SERDE.deSerialize(tab[2]);
-                    player.updateState(publicGameState, playerState);
+                        PublicGameState publicGameState = PUBLIC_GAME_STATE_SERDE.deSerialize(tab[1]);
+                        PlayerState playerState = PLAYER_STATE_SERDE.deSerialize(tab[2]);
+                        player.updateState(publicGameState, playerState);
 
-                    break;
-                case SET_INITIAL_TICKETS:
+                        break;
+                    case SET_INITIAL_TICKETS:
 
-                    SortedBag<Ticket> initial = BAG_OF_TICKET_SERDE.deSerialize(tab[1]);
-                    player.setInitialTicketChoice(initial);
+                        SortedBag<Ticket> initial = BAG_OF_TICKET_SERDE.deSerialize(tab[1]);
+                        player.setInitialTicketChoice(initial);
 
-                    break;
-                case CHOOSE_INITIAL_TICKETS:
+                        break;
+                    case CHOOSE_INITIAL_TICKETS:
 
-                    SortedBag<Ticket> choose = player.chooseInitialTickets();
-                    writer.write(BAG_OF_TICKET_SERDE.serialize(choose));
+                        SortedBag<Ticket> choose = player.chooseInitialTickets();
+                        writer.write(BAG_OF_TICKET_SERDE.serialize(choose));
 
-                    break;
-                case NEXT_TURN:
+                        break;
+                    case NEXT_TURN:
 
-                    Player.TurnKind turnKind = player.nextTurn();
-                    writer.write(TURN_KIND_SERDE.serialize(turnKind));
+                        Player.TurnKind turnKind = player.nextTurn();
+                        writer.write(TURN_KIND_SERDE.serialize(turnKind));
 
-                    break;
-                case CHOOSE_TICKETS:
+                        break;
+                    case CHOOSE_TICKETS:
 
-                    SortedBag<Ticket> options = BAG_OF_TICKET_SERDE.deSerialize(tab[1]);
-                    SortedBag<Ticket> chooseTickets = player.chooseTickets(options);
-                    writer.write(BAG_OF_TICKET_SERDE.serialize(chooseTickets));
+                        SortedBag<Ticket> options = BAG_OF_TICKET_SERDE.deSerialize(tab[1]);
+                        SortedBag<Ticket> chooseTickets = player.chooseTickets(options);
+                        writer.write(BAG_OF_TICKET_SERDE.serialize(chooseTickets));
 
-                    break;
-                case DRAW_SLOT:
+                        break;
+                    case DRAW_SLOT:
 
-                    int drawnSlot = player.drawSlot();
-                    writer.write(INT_SERDE.serialize(drawnSlot));
+                        int drawnSlot = player.drawSlot();
+                        writer.write(INT_SERDE.serialize(drawnSlot));
 
-                    break;
-                case ROUTE://claimed route ?
+                        break;
+                    case ROUTE://claimed route ?
 
-                    Route route = player.claimedRoute();
-                    writer.write(ROUTE_SERDE.serialize(route));
+                        Route route = player.claimedRoute();
+                        writer.write(ROUTE_SERDE.serialize(route));
 
-                    break;
-                case CARDS:
-                    SortedBag<Card> cards = player.initialClaimCards();
-                    writer.write(BAG_OF_CARD_SERDE.serialize(cards));
+                        break;
+                    case CARDS:
+                        SortedBag<Card> cards = player.initialClaimCards();
+                        writer.write(BAG_OF_CARD_SERDE.serialize(cards));
 
-                    break;
-                case CHOOSE_ADDITIONAL_CARDS:
+                        break;
+                    case CHOOSE_ADDITIONAL_CARDS:
 
-                    List<SortedBag<Card>> options2 = LIST_OF_SORTED_BAG_CARD_SERDE.deSerialize(tab[1]);
-                    SortedBag<Card> card = player.chooseAdditionalCards(options2);
-                    writer.write(BAG_OF_CARD_SERDE.serialize(card));
+                        List<SortedBag<Card>> options2 = LIST_OF_SORTED_BAG_CARD_SERDE.deSerialize(tab[1]);
+                        SortedBag<Card> card = player.chooseAdditionalCards(options2);
+                        writer.write(BAG_OF_CARD_SERDE.serialize(card));
 
-                    break;
+                        break;
 
-
-                default:
-                    break;
+                    default:
+                        break;
+                }
             }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
-    } catch (IOException e) {
-        throw new UncheckedIOException(e);
     }
-    }
-    //----------------------------------------------------------------------------------------------------
 }
+
+//----------------------------------------------------------------------------------------------------
 

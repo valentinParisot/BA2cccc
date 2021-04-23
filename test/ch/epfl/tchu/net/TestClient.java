@@ -1,5 +1,7 @@
 package ch.epfl.tchu.net;
 
+import java.io.IOException;
+
 public final class TestClient {
     public static void main(String[] args) {
         System.out.println("Starting client!");
