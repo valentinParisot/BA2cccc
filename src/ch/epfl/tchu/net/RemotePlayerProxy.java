@@ -14,10 +14,19 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
 
 public class RemotePlayerProxy implements Player {
 
-    private final Socket socket;
+    private final BufferedReader r;
+    private final BufferedWriter w;
 
-    public RemotePlayerProxy(Socket socket) {
-        this.socket = socket;
+    public RemotePlayerProxy(Socket socket) throws IOException {
+
+        this.r =
+                new BufferedReader(
+                        new InputStreamReader(socket.getInputStream(),
+                                US_ASCII));
+        this.w =
+                new BufferedWriter(
+                        new OutputStreamWriter(socket.getOutputStream(),
+                                US_ASCII));
     }
 
     @Override
@@ -150,23 +159,9 @@ public class RemotePlayerProxy implements Player {
     }
 
 
-
-
-
-
     private void send(MessageId id, String serialized) {
 
-        try (ServerSocket s0 = new ServerSocket(5108);
-             Socket s = s0.accept();
-             BufferedReader r =
-                     new BufferedReader(
-                             new InputStreamReader(s.getInputStream(),
-                                     US_ASCII));
-             BufferedWriter w =
-                     new BufferedWriter(
-                             new OutputStreamWriter(s.getOutputStream(),
-                                     US_ASCII))) {
-
+        try {
             String message = (serialized.equals(""))
                     ? (id.name())
                     : (id.name() + " " + serialized);
@@ -174,28 +169,18 @@ public class RemotePlayerProxy implements Player {
             w.write(message);
             w.write('\n');
             w.flush();
-
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+
+
     }
 
-    private String receive() {  // receive = string?
+    private String receive() {
 
-        try (ServerSocket s0 = new ServerSocket(5108);
-             Socket s = s0.accept();
-             BufferedReader r =
-                     new BufferedReader(
-                             new InputStreamReader(s.getInputStream(),
-                                     US_ASCII));
-             BufferedWriter w =
-                     new BufferedWriter(
-                             new OutputStreamWriter(s.getOutputStream(),
-                                     US_ASCII))) {
-
+        try {
             String message = r.readLine();
             return message;
-
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
