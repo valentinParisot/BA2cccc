@@ -5,7 +5,6 @@ import ch.epfl.tchu.game.*;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +24,8 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
 
 public final class RemotePlayerClient {
 
+    //----------------------------------------------------------------------------------------------------
+
     private final Player player;
     private final String name;
     private final int portNumber;
@@ -33,9 +34,11 @@ public final class RemotePlayerClient {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param player
-     * @param name
-     * @param port
+     * constructor
+     *
+     * @param player the player
+     * @param name name of the player
+     * @param port the port to use to connect to the proxy
      */
 
     public RemotePlayerClient(Player player, String name, int port) {
@@ -47,6 +50,12 @@ public final class RemotePlayerClient {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * waits for a message from the proxy,
+     * splits it using the space character as a separator,
+     * determines the type of the message according to the first string resulting from the splitting,
+     * depending on this type of message, deserialize the arguments, call the player's corresponding method;
+     * if this method returns a result, serializes it to return it to the proxy in response.
+     *
      * @throws IOException
      */
 
@@ -81,6 +90,7 @@ public final class RemotePlayerClient {
                         }
                         player.initPlayers(ownId, playersNames);
 
+
                         break;
                     case RECEIVE_INFO:
 
@@ -104,59 +114,74 @@ public final class RemotePlayerClient {
                     case CHOOSE_INITIAL_TICKETS:
 
                         SortedBag<Ticket> choose = player.chooseInitialTickets();
-                        writer.write(BAG_OF_TICKET_SERDE.serialize(choose));
-                        writer.write('\n');
-                        writer.flush();
+                        write(writer,BAG_OF_TICKET_SERDE.serialize(choose));
 
+                        //writer.write(BAG_OF_TICKET_SERDE.serialize(choose));
+                        //writer.write('\n');
+                        //writer.flush();
 
                         break;
                     case NEXT_TURN:
 
                         Player.TurnKind turnKind = player.nextTurn();
-                        writer.write(TURN_KIND_SERDE.serialize(turnKind));
-                        writer.write('\n');
-                        writer.flush();
+                        write(writer,TURN_KIND_SERDE.serialize(turnKind));
+
+                        //writer.write(TURN_KIND_SERDE.serialize(turnKind));
+                        //writer.write('\n');
+                        //writer.flush();
 
                         break;
                     case CHOOSE_TICKETS:
 
                         SortedBag<Ticket> options = BAG_OF_TICKET_SERDE.deSerialize(tab[1]);
                         SortedBag<Ticket> chooseTickets = player.chooseTickets(options);
-                        writer.write(BAG_OF_TICKET_SERDE.serialize(chooseTickets));
-                        writer.write('\n');
-                        writer.flush();
+                        write(writer,BAG_OF_TICKET_SERDE.serialize(chooseTickets));
+
+                        //writer.write(BAG_OF_TICKET_SERDE.serialize(chooseTickets));
+                        //writer.write('\n');
+                        //writer.flush();
 
                         break;
                     case DRAW_SLOT:
 
                         int drawnSlot = player.drawSlot();
-                        writer.write(INT_SERDE.serialize(drawnSlot));
-                        writer.write('\n');
-                        writer.flush();
+                        //writer.write(INT_SERDE.serialize(drawnSlot));
+
+                        write(writer,INT_SERDE.serialize(drawnSlot));
+                        //writer.write('\n');
+                        //writer.flush();
 
                         break;
                     case ROUTE:
 
                         Route route = player.claimedRoute();
-                        writer.write(ROUTE_SERDE.serialize(route));
-                        writer.write('\n');
-                        writer.flush();
+                        write(writer,ROUTE_SERDE.serialize(route));
+
+                        //writer.write(ROUTE_SERDE.serialize(route));
+                        //writer.write('\n');
+                        //writer.flush();
 
                         break;
                     case CARDS:
                         SortedBag<Card> cards = player.initialClaimCards();
-                        writer.write(BAG_OF_CARD_SERDE.serialize(cards));
-                        writer.write('\n');
-                        writer.flush();
+                        write(writer,BAG_OF_CARD_SERDE.serialize(cards));
+                        //writer.write(BAG_OF_CARD_SERDE.serialize(cards));
+                        //writer.write('\n');
+                        //writer.flush();
 
                         break;
                     case CHOOSE_ADDITIONAL_CARDS:
 
                         List<SortedBag<Card>> options2 = LIST_OF_SORTED_BAG_CARD_SERDE.deSerialize(tab[1]);
                         SortedBag<Card> card = player.chooseAdditionalCards(options2);
-                        writer.write(BAG_OF_CARD_SERDE.serialize(card));
-                        writer.write('\n');
-                        writer.flush();
+
+                        //writer.write(BAG_OF_CARD_SERDE.serialize(card));
+                        //writer.write('\n');
+                        //writer.flush();
+
+                        write(writer,BAG_OF_CARD_SERDE.serialize(card));
+
+
 
                         break;
 
@@ -168,7 +193,25 @@ public final class RemotePlayerClient {
             throw new UncheckedIOException(e);
         }
     }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     * write
+     * @param writer BufferedWriter
+     * @param string string to write
+     * @throws IOException
+     */
+
+    private static void write(BufferedWriter writer,String string) throws IOException {
+
+            writer.write(string);
+            writer.write('\n');
+            writer.flush();
+
+    }
+
+    //----------------------------------------------------------------------------------------------------
 }
 
-//----------------------------------------------------------------------------------------------------
 

@@ -33,9 +33,9 @@ public final class TestServer {
 
             playerProxy.initPlayers(PLAYER_1, playerNames);
 
-            playerProxy.receiveInfo(i1.won(1,2));
+            playerProxy.receiveInfo(i1.drewBlindCard());
 
-           // playerProxy.updateState();
+           //playerProxy.updateState();
 
             playerProxy.setInitialTicketChoice(tickets);
         }
