@@ -5,6 +5,7 @@ import ch.epfl.tchu.game.*;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,23 +61,23 @@ public final class RemotePlayerClient {
                     new BufferedWriter(
                             new OutputStreamWriter(socket.getOutputStream(),
                                     US_ASCII));
+            String s;
 
-            while (reader.readLine() != null) {
+            while ( (s = reader.readLine()) != null) {
 
-                System.out.print("la");
-                String s = reader.readLine();
                 String[] tab = s.split(Pattern.quote(SPACE), -1);
 
-                switch (MessageId.valueOf(tab[0])) { // valut a utiliser ocmme ca ?e of es
+                switch (MessageId.valueOf(tab[0])) {
 
                     case INIT_PLAYERS: //non
+
                         PlayerId ownId = PLAYER_ID_SERDE.deSerialize(tab[1]);
                         Map<PlayerId, String> playersNames = new HashMap<>();
+                        List<String> z = LIST_OF_STRING_SERDE.deSerialize(tab[2]);
 
                         for (PlayerId id : PlayerId.ALL) {
 
-                            playersNames.put(PLAYER_ID_SERDE.deSerialize(id.toString()),
-                                    name);
+                            playersNames.put(id, z.get(id.ordinal()));
                         }
                         player.initPlayers(ownId, playersNames);
 
@@ -125,7 +126,7 @@ public final class RemotePlayerClient {
                         writer.write(INT_SERDE.serialize(drawnSlot));
 
                         break;
-                    case ROUTE://claimed route ?
+                    case ROUTE:
 
                         Route route = player.claimedRoute();
                         writer.write(ROUTE_SERDE.serialize(route));
