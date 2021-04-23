@@ -16,6 +16,8 @@ public class RemotePlayerProxy implements Player {
 
     private final BufferedReader r;
     private final BufferedWriter w;
+    private final static String SPACE = " ";
+    private final static String NOTHING = "";
 
     public RemotePlayerProxy(Socket socket) throws IOException {
 
@@ -81,10 +83,10 @@ public class RemotePlayerProxy implements Player {
     }
 
     @Override
-    public SortedBag<Ticket> chooseInitialTickets() {  // correct pour les retours non void? r.readLine() bien utilisé?
+    public SortedBag<Ticket> chooseInitialTickets() {
 
         Serde<SortedBag<Ticket>> ticketSerde = Serdes.BAG_OF_TICKET_SERDE;
-        send(MessageId.CHOOSE_INITIAL_TICKETS, "");
+        send(MessageId.CHOOSE_INITIAL_TICKETS, NOTHING);
 
         SortedBag<Ticket> cITickets = ticketSerde.deSerialize(receive());
 
@@ -95,7 +97,7 @@ public class RemotePlayerProxy implements Player {
     public TurnKind nextTurn() {
 
         Serde<TurnKind> ticketSerde = Serdes.TURN_KIND_SERDE;
-        send(MessageId.NEXT_TURN, "");
+        send(MessageId.NEXT_TURN, NOTHING);
 
         TurnKind nextTurn = ticketSerde.deSerialize(receive());
 
@@ -117,7 +119,7 @@ public class RemotePlayerProxy implements Player {
     public int drawSlot() {
 
         Serde<Integer> intSerde = Serdes.INT_SERDE;
-        send(MessageId.DRAW_SLOT, "");
+        send(MessageId.DRAW_SLOT, NOTHING);
 
         int drawSlot = intSerde.deSerialize(receive()).intValue();
 
@@ -128,7 +130,7 @@ public class RemotePlayerProxy implements Player {
     public Route claimedRoute() {
 
         Serde<Route> routeSerde = Serdes.ROUTE_SERDE;
-        send(MessageId.ROUTE, "");
+        send(MessageId.ROUTE, NOTHING);
 
         Route cRoute = routeSerde.deSerialize(receive());
 
@@ -139,7 +141,7 @@ public class RemotePlayerProxy implements Player {
     public SortedBag<Card> initialClaimCards() {
 
         Serde<SortedBag<Card>> cardSerde = Serdes.BAG_OF_CARD_SERDE;
-        send(MessageId.CARDS, "");
+        send(MessageId.CARDS, NOTHING);
 
         SortedBag<Card> iCCards = cardSerde.deSerialize(receive());
 
@@ -162,9 +164,9 @@ public class RemotePlayerProxy implements Player {
     private void send(MessageId id, String serialized) {
 
         try {
-            String message = (serialized.equals(""))
+            String message = (serialized.equals(NOTHING))
                     ? (id.name())
-                    : (id.name() + " " + serialized);
+                    : (id.name() + SPACE + serialized);
 
             w.write(message);
             w.write('\n');
