@@ -68,7 +68,6 @@ public final class Serdes {
                 int discardsSize;
                 List<Card> card;
 
-                //s = String.join(publicCardState.faceUpCards().toString(), COMMA);
                 card = publicCardState.faceUpCards();
                 deckSize = publicCardState.deckSize();
                 discardsSize = publicCardState.discardsSize();
@@ -96,7 +95,6 @@ public final class Serdes {
                 int ticketCount;
                 int cardCount;
 
-                //s = String.join(publicPlayerState.routes().toString(), COMMA);
                 routes = publicPlayerState.routes();
                 ticketCount = publicPlayerState.ticketCount();
                 cardCount = publicPlayerState.cardCount();
@@ -122,17 +120,9 @@ public final class Serdes {
                 SortedBag<Card> card;
                 List<Route> route;
 
-                //route = String.join(playerState.routes().toString(), COMMA);
-                //ticket = String.join(playerState.tickets().toString(), COMMA);
-                //card = String.join(playerState.cards().toString(), COMMA);
-
                 ticket = playerState.tickets();
                 card = playerState.cards();
                 route = playerState.routes();
-
-                //return STRING_SERDE.serialize(ticket)
-                //        + SEMICOLON + STRING_SERDE.serialize(card)
-                //        + SEMICOLON + STRING_SERDE.serialize(route);
 
                 return BAG_OF_TICKET_SERDE.serialize(ticket)
                         + SEMICOLON + BAG_OF_CARD_SERDE.serialize(card)
