@@ -205,9 +205,9 @@ public final class RemotePlayerClient {
 
     private static void write(BufferedWriter writer,String string) throws IOException {
 
-            writer.write(string);
-            writer.write('\n');
-            writer.flush();
+        writer.write(string);
+        writer.write('\n');
+        writer.flush();
 
     }
 
