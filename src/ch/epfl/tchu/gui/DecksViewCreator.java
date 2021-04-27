@@ -1,6 +1,8 @@
 package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.Card;
+import ch.epfl.tchu.game.Ticket;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -12,9 +14,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-class DecksViewCreator {
+public class DecksViewCreator {
 
-    public HBox createHandView(ObservableGameState state){ // type de retour void?
+    public static HBox createHandView(ObservableGameState state) { // type de retour void?
 
         HBox root = new HBox();
         root.getStylesheets().addAll("decks.css", "colors.css");
@@ -38,7 +40,11 @@ class DecksViewCreator {
 
         return root;
     }
-    public VBox createCardsView(ObservableGameState state){ // "deux propriétés contenant chacune un gestionnaire d'action"?
+
+    // "deux propriétés contenant chacune un gestionnaire d'action"?
+    public static VBox createCardsView(ObservableGameState state/*,
+                                ObjectProperty<Ticket> ticketProperty,
+                                ObjectProperty<Card> cardProperty*/) {
 
         VBox root = new VBox();
         root.setId("card-pane");
@@ -53,11 +59,10 @@ class DecksViewCreator {
         root.getChildren().add(cardButton);
 
 
-
         return root;
     }
 
-    private void addWagonLoco(Pane root, Node node){
+    private static void addWagonLoco(Pane root, Node node) {
 
         Rectangle r1 = new Rectangle();
         r1.setWidth(60);
@@ -83,7 +88,7 @@ class DecksViewCreator {
         }
     }
 
-    private void addWagonLoco(Pane root){
+    private static void addWagonLoco(Pane root) {
 
         Rectangle r1 = new Rectangle();
         r1.setWidth(60);
@@ -109,7 +114,7 @@ class DecksViewCreator {
         }
     }
 
-    private Button button(){
+    private static Button button() {
 
         Button button = new Button();
         button.getStyleClass().add("gauged");

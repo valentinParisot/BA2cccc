@@ -31,17 +31,17 @@ public abstract class MapViewCreator {
      * @param ObjectProperty      a property containing the action manager to use when the player wants to seize a road
      * @param cardChooser         card chooser
      */
-    /**public createMapView(ObservableGameState observableGameState,
-                         ObjectProperty<ClaimRouteHandler> ObjectProperty,
-                         CardChooser cardChooser) {
-
-
-    }**/
+    /**
+     * public createMapView(ObservableGameState observableGameState,
+     * ObjectProperty<ClaimRouteHandler> ObjectProperty,
+     * CardChooser cardChooser) {
+     * <p>
+     * <p>
+     * }
+     **/
 
     //----------------------------------------------------------------------------------------------------
-
-
-    public static void createMapView() {
+    public static Pane createMapView() {
 
         Image image = new Image("map.css");
         ImageView iv1 = new ImageView(image);
@@ -90,7 +90,9 @@ public abstract class MapViewCreator {
             }
 
             root.getChildren().setAll(routes);
+
         }
+        return root;
     }
 
     //----------------------------------------------------------------------------------------------------
