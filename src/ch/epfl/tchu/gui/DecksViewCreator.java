@@ -16,7 +16,7 @@ import javafx.scene.text.Text;
 
 public class DecksViewCreator {
 
-    public static HBox createHandView(ObservableGameState state) { // type de retour void?
+    public static HBox createHandView(ObservableGameState state) {
 
         HBox root = new HBox();
         root.getStylesheets().addAll("decks.css", "colors.css");
@@ -42,9 +42,10 @@ public class DecksViewCreator {
     }
 
     // "deux propriétés contenant chacune un gestionnaire d'action"?
+    // afficher 1seule des 5cartes visibles
     public static VBox createCardsView(ObservableGameState state/*,
-                                ObjectProperty<Ticket> ticketProperty,
-                                ObjectProperty<Card> cardProperty*/) {
+                                ObjectProperty<> ticketProperty,
+                                ObjectProperty<> cardProperty*/) {
 
         VBox root = new VBox();
         root.setId("card-pane");
