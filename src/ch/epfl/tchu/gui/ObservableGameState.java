@@ -10,16 +10,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import java.util.List;
+import static ch.epfl.tchu.game.Constants.*;
+import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
+import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
 
 public class ObservableGameState {
 
 
-    private final PlayerId playerId;
-    private final PlayerState playerState;
-    private final PublicGameState gameState;
+    private PlayerId playerId;
+    private PlayerState playerState;
+    private PublicGameState publicGameState;
     /*public static final Integer TICKET_COUNT = 46;
-    public static final Integer CARD_COUNT = 10;*/
+    public static final Integer CARD_COUNT = 110;*/
 
     // etat publique de la partie
     private final IntegerProperty ticketPercentage, cardPercentage;
@@ -40,7 +42,7 @@ public class ObservableGameState {
     public ObservableGameState(PlayerId playerId) {
         this.playerId = playerId;
         playerState = null;
-        gameState = null;
+        publicGameState = null;
 
 
         ticketPercentage = createTicketPercentage();
@@ -61,7 +63,42 @@ public class ObservableGameState {
     }
 
 
-    public void setState(PublicGameState gameState, PlayerState playerState){
+    public void setState(PublicGameState newGameState, PlayerState newPlayerState){
+        this.publicGameState = newGameState;
+        this.playerId = newGameState.currentPlayerId();
+        this.playerState = newPlayerState;
+
+        ticketPercentage.set((newGameState.ticketsCount() / 46) * 100);
+        cardPercentage.set((newPlayerState.cardCount() / 110) * 100);
+
+        for (int slot : FACE_UP_CARD_SLOTS) {
+            Card newCard = newGameState.cardState().faceUpCard(slot);
+            faceUpCards.get(slot).set(newCard);
+        }
+
+        for (Route route : ChMap.routes()) {
+            if(newGameState.playerState(PLAYER_1).routes().contains(route)){
+                routeOwner.get(route).set(PLAYER_1);
+            }
+            else if(newGameState.playerState(PLAYER_2).routes().contains(route)){
+                routeOwner.get(route).set(PLAYER_2);
+            }
+            else {
+                routeOwner.get(route).set(null);
+            }
+            canClaimRoute.get(route).set(claimable(route));
+        }
+
+        ticketCount.set(newPlayerState.ticketCount());
+        cardCount.set(newPlayerState.cardCount());
+        wagonCount.set(newPlayerState.carCount());
+        playerPoints.set(newPlayerState.ticketPoints());
+
+        ticketList.set(FXCollections.observableList(newPlayerState.tickets().toList()));
+
+        for (Card card : Card.ALL) {
+            cardMultiplicity.get(card).set(newPlayerState.cards().countOf(card));
+        }
 
     }
 
@@ -200,11 +237,11 @@ public class ObservableGameState {
 
     //----------------------------------------------------------------------------------------------------
     public boolean canDrawTickets(){
-        return gameState.canDrawTickets();
+        return publicGameState.canDrawTickets();
     }
 
     public boolean canDrawCards(){
-        return gameState.canDrawCards();
+        return publicGameState.canDrawCards();
     }
 
     public List<SortedBag<Card>> possibleClaimCards(Route route) {
