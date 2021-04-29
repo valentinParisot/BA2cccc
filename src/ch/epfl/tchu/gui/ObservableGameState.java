@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class ObservableGameState {
     // etat publique de la partie
     private final IntegerProperty ticketPercentage, cardPercentage;
     private final List<ObjectProperty<Card>> faceUpCards;
-    private final List<ObjectProperty<PlayerId>> routeOwner;
+    private final HashMap<Route, ObjectProperty<PlayerId>> routeOwner;
 
 
     // etat publique de chacun des joueurs
@@ -32,8 +33,8 @@ public class ObservableGameState {
 
     // etat privé de playerId passé au constructeur
     private final ObjectProperty<ObservableList<Ticket>> ticketList;
-    private final List<IntegerProperty> cardMultiplicity;
-    private final List<BooleanProperty> canClaimRoute;
+    private final HashMap<Card, IntegerProperty> cardMultiplicity;
+    private final HashMap<Route, BooleanProperty> canClaimRoute;
 
 
     public ObservableGameState(PlayerId playerId) {
@@ -83,14 +84,15 @@ public class ObservableGameState {
         return list;
     }
 
-    private static List<ObjectProperty<PlayerId>> createRouteOwner(){
-        List<ObjectProperty<PlayerId>> list = new ArrayList<ObjectProperty<PlayerId>>();
+    private static HashMap<Route,ObjectProperty<PlayerId>> createRouteOwner(){
+
+        HashMap<Route, ObjectProperty<PlayerId>> map = new HashMap<>();
 
         for (Route route : ChMap.routes()) {
-            list.add(new SimpleObjectProperty<PlayerId>());
+            map.put(route, new SimpleObjectProperty<PlayerId>());
         }
 
-        return list;
+        return map;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -115,22 +117,24 @@ public class ObservableGameState {
         return new SimpleObjectProperty<ObservableList<Ticket>>();
     }
     
-    private static List<IntegerProperty> createCardMultiplicity(){
-        List<IntegerProperty> list = new ArrayList<>();
+    private static HashMap<Card, IntegerProperty> createCardMultiplicity(){
+
+        HashMap<Card, IntegerProperty> map = new HashMap<>();
 
         for (Card card : Card.ALL) {
-            list.add(new SimpleIntegerProperty());
+           map.put(card, new SimpleIntegerProperty());
         }
-        return list;
+        return map;
     }
 
-    private static List<BooleanProperty> createCanClaimRoute(){
-        List<BooleanProperty> list = new ArrayList<>();
+    private static HashMap<Route, BooleanProperty> createCanClaimRoute(){
+
+        HashMap<Route, BooleanProperty> map = new HashMap<>();
 
         for (Route route : ChMap.routes()) {
-            list.add(new SimpleBooleanProperty());
+            map.put(route, new SimpleBooleanProperty());
         }
-        return list;
+        return map;
     }
 
 
@@ -153,8 +157,8 @@ public class ObservableGameState {
         return faceUpCards.get(slot);
     }
     // comment l'avoir avec une route plutot qu'un int?
-    public ReadOnlyObjectProperty<PlayerId> routeOwner(int slot) {
-        return routeOwner.get(slot);
+    public ReadOnlyObjectProperty<PlayerId> routeOwner(Route route) {
+        return routeOwner.get(route);
     }
 
 
@@ -183,12 +187,12 @@ public class ObservableGameState {
         return ticketList;
     }
 
-    public ReadOnlyIntegerProperty cardMultiplicity(int slot) {
-        return cardMultiplicity.get(slot);
+    public ReadOnlyIntegerProperty cardMultiplicity(Card card) {
+        return cardMultiplicity.get(card);
     }
 
-    public ReadOnlyBooleanProperty canClaimRoute(int slot) {
-        return canClaimRoute.get(slot);
+    public ReadOnlyBooleanProperty canClaimRoute(Route route) {
+        return canClaimRoute.get(route);
     }
 
 
