@@ -1,12 +1,17 @@
 package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.Card;
+import ch.epfl.tchu.game.ChMap;
 import ch.epfl.tchu.game.Ticket;
 import javafx.beans.property.ObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Pagination;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -21,16 +26,79 @@ public class DecksViewCreator {
         HBox root = new HBox();
         root.getStylesheets().addAll("decks.css", "colors.css");
 
+        /**ObservableList<String> names = FXCollections.observableArrayList();
 
-        ListView<String> ticketView = new ListView<String>();
-        ticketView.setId("tickets");
-        root.getChildren().add(ticketView);
+        for (Ticket t : ChMap.tickets()) {
+            names.add(t.toString());
+
+        }
+        ListView<String> billets = new ListView<>(names);
+
+        for (Ticket t : ChMap.tickets()) {
+            billets.getItems().add(t.toString());
+        }
+
+        billets.setId("tickets");
+        root.getChildren().add(billets);**/
 
 
         HBox handPane = new HBox();
         handPane.setId("hand-pane");
 
-        Text counter = new Text();
+
+        /**ListView<String> billets = new ListView<>();
+        for (Ticket t : ChMap.tickets()) {
+
+            billets.getItems().add(t.toString());
+
+        }**/
+
+        for (Card c: Card.ALL) {
+
+            StackPane sp = new StackPane();
+
+
+            if(c.color() == null){
+
+                sp.getStyleClass().addAll("NEUTRAL", "card");
+
+            }else {
+                sp.getStyleClass().addAll(c.color().toString(), "card");
+            }
+
+            Rectangle r1 = new Rectangle();
+            r1.setWidth(60);
+            r1.setHeight(90);
+            r1.getStyleClass().add("outside");
+
+            Rectangle r2 = new Rectangle();
+            r2.setWidth(40);
+            r2.setHeight(70);
+            r2.getStyleClass().addAll("filled","inside");
+
+            Rectangle r3 = new Rectangle();
+            r3.setWidth(40);
+            r3.setHeight(70);
+            r3.getStyleClass().add("train-image");
+
+            Text compteurnoir = new Text();
+            compteurnoir.getStyleClass().add("count");
+
+            sp.getChildren().addAll(r1,r2,r3,compteurnoir);
+            handPane.getChildren().add(sp);
+
+        }
+
+        root.getChildren().add(handPane);
+
+
+        return root;
+
+
+
+
+
+       /** Text counter = new Text();
         counter.getStyleClass().add("count");
 
         addWagonLoco(handPane, counter);
@@ -38,26 +106,66 @@ public class DecksViewCreator {
 
         root.getChildren().add(handPane);
 
-        return root;
+        return root;**/
     }
 
     // "deux propriétés contenant chacune un gestionnaire d'action"?
     // afficher 1seule des 5cartes visibles
-    public static VBox createCardsView(ObservableGameState state/*,
-                                ObjectProperty<> ticketProperty,
-                                ObjectProperty<> cardProperty*/) {
+    public static VBox createCardsView(/*ObservableGameState state,
+                                       ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketProperty,
+                                       ObjectProperty<ActionHandlers.DrawCardHandler> cardProperty*/) {
 
         VBox root = new VBox();
         root.setId("card-pane");
         root.getStylesheets().addAll("decks.css", "colors.css");
 
-        addWagonLoco(root);
 
-        Button ticketButton = button();
-        root.getChildren().add(ticketButton);
+        for (int i = 0; i <5 ; i++) {
+
+
+            StackPane sp = new StackPane();
+            sp.getStyleClass().addAll( "card");//ajouter la couelur
+
+            /**if(c.color() == null){
+
+             sp.getStyleClass().addAll("NEUTRAL", "card");
+
+             }else {
+             sp.getStyleClass().addAll(c.color().toString(), "card");
+             }**/
+
+
+            Rectangle r1 = new Rectangle();
+            r1.setWidth(60);
+            r1.setHeight(90);
+            r1.getStyleClass().add("outside");
+
+            Rectangle r2 = new Rectangle();
+            r2.setWidth(40);
+            r2.setHeight(70);
+            r2.getStyleClass().addAll("filled", "inside");
+
+            Rectangle r3 = new Rectangle();
+            r3.setWidth(40);
+            r3.setHeight(70);
+            r3.getStyleClass().add("train-image");
+
+
+
+            sp.getChildren().addAll(r1, r2, r3);
+            root.getChildren().add(sp);
+        }
+
+            
+
+
+        //addWagonLoco(root);
+
+        /**Button ticketButton = button();
+        root.getChildren().setAll(ticketButton);
 
         Button cardButton = button();
-        root.getChildren().add(cardButton);
+        root.getChildren().setAll(cardButton);**/
 
 
         return root;

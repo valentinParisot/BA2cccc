@@ -4,7 +4,11 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.ChMap;
 import ch.epfl.tchu.game.Route;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -12,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -37,63 +42,78 @@ public abstract class MapViewCreator {
      * CardChooser cardChooser) {
      * <p>
      * <p>
+     *
+     *     ObservableGameState observableGameState,
+     *       ObjectProperty<ActionHandlers.ClaimRouteHandler> ObjectProperty,
+     *       CardChooser cardChooser
      * }
      **/
 
     //----------------------------------------------------------------------------------------------------
     public static Pane createMapView() {
 
-        Image image = new Image("map.css");
-        ImageView iv1 = new ImageView(image);
-        final Pane root = new Pane();
-        root.getChildren().setAll(iv1);
-        root.getStylesheets().addAll("map.css", "colors.css");
-
-        Rectangle r1 = new Rectangle();
-        r1.setWidth(36);
-        r1.setHeight(12);
-        r1.getStyleClass().addAll("filled");
-
-        Circle c1 = new Circle();
-        c1.setCenterX(12);
-        c1.setCenterY(6);
-        c1.setRadius(3);
-
-        Circle c2 = new Circle();
-        c2.setCenterX(24);
-        c2.setCenterY(6);
-        c2.setRadius(3);
-
-
-        Rectangle voie = new Rectangle();
-        voie.setWidth(36);
-        voie.setHeight(12);
-        voie.getStyleClass().addAll("track", "filled");
-
-        Group wagon = new Group();
-        wagon.getChildren().addAll(r1, c1, c2);
-        wagon.getStyleClass().addAll("car");
+        ImageView iv = new ImageView("map.png");
+        Pane root = new Pane();
+        root.getChildren().add(iv);
+        root.getStylesheets().add("map.css");
+        root.getStylesheets().add("colors.css");
 
 
         for (Route r : ChMap.routes()) {
 
-            Group routes = new Group();
-            routes.setId(r.id());
-            routes.getStyleClass().addAll("route", "UNDERGROUND", "NEUTRAL");
+            for (int i = 0; i <=r.length(); i++) {
 
 
-            for (int i = 1; i <= r.length(); i++) {
+                Group routes = new Group();
+                routes.setId(r.id());
+
+                Rectangle r1 = new Rectangle();
+                r1.setWidth(36);
+                r1.setHeight(12);
+                r1.getStyleClass().add("filled");
+
+                Circle c1 = new Circle();
+                c1.setCenterX(12);
+                c1.setCenterY(6);
+                c1.setRadius(3);
+
+                Circle c2 = new Circle();
+                c2.setCenterX(24);
+                c2.setCenterY(6);
+                c2.setRadius(3);
+
+
+                Rectangle voie = new Rectangle();
+                voie.setWidth(36);
+                voie.setHeight(12);
+                voie.getStyleClass().addAll("track", "filled");
+
+                Group wagon = new Group();
+                wagon.getChildren().addAll(r1, c1, c2);
+                wagon.getStyleClass().addAll("car");
+
+
                 Group box = new Group();
                 box.setId(r.id() + "_" + i);
                 box.getChildren().addAll(voie, wagon);
                 routes.getChildren().add(box);
+
+                if (r.color() == null) {
+                    routes.getStyleClass().addAll("route", r.level().toString(), "NEUTRAL");
+
+                } else {
+                    routes.getStyleClass().addAll("route", r.level().toString(), r.color().toString());
+
+                }
+
+                root.getChildren().add(routes);
             }
-
-            root.getChildren().setAll(routes);
-
         }
-        return root;
+        return root ;
+
     }
+
+
 
     //----------------------------------------------------------------------------------------------------
 
@@ -105,11 +125,13 @@ public abstract class MapViewCreator {
          * called when the player must choose the cards he wishes to use to seize a road.
          *
          * @param options The possibilities open to him
-         *                handler the action handler is intended to be used when he has made his choice
+         * @param handler handler the action handler is intended to be used when he has made his choice
          */
-        void chooseCards(List<SortedBag<Card>> options/*, ChooseCardsHandler handler */);
+        void chooseCards(List<SortedBag<Card>> options , ActionHandlers.ChooseCardsHandler handler );
 
     }
+
+
 }
 
 
