@@ -87,6 +87,8 @@ public final class DecksViewCreator {
             sp.getChildren().addAll(r1,r2,r3,compteurnoir);
             handPane.getChildren().add(sp);
 
+
+
         }
 
         root.getChildren().add(billets);
@@ -140,32 +142,8 @@ public final class DecksViewCreator {
              sp.getStyleClass().addAll(c.color().toString(), "card");
              }**/
 
-
-            Rectangle r1 = new Rectangle();
-            r1.setWidth(60);
-            r1.setHeight(90);
-            r1.getStyleClass().add("outside");
-
-            Rectangle r2 = new Rectangle();
-            r2.setWidth(40);
-            r2.setHeight(70);
-            r2.getStyleClass().addAll("filled", "inside");
-
-            Rectangle r3 = new Rectangle();
-            r3.setWidth(40);
-            r3.setHeight(70);
-            r3.getStyleClass().add("train-image");
-
-
-
-            sp.getChildren().addAll(r1, r2, r3);
-            root.getChildren().add(sp);
+            addWagonLoco(sp, root);
         }
-
-            
-
-
-        //addWagonLoco(root);
 
         Button cardButton = button();
         cardButton.setText("Cartes");
@@ -175,7 +153,7 @@ public final class DecksViewCreator {
         return root;
     }
 
-    private static void addWagonLoco(Pane root, Node node) {
+    private static void addWagonLoco(StackPane sp,  VBox root) {
 
         Rectangle r1 = new Rectangle();
         r1.setWidth(60);
@@ -183,25 +161,28 @@ public final class DecksViewCreator {
         r1.getStyleClass().add("outside");
 
         Rectangle r2 = new Rectangle();
-        r1.setWidth(40);
-        r1.setHeight(70);
-        r1.getStyleClass().addAll("filled", "inside");
+        r2.setWidth(40);
+        r2.setHeight(70);
+        r2.getStyleClass().addAll("filled", "inside");
 
         Rectangle r3 = new Rectangle();
-        r1.setWidth(40);
-        r1.setHeight(70);
-        r1.getStyleClass().add("train-image");
+        r3.setWidth(40);
+        r3.setHeight(70);
+        r3.getStyleClass().add("train-image");
 
-        for (Card card : Card.ALL) {
+        sp.getChildren().addAll(r1, r2, r3);
+        root.getChildren().add(sp);
+
+        /**for (Card card : Card.ALL) {
             StackPane stackPane = new StackPane();
             stackPane.getStyleClass().addAll("card", card.name());
             stackPane.getChildren().addAll(r1, r2, r3, node);
 
             root.getChildren().add(stackPane);
-        }
+        }**/
     }
 
-    private static void addWagonLoco(Pane root) {
+    private static void addWagonLoco(StackPane sp, HBox handPane) {
 
         Rectangle r1 = new Rectangle();
         r1.setWidth(60);
@@ -218,13 +199,20 @@ public final class DecksViewCreator {
         r1.setHeight(70);
         r1.getStyleClass().add("train-image");
 
-        for (Card card : Card.ALL) {
+        Text compteurnoir = new Text();
+        compteurnoir.getStyleClass().add("count");
+
+        sp.getChildren().addAll(r1,r2,r3,compteurnoir);
+        handPane.getChildren().add(sp);
+
+
+        /**for (Card card : Card.ALL) {
             StackPane stackPane = new StackPane();
             stackPane.getStyleClass().addAll("card", card.name());
             stackPane.getChildren().addAll(r1, r2, r3);
 
             root.getChildren().add(stackPane);
-        }
+        }**/
     }
 
     private static Button button() {
