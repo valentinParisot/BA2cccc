@@ -4,19 +4,13 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.ChMap;
 import ch.epfl.tchu.game.Route;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -52,7 +46,7 @@ public abstract class MapViewCreator {
     //----------------------------------------------------------------------------------------------------
     public static Pane createMapView() {
 
-        ImageView iv = new ImageView("map.png");
+        ImageView iv = new ImageView();
         Pane root = new Pane();
         root.getChildren().add(iv);
         root.getStylesheets().add("map.css");
@@ -61,7 +55,7 @@ public abstract class MapViewCreator {
 
         for (Route r : ChMap.routes()) {
 
-            for (int i = 0; i <= r.length(); i++) {
+            for (int i = 1; i <= r.length(); i++) {
 
 
                 Group routes = new Group();
@@ -109,6 +103,7 @@ public abstract class MapViewCreator {
                 root.getChildren().add(routes);
             }
         }
+
         return root ;
 
     }
