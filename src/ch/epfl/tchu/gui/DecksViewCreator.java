@@ -89,15 +89,19 @@ import javafx.scene.text.Text;
             Text compteurnoir = new Text();
             compteurnoir.getStyleClass().add("count");
 
-            compteurnoir.textProperty().bind(Bindings.convert(state.cardMultiplicity(c))); // question
-            compteurnoir.visibleProperty().bind(Bindings.greaterThan(state.cardMultiplicity(c), 1));
+            compteurnoir.textProperty()
+                    .bind(Bindings.convert(state.cardMultiplicity(c))); // question
+
+            compteurnoir.visibleProperty()
+                    .bind(Bindings.greaterThan(state.cardMultiplicity(c), 1));
 
             sp.getChildren().addAll(r1,r2,r3,compteurnoir);
             handPane.getChildren().add(sp);
 
 
 
-            sp.visibleProperty().bind(Bindings.greaterThan(state.cardMultiplicity(c), 0));
+            sp.visibleProperty()
+                    .bind(Bindings.greaterThan(state.cardMultiplicity(c), 0));
 
 
 
@@ -135,11 +139,27 @@ import javafx.scene.text.Text;
         root.setId("card-pane");
         root.getStylesheets().addAll("decks.css", "colors.css");
 
-        Button ticketButton = button();
+        Button ticketButton = new Button();
+        ticketButton.getStyleClass().add("gauged");
+
+        Rectangle backTicket = new Rectangle();
+        backTicket.setHeight(5);
+        backTicket.setWidth(50);
+        backTicket.getStyleClass().add("background");
+
+        Rectangle gaugeTicket = new Rectangle();
+        gaugeTicket.setHeight(5);
+        gaugeTicket.widthProperty()
+                .bind(state.ticketPercentage().multiply(50).divide(100));
+        gaugeTicket.getStyleClass().add("foreground");
+
+        Group graphic = new Group();
+        graphic.getChildren().addAll(backTicket, gaugeTicket);
+        ticketButton.setGraphic(graphic);
         ticketButton.setText(StringsFr.TICKETS);
 
-
-        ticketButton.disableProperty().bind(ticketProperty.isNull());
+        ticketButton.disableProperty()
+                .bind(ticketProperty.isNull());
 
 
         root.getChildren().add(ticketButton);
@@ -162,7 +182,24 @@ import javafx.scene.text.Text;
             addWagonLoco(sp, root);
         }
 
-        Button cardButton = button();
+        Button cardButton = new Button();
+        cardButton.getStyleClass().add("gauged");
+
+        Rectangle backCard = new Rectangle();
+        backCard.setHeight(5);
+        backCard.setWidth(50);
+        backCard.getStyleClass().add("background");
+
+        Rectangle gaugeCard = new Rectangle();
+        gaugeCard.setHeight(5);
+        gaugeCard.widthProperty()
+                .bind(state.cardPercentage().multiply(50).divide(100));
+        gaugeCard.getStyleClass().add("foreground");
+
+        Group graphicCard = new Group();
+        graphic.getChildren().addAll(backCard, gaugeCard);
+
+        cardButton.setGraphic(graphicCard);
         cardButton.setText(StringsFr.CARDS);
 
         cardButton.disableProperty().bind(cardProperty.isNull());
