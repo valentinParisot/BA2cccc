@@ -69,7 +69,7 @@ public class ObservableGameState {
         this.playerState = newPlayerState;
 
         ticketPercentage.set((newGameState.ticketsCount() / 46) * 100);
-        cardPercentage.set((newPlayerState.cardCount() / 110) * 100);
+        cardPercentage.set((newGameState.cardState().deckSize() / 110) * 100);
 
         for (int slot : FACE_UP_CARD_SLOTS) {
             Card newCard = newGameState.cardState().faceUpCard(slot);

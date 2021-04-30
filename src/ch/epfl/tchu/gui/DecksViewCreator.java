@@ -197,7 +197,7 @@ import javafx.scene.text.Text;
         gaugeCard.getStyleClass().add("foreground");
 
         Group graphicCard = new Group();
-        graphic.getChildren().addAll(backCard, gaugeCard);
+        graphicCard.getChildren().addAll(backCard, gaugeCard);
 
         cardButton.setGraphic(graphicCard);
         cardButton.setText(StringsFr.CARDS);
