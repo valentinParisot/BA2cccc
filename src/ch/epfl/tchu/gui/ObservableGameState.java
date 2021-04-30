@@ -248,7 +248,7 @@ public class ObservableGameState {
         return playerState.possibleClaimCards(route);
     }
 
-    public boolean claimable(Route route){
+    private boolean claimable(Route route){
 
         return ((playerState.carCount() >= route.length()) && (!(this.possibleClaimCards(route).isEmpty())));
 

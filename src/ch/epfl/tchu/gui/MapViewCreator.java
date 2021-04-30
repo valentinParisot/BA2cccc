@@ -4,6 +4,8 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.ChMap;
 import ch.epfl.tchu.game.Route;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -21,7 +23,7 @@ import java.util.List;
  * @author Hugo Jeannin (329220)
  */
 
-public abstract class MapViewCreator {
+class MapViewCreator {
 
     /**
      * create the view of the map
@@ -44,7 +46,9 @@ public abstract class MapViewCreator {
      **/
 
     //----------------------------------------------------------------------------------------------------
-    public static Pane createMapView() {
+    public static Pane createMapView(ObservableGameState observableGameState,
+     ObjectProperty<ActionHandlers.ClaimRouteHandler> objectProperty
+     /**CardChooser cardChooser**/ ){
 
         ImageView iv = new ImageView();
         Pane root = new Pane();
@@ -55,10 +59,17 @@ public abstract class MapViewCreator {
 
         for (Route r : ChMap.routes()) {
 
+            Group routes = new Group();
+
+            observableGameState.routeOwner(r).addListener((o,ov,on) ->{
+
+                routes.getStyleClass().add(on.name());
+
+            });
+
+
             for (int i = 1; i <= r.length(); i++) {
 
-
-                Group routes = new Group();
                 routes.setId(r.id());
 
                 Rectangle r1 = new Rectangle();
@@ -92,16 +103,19 @@ public abstract class MapViewCreator {
                 box.getChildren().addAll(voie, wagon);
                 routes.getChildren().add(box);
 
-                if (r.color() == null) {
-                    routes.getStyleClass().addAll("route", r.level().toString(), "NEUTRAL");
-
-                } else {
-                    routes.getStyleClass().addAll("route", r.level().toString(), r.color().toString());
-
-                }
-
-                root.getChildren().add(routes);
             }
+
+            if (r.color() == null) {
+                routes.getStyleClass().addAll("route", r.level().toString(), "NEUTRAL");
+
+            } else {
+                routes.getStyleClass().addAll("route", r.level().toString(), r.color().toString());
+
+            }
+
+            root.getChildren().add(routes);
+
+            routes.disableProperty().bind(objectProperty.isNull().or(observableGameState.canClaimRoute(r).not()));
         }
 
         return root ;

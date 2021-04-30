@@ -4,6 +4,8 @@ import ch.epfl.tchu.game.*;
 import ch.epfl.tchu.gui.DecksViewCreator;
 import ch.epfl.tchu.gui.MapViewCreator;
 import ch.epfl.tchu.gui.ObservableGameState;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -26,8 +28,15 @@ public final class Stage9Test extends Application {
     public void start(Stage primaryStage) {
         ObservableGameState gameState = new ObservableGameState(PLAYER_1);
 
+        ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRoute =
+                new SimpleObjectProperty<>(Stage9Test::claimRoute);
+        ObjectProperty<ActionHandlers.DrawTicketsHandler> drawTickets =
+                new SimpleObjectProperty<>(Stage9Test::drawTickets);
+        ObjectProperty<ActionHandlers.DrawCardHandler> drawCard =
+                new SimpleObjectProperty<>(Stage9Test::drawCard);
+
         Node mapView = MapViewCreator
-                .createMapView();
+                .createMapView(gameState,claimRoute);
         Node cardsView = DecksViewCreator
                 .createCardsView(gameState);
         Node handView = DecksViewCreator
@@ -37,28 +46,8 @@ public final class Stage9Test extends Application {
                 new BorderPane(mapView, null, cardsView, handView, null);
         primaryStage.setScene(new Scene(mainPane));
         primaryStage.show();
-        //setState(gameState);
+        setState(gameState);
 
-        /** ObjectProperty<ClaimRouteHandler> claimRoute =
-         new SimpleObjectProperty<>(Stage9Test::claimRoute);
-         ObjectProperty<DrawTicketsHandler> drawTickets =
-         new SimpleObjectProperty<>(Stage9Test::drawTickets);
-         ObjectProperty<DrawCardHandler> drawCard =
-         new SimpleObjectProperty<>(Stage9Test::drawCard);
-
-         Node mapView = MapViewCreator
-         .createMapView(gameState, claimRoute, Stage9Test::chooseCards);
-         Node cardsView = DecksViewCreator
-         .createCardsView(gameState, drawTickets, drawCard);
-         Node handView = DecksViewCreator
-         .createHandView(gameState);
-
-         BorderPane mainPane =
-         new BorderPane(mapView, null, cardsView, handView, null);
-         primaryStage.setScene(new Scene(mainPane));
-         primaryStage.show();**/
-
-         setState(gameState);
     }
 
     private void setState(ObservableGameState gameState) {

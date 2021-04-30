@@ -15,7 +15,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 
-public final class DecksViewCreator {
+ class DecksViewCreator {
 
 
     public static HBox createHandView(ObservableGameState state) {
