@@ -2,7 +2,11 @@ package  ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.ChMap;
+import ch.epfl.tchu.game.Constants;
 import ch.epfl.tchu.game.Ticket;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -38,6 +42,7 @@ import javafx.scene.text.Text;
 
         billets.setId("tickets");
         root.getChildren().add(billets);**/
+
 
 
         HBox handPane = new HBox();
@@ -84,8 +89,15 @@ import javafx.scene.text.Text;
             Text compteurnoir = new Text();
             compteurnoir.getStyleClass().add("count");
 
+            compteurnoir.textProperty().bind(Bindings.convert(state.cardMultiplicity(c))); // question
+            compteurnoir.visibleProperty().bind(Bindings.greaterThan(state.cardMultiplicity(c), 1));
+
             sp.getChildren().addAll(r1,r2,r3,compteurnoir);
             handPane.getChildren().add(sp);
+
+
+
+            sp.visibleProperty().bind(Bindings.greaterThan(state.cardMultiplicity(c), 0));
 
 
 
@@ -115,38 +127,46 @@ import javafx.scene.text.Text;
 
     // "deux propriétés contenant chacune un gestionnaire d'action"?
     // afficher 1seule des 5cartes visibles
-    public static VBox createCardsView(ObservableGameState state
-                                       /*ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketProperty,
-                                       ObjectProperty<ActionHandlers.DrawCardHandler> cardProperty*/) {
+    public static VBox createCardsView(ObservableGameState state,
+                                       ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketProperty,
+                                       ObjectProperty<ActionHandlers.DrawCardHandler> cardProperty) {
 
         VBox root = new VBox();
         root.setId("card-pane");
         root.getStylesheets().addAll("decks.css", "colors.css");
 
         Button ticketButton = button();
-        ticketButton.setText("Billets");
+        ticketButton.setText(StringsFr.TICKETS);
+
+
+        ticketButton.disableProperty().bind(ticketProperty.isNull());
+
+
         root.getChildren().add(ticketButton);
 
 
-        for (int i = 0; i <5 ; i++) {// a modifier pour prednre les faceup
+        for (int i = 0; i < Constants.FACE_UP_CARDS_COUNT; i++) {// a modifier pour prednre les faceup
 
 
             StackPane sp = new StackPane();
             sp.getStyleClass().addAll( "card");//ajouter la couelur
 
-            /**if(c.color() == null){
+            state.faceUpCard(i).addListener((o,ov,on) ->{ // question
 
-             sp.getStyleClass().addAll("NEUTRAL", "card");
+                sp.getStyleClass().setAll(on.color().toString(), "card");
 
-             }else {
-             sp.getStyleClass().addAll(c.color().toString(), "card");
-             }**/
+            });
+
+            sp.disableProperty().bind(cardProperty.isNull());
 
             addWagonLoco(sp, root);
         }
 
         Button cardButton = button();
-        cardButton.setText("Cartes");
+        cardButton.setText(StringsFr.CARDS);
+
+        cardButton.disableProperty().bind(cardProperty.isNull());
+
         root.getChildren().add(cardButton);
 
 

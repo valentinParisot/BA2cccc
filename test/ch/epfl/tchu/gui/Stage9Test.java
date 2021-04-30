@@ -38,7 +38,7 @@ public final class Stage9Test extends Application {
         Node mapView = MapViewCreator
                 .createMapView(gameState,claimRoute);
         Node cardsView = DecksViewCreator
-                .createCardsView(gameState);
+                .createCardsView(gameState, drawTickets, drawCard);
         Node handView = DecksViewCreator
                 .createHandView(gameState);
 
@@ -87,7 +87,7 @@ public final class Stage9Test extends Application {
     }
 
 
-    public void start2(Stage primaryStage) {
+    /*public void start2(Stage primaryStage) {
 
         final Image image = new Image("map.png");
         final ImageView imageView = new ImageView(image);
@@ -97,7 +97,7 @@ public final class Stage9Test extends Application {
         primaryStage.setTitle("Test d'affichage d'image");
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
+    }*
 
     /*private void setState(ObservableGameState gameState) {
         PlayerState p1State =
