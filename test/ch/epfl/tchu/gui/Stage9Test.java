@@ -56,12 +56,12 @@ public final class Stage9Test extends Application {
          BorderPane mainPane =
          new BorderPane(mapView, null, cardsView, handView, null);
          primaryStage.setScene(new Scene(mainPane));
-         primaryStage.show();
+         primaryStage.show();**/
 
-         setState(gameState);**/
+         setState(gameState);
     }
 
-    /** private void setState(ObservableGameState gameState) {
+    private void setState(ObservableGameState gameState) {
      PlayerState p1State =
      new PlayerState(SortedBag.of(ChMap.tickets().subList(0, 3)),
      SortedBag.of(1, Card.WHITE, 3, Card.RED),
@@ -77,7 +77,7 @@ public final class Stage9Test extends Application {
      PublicGameState publicGameState =
      new PublicGameState(36, cardState, PLAYER_1, pubPlayerStates, null);
      gameState.setState(publicGameState, p1State);
-     }**/
+     }
 
     private static void claimRoute(Route route, SortedBag<Card> cards) {
         System.out.printf("Prise de possession d'une route : %s - %s %s%n",

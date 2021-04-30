@@ -61,7 +61,7 @@ public abstract class MapViewCreator {
 
         for (Route r : ChMap.routes()) {
 
-            for (int i = 0; i <=r.length(); i++) {
+            for (int i = 0; i <= r.length(); i++) {
 
 
                 Group routes = new Group();

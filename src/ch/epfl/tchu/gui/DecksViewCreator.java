@@ -1,4 +1,4 @@
-package ch.epfl.tchu.gui;
+package  ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.ChMap;
@@ -18,10 +18,28 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.util.Callback;
 
-public class DecksViewCreator {
+public final class DecksViewCreator {
+
 
     public static HBox createHandView(ObservableGameState state) {
+
 
         HBox root = new HBox();
         root.getStylesheets().addAll("decks.css", "colors.css");
@@ -46,8 +64,9 @@ public class DecksViewCreator {
         handPane.setId("hand-pane");
 
 
-        /**ListView<String> billets = new ListView<>();
-        for (Ticket t : ChMap.tickets()) {
+        //ListView<String> billets = new ListView<>();
+
+       /** for (Ticket t : ChMap.tickets()) {
 
             billets.getItems().add(t.toString());
 
@@ -120,7 +139,7 @@ public class DecksViewCreator {
         root.getStylesheets().addAll("decks.css", "colors.css");
 
 
-        for (int i = 0; i <5 ; i++) {
+        for (int i = 0; i <5 ; i++) {// a modifier pour prednre les faceup
 
 
             StackPane sp = new StackPane();
