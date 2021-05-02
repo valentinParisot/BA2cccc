@@ -6,13 +6,10 @@ import ch.epfl.tchu.game.Constants;
 import ch.epfl.tchu.game.Ticket;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
@@ -28,26 +25,8 @@ import javafx.scene.text.Text;
         HBox root = new HBox();
         root.getStylesheets().addAll("decks.css", "colors.css");
 
-        /**ObservableList<String> names = FXCollections.observableArrayList();
-
-        for (Ticket t : ChMap.tickets()) {
-            names.add(t.toString());
-
-        }
-        ListView<String> billets = new ListView<>(names);
-
-        for (Ticket t : ChMap.tickets()) {
-            billets.getItems().add(t.toString());
-        }
-
-        billets.setId("tickets");
-        root.getChildren().add(billets);**/
-
-
-
         HBox handPane = new HBox();
         handPane.setId("hand-pane");
-
 
         ListView<String> billets = new ListView<>();
         billets.setId("tickets");
@@ -98,35 +77,15 @@ import javafx.scene.text.Text;
             sp.getChildren().addAll(r1,r2,r3,compteurnoir);
             handPane.getChildren().add(sp);
 
-
-
             sp.visibleProperty()
                     .bind(Bindings.greaterThan(state.cardMultiplicity(c), 0));
-
-
 
         }
 
         root.getChildren().add(billets);
         root.getChildren().add(handPane);
 
-
-
         return root;
-
-
-
-
-
-       /** Text counter = new Text();
-        counter.getStyleClass().add("count");
-
-        addWagonLoco(handPane, counter);
-
-
-        root.getChildren().add(handPane);
-
-        return root;**/
     }
 
     // "deux propriétés contenant chacune un gestionnaire d'action"?
@@ -229,14 +188,6 @@ import javafx.scene.text.Text;
 
         sp.getChildren().addAll(r1, r2, r3);
         root.getChildren().add(sp);
-
-        /**for (Card card : Card.ALL) {
-            StackPane stackPane = new StackPane();
-            stackPane.getStyleClass().addAll("card", card.name());
-            stackPane.getChildren().addAll(r1, r2, r3, node);
-
-            root.getChildren().add(stackPane);
-        }**/
     }
 
     private static void addWagonLoco(StackPane sp, HBox handPane) {
@@ -262,14 +213,6 @@ import javafx.scene.text.Text;
         sp.getChildren().addAll(r1,r2,r3,compteurnoir);
         handPane.getChildren().add(sp);
 
-
-        /**for (Card card : Card.ALL) {
-            StackPane stackPane = new StackPane();
-            stackPane.getStyleClass().addAll("card", card.name());
-            stackPane.getChildren().addAll(r1, r2, r3);
-
-            root.getChildren().add(stackPane);
-        }**/
     }
 
     private static Button button() {

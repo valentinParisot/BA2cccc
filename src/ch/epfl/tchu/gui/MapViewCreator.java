@@ -24,30 +24,19 @@ import java.util.List;
 
 class MapViewCreator {
 
+    //----------------------------------------------------------------------------------------------------
+
     /**
      * create the view of the map
      *
      * @param observableGameState state of the game observable
-     * @param ObjectProperty      a property containing the action manager to use when the player wants to seize a road
+     * @param objectProperty      a property containing the action manager to use when the player wants to seize a road
      * @param cardChooser         card chooser
      */
-    /**
-     * public createMapView(ObservableGameState observableGameState,
-     * ObjectProperty<ClaimRouteHandler> ObjectProperty,
-     * CardChooser cardChooser) {
-     * <p>
-     * <p>
-     *
-     *     ObservableGameState observableGameState,
-     *       ObjectProperty<ActionHandlers.ClaimRouteHandler> ObjectProperty,
-     *       CardChooser cardChooser
-     * }
-     **/
 
-    //----------------------------------------------------------------------------------------------------
     public static Pane createMapView(ObservableGameState observableGameState,
-     ObjectProperty<ActionHandlers.ClaimRouteHandler> objectProperty
-     /**CardChooser cardChooser**/ ){
+     ObjectProperty<ActionHandlers.ClaimRouteHandler> objectProperty,
+     CardChooser cardChooser){
 
         ImageView iv = new ImageView();
         Pane root = new Pane();
@@ -56,20 +45,34 @@ class MapViewCreator {
         root.getStylesheets().add("colors.css");
 
 
-        for (Route r : ChMap.routes()) {
+        for (Route route : ChMap.routes()) {
 
             Group routes = new Group();
 
-            observableGameState.routeOwner(r).addListener((o,ov,on) ->{
+            routes.setOnMouseClicked((e) -> {
 
-                routes.getStyleClass().add(on.name());
+                List<SortedBag<Card>> possibleClaimCards = observableGameState.possibleClaimCards(route);
+
+                if(possibleClaimCards.size() == 1 ){
+
+                    objectProperty.get().onClaimRoute(route, possibleClaimCards.get(0));
+
+                }else {
+
+                    ActionHandlers.ClaimRouteHandler claimRouteH = objectProperty.get() ;
+                    ActionHandlers.ChooseCardsHandler chooseCardsH =
+                            chosenCards -> claimRouteH.onClaimRoute(route, chosenCards);
+                    cardChooser.chooseCards(possibleClaimCards, chooseCardsH);
+
+                }
 
             });
 
+            observableGameState.routeOwner(route).addListener((o,ov,on) ->{ routes.getStyleClass().add(on.name()); });
 
-            for (int i = 1; i <= r.length(); i++) {
+            for (int i = 1; i <= route.length(); i++) {
 
-                routes.setId(r.id());
+                routes.setId(route.id());
 
                 Rectangle r1 = new Rectangle();
                 r1.setWidth(36);
@@ -98,23 +101,23 @@ class MapViewCreator {
 
 
                 Group box = new Group();
-                box.setId(r.id() + "_" + i);
+                box.setId(route.id() + "_" + i);
                 box.getChildren().addAll(voie, wagon);
                 routes.getChildren().add(box);
 
             }
 
-            if (r.color() == null) {
-                routes.getStyleClass().addAll("route", r.level().toString(), "NEUTRAL");
+            if (route.color() == null) {
+                routes.getStyleClass().addAll("route", route.level().toString(), "NEUTRAL");
 
             } else {
-                routes.getStyleClass().addAll("route", r.level().toString(), r.color().toString());
+                routes.getStyleClass().addAll("route", route.level().toString(), route.color().toString());
 
             }
 
             root.getChildren().add(routes);
 
-            routes.disableProperty().bind(objectProperty.isNull().or(observableGameState.canClaimRoute(r).not()));
+            routes.disableProperty().bind(objectProperty.isNull().or(observableGameState.canClaimRoute(route).not()));
         }
 
         return root ;
@@ -138,7 +141,6 @@ class MapViewCreator {
         void chooseCards(List<SortedBag<Card>> options , ActionHandlers.ChooseCardsHandler handler );
 
     }
-
 
 }
 

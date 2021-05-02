@@ -1,20 +1,17 @@
 package ch.epfl.tchu.gui;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
-import ch.epfl.tchu.gui.DecksViewCreator;
-import ch.epfl.tchu.gui.MapViewCreator;
-import ch.epfl.tchu.gui.ObservableGameState;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.application.Application;
+import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
@@ -36,11 +33,13 @@ public final class Stage9Test extends Application {
                 new SimpleObjectProperty<>(Stage9Test::drawCard);
 
         Node mapView = MapViewCreator
-                .createMapView(gameState,claimRoute);
+                .createMapView(gameState,claimRoute,Stage9Test::chooseCards);
         Node cardsView = DecksViewCreator
                 .createCardsView(gameState, drawTickets, drawCard);
         Node handView = DecksViewCreator
                 .createHandView(gameState);
+
+        //dumpTree(5, mapView.getParent().lookup("AT1_STG_1"));
 
         BorderPane mainPane =
                 new BorderPane(mapView, null, cardsView, handView, null);
@@ -73,10 +72,10 @@ public final class Stage9Test extends Application {
                 route.station1(), route.station2(), cards);
     }
 
-    /**private static void chooseCards(List<SortedBag<Card>> options,
-     ChooseCardsHandler chooser) {
+    private static void chooseCards(List<SortedBag<Card>> options,
+                                    ActionHandlers.ChooseCardsHandler chooser) {
      chooser.onChooseCards(options.get(0));
-     }**/
+     }
 
     private static void drawTickets() {
         System.out.println("Tirage de billets !");
@@ -86,35 +85,22 @@ public final class Stage9Test extends Application {
         System.out.printf("Tirage de cartes (emplacement %s)!\n", slot);
     }
 
+    public static void dumpTree(Node root) {
+        dumpTree(0, root);
+    }
 
-    /*public void start2(Stage primaryStage) {
+    public static void dumpTree(int indent, Node root) {
+        System.out.printf("%s%s (id: %s, classes: [%s])%n",
+                " ".repeat(indent),
+                root.getTypeSelector(),
+                root.getId(),
+                String.join(", ", root.getStyleClass()));
+        if (root instanceof Parent) {
+            Parent parent = ((Parent) root);
+            for (Node child : parent.getChildrenUnmodifiable())
+                dumpTree(indent + 2, child);
+        }
+    }
 
-        final Image image = new Image("map.png");
-        final ImageView imageView = new ImageView(image);
-        final Pane root = new Pane();
-        root.getChildren().setAll(imageView);
-        final Scene scene = new Scene(root, 1000, 1000);
-        primaryStage.setTitle("Test d'affichage d'image");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }*
-
-    /*private void setState(ObservableGameState gameState) {
-        PlayerState p1State =
-                new PlayerState(SortedBag.of(ChMap.tickets().subList(0, 3)),
-                        SortedBag.of(1, Card.WHITE, 3, Card.RED),
-                        ChMap.routes().subList(0, 3));
-
-        PublicPlayerState p2State =
-                new PublicPlayerState(0, 0, ChMap.routes().subList(3, 6));
-
-        Map<PlayerId, PublicPlayerState> pubPlayerStates =
-                Map.of(PLAYER_1, p1State, PLAYER_2, p2State);
-        PublicCardState cardState =
-                new PublicCardState(Card.ALL.subList(0, 5), 110 - 2 * 4 - 5, 0);
-        PublicGameState publicGameState =
-                new PublicGameState(36, cardState, PLAYER_1, pubPlayerStates, null);
-        gameState.setState(publicGameState, p1State);
-    }*/
 
 }

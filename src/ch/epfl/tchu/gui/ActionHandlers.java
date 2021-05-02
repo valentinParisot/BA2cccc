@@ -27,7 +27,7 @@ public interface ActionHandlers {
          *
          * @param index given location ( between 0 and 4, or -1)
          */
-        abstract void onDrawCard(int index);
+        abstract void onDrawCard(int index); //checke rindex 0--4 et -1 ?
 
     }
 
