@@ -120,6 +120,10 @@ import javafx.scene.text.Text;
         ticketButton.disableProperty()
                 .bind(ticketProperty.isNull());
 
+        ticketButton.setOnMouseClicked(e -> {
+            ticketProperty.get().onDrawTickets();
+        });
+
 
         root.getChildren().add(ticketButton);
 
@@ -136,7 +140,10 @@ import javafx.scene.text.Text;
 
             });
 
-            sp.disableProperty().bind(cardProperty.isNull());
+            sp.disableProperty()
+                    .bind(cardProperty.isNull());
+
+            cardProperty.get().onDrawCard(i);
 
             addWagonLoco(sp, root);
         }
@@ -161,7 +168,12 @@ import javafx.scene.text.Text;
         cardButton.setGraphic(graphicCard);
         cardButton.setText(StringsFr.CARDS);
 
-        cardButton.disableProperty().bind(cardProperty.isNull());
+        cardButton.disableProperty()
+                .bind(cardProperty.isNull());
+
+        cardButton.setOnMouseClicked(e -> {
+            cardProperty.get().onDrawCard(-1);
+        });
 
         root.getChildren().add(cardButton);
 
