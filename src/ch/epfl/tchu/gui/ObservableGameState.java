@@ -31,6 +31,7 @@ public class ObservableGameState {
 
     // etat publique de chacun des joueurs
     private final IntegerProperty ticketCount, cardCount, wagonCount, playerPoints;
+    private final IntegerProperty ticketCount2, cardCount2, wagonCount2, playerPoints2;
 
 
     // etat privé de playerId passé au constructeur
@@ -55,6 +56,11 @@ public class ObservableGameState {
         cardCount = createCardCount();
         wagonCount = createWagonCount();
         playerPoints = createPlayerPoints();
+
+        ticketCount2 = createTicketCount();
+        cardCount2 = createCardCount();
+        wagonCount2 = createWagonCount();
+        playerPoints2 = createPlayerPoints();
 
 
         ticketList = createTicketList();
@@ -90,7 +96,12 @@ public class ObservableGameState {
         ticketCount.set(newPlayerState.ticketCount());
         cardCount.set(newPlayerState.cardCount());
         wagonCount.set(newPlayerState.carCount());
-        playerPoints.set(newPlayerState.ticketPoints());
+        playerPoints.set(newPlayerState.claimPoints());
+
+        ticketCount2.set(newGameState.playerState(PLAYER_2).ticketCount());
+        cardCount2.set(newGameState.playerState(PLAYER_2).cardCount());
+        wagonCount2.set(newGameState.playerState(PLAYER_2).carCount());
+        playerPoints2.set(newGameState.playerState(PLAYER_2).claimPoints());
 
         ticketList.set(FXCollections.observableList(newPlayerState.tickets().toList()));
 
@@ -210,6 +221,24 @@ public class ObservableGameState {
 
     public ReadOnlyIntegerProperty playerPoints() {
         return playerPoints;
+    }
+
+
+
+    public ReadOnlyIntegerProperty ticketCount2() {
+        return ticketCount2;
+    }
+
+    public ReadOnlyIntegerProperty cardCount2() {
+        return cardCount2;
+    }
+
+    public ReadOnlyIntegerProperty wagonCunt2() {
+        return wagonCount2;
+    }
+
+    public ReadOnlyIntegerProperty playerPoints2() {
+        return playerPoints2;
     }
 
 

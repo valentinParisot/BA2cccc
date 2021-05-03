@@ -3,10 +3,13 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.application.Application;
 import org.junit.jupiter.api.Test;
@@ -41,8 +44,16 @@ public final class Stage9Test extends Application {
 
         //dumpTree(5, mapView.getParent().lookup("AT1_STG_1"));
 
+        Map<PlayerId, String> playerNames =
+                Map.of(PLAYER_1, "Ada", PLAYER_2, "Charles");
+        ObservableList<Text> infos = FXCollections.observableArrayList(
+                new Text("Première information.\n"),
+                new Text("\nSeconde information.\n"));
+        Node infoView = InfoViewCreator
+                .createInfoView(PLAYER_1, playerNames, gameState, infos);
+
         BorderPane mainPane =
-                new BorderPane(mapView, null, cardsView, handView, null);
+                new BorderPane(mapView, null, cardsView, handView, infoView);
         primaryStage.setScene(new Scene(mainPane));
         primaryStage.show();
         setState(gameState);

@@ -48,8 +48,7 @@ class MapViewCreator {
         ImageView iv = new ImageView();
         Pane root = new Pane();
         root.getChildren().add(iv);
-        root.getStylesheets().add("map.css");
-        root.getStylesheets().add("colors.css");
+        root.getStylesheets().addAll("map.css","colors.css");
 
 
         for (Route route : ChMap.routes()) {
@@ -112,35 +111,26 @@ class MapViewCreator {
 
             routes.setId(route.id());
 
-            Rectangle r1 = new Rectangle();
-            r1.setWidth(RECTANGLE_WIDTH);
-            r1.setHeight(RECTANGLE_HEIGHT);
+            Rectangle r1 = new Rectangle(RECTANGLE_WIDTH,RECTANGLE_HEIGHT);
             r1.getStyleClass().add("filled");
 
-            Circle c1 = new Circle();
+            Circle c1 = new Circle(CIRCLE_RADIUS);
             c1.setCenterX(12);
             c1.setCenterY(6);
-            c1.setRadius(CIRCLE_RADIUS);
 
-            Circle c2 = new Circle();
+            Circle c2 = new Circle(CIRCLE_RADIUS);
             c2.setCenterX(24);
             c2.setCenterY(6);
-            c2.setRadius(CIRCLE_RADIUS);
 
-
-            Rectangle voie = new Rectangle();
-            voie.setWidth(RECTANGLE_WIDTH);
-            voie.setHeight(RECTANGLE_HEIGHT);
+            Rectangle voie = new Rectangle(RECTANGLE_WIDTH,RECTANGLE_HEIGHT);
             voie.getStyleClass().addAll("track", "filled");
 
-            Group wagon = new Group();
-            wagon.getChildren().addAll(r1, c1, c2);
+            Group wagon = new Group(r1, c1, c2);
             wagon.getStyleClass().addAll("car");
 
 
-            Group box = new Group();
+            Group box = new Group(voie,wagon);
             box.setId(route.id() + LOW_LINE + i);
-            box.getChildren().addAll(voie, wagon);
             routes.getChildren().add(box);
         }
 
