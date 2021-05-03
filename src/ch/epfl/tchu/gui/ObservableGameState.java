@@ -68,8 +68,8 @@ public class ObservableGameState {
         this.playerId = newGameState.currentPlayerId();
         this.playerState = newPlayerState;
 
-        ticketPercentage.set((newGameState.ticketsCount() / 46) * 100);
-        cardPercentage.set((newGameState.cardState().deckSize() / 110) * 100);
+        ticketPercentage.set(newGameState.ticketsCount() * 100 / 46 );
+        cardPercentage.set(newGameState.cardState().deckSize() * 100 / 110);
 
         for (int slot : FACE_UP_CARD_SLOTS) {
             Card newCard = newGameState.cardState().faceUpCard(slot);
@@ -103,6 +103,7 @@ public class ObservableGameState {
 
     //----------------------------------------------------------------------------------------------------
     private static IntegerProperty createTicketPercentage() {
+
         return new SimpleIntegerProperty();
         //Integer i = Math.round(gameState.ticketsCount() * 100 / TICKET_COUNT);
     }

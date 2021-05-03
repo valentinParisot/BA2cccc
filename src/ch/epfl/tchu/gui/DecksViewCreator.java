@@ -18,6 +18,8 @@ import javafx.scene.text.Text;
 
  class DecksViewCreator {
 
+     private final static int BUTTON_WIDTH = 50;
+     private final static int BUTTON_HEIGHT = 5;
 
     public static HBox createHandView(ObservableGameState state) {
 
@@ -98,24 +100,19 @@ import javafx.scene.text.Text;
         root.setId("card-pane");
         root.getStylesheets().addAll("decks.css", "colors.css");
 
-        Button ticketButton = new Button();
+        Button ticketButton = new Button(StringsFr.TICKETS);
         ticketButton.getStyleClass().add("gauged");
 
-        Rectangle backTicket = new Rectangle();
-        backTicket.setHeight(5);
-        backTicket.setWidth(50);
+        Rectangle backTicket = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
         backTicket.getStyleClass().add("background");
 
-        Rectangle gaugeTicket = new Rectangle();
-        gaugeTicket.setHeight(5);
+        Rectangle gaugeTicket = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
         gaugeTicket.widthProperty()
                 .bind(state.ticketPercentage().multiply(50).divide(100));
         gaugeTicket.getStyleClass().add("foreground");
 
-        Group graphic = new Group();
-        graphic.getChildren().addAll(backTicket, gaugeTicket);
-        ticketButton.setGraphic(graphic);
-        ticketButton.setText(StringsFr.TICKETS);
+
+        ticketButton.setGraphic(new Group(backTicket, gaugeTicket));
 
         ticketButton.disableProperty()
                 .bind(ticketProperty.isNull());
@@ -148,24 +145,19 @@ import javafx.scene.text.Text;
             addWagonLoco(sp, root);
         }
 
-        Button cardButton = new Button();
+        Button cardButton = new Button(StringsFr.CARDS);
         cardButton.getStyleClass().add("gauged");
 
-        Rectangle backCard = new Rectangle();
-        backCard.setHeight(5);
-        backCard.setWidth(50);
+        Rectangle backCard = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
         backCard.getStyleClass().add("background");
 
-        Rectangle gaugeCard = new Rectangle();
-        gaugeCard.setHeight(5);
+        Rectangle gaugeCard = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
+
         gaugeCard.widthProperty()
                 .bind(state.cardPercentage().multiply(50).divide(100));
         gaugeCard.getStyleClass().add("foreground");
 
-        Group graphicCard = new Group();
-        graphicCard.getChildren().addAll(backCard, gaugeCard);
-
-        cardButton.setGraphic(graphicCard);
+        cardButton.setGraphic(new Group(backCard, gaugeCard));
         cardButton.setText(StringsFr.CARDS);
 
         cardButton.disableProperty()
