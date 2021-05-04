@@ -56,6 +56,7 @@ class InfoViewCreator {
              for (int i = 0; i < observableList.size(); i++) {
 
                  Text t = new Text();
+                 t.setText(String.valueOf(observableList.get(i))); // j'ai rajouté ça sinon c'était vide non?
                  message.getChildren().add(t);
 
              }
