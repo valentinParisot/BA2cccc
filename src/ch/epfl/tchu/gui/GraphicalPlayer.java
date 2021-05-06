@@ -5,13 +5,16 @@ import ch.epfl.tchu.game.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
@@ -24,6 +27,9 @@ import java.util.Map;
 import static javafx.application.Platform.isFxApplicationThread;
 
 public class GraphicalPlayer {
+
+    private final static int BUTTON_WIDTH = 50;
+    private final static int BUTTON_HEIGHT = 5;
 
     private final ObservableGameState observableGameState;
     private final PlayerId playerId;
@@ -112,6 +118,15 @@ public class GraphicalPlayer {
         ListView<SortedBag<Ticket>> listView = new ListView<SortedBag<Ticket>>();
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
+        Button ticketButton = new Button(StringsFr.CHOOSE);
+
+        Rectangle backTicket = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
+        backTicket.getStyleClass().add("background");
+        Rectangle foreTicket = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
+        foreTicket.getStyleClass().add("foreground");
+
+        ticketButton.setGraphic(new Group(backTicket, foreTicket));
+
 
     }
 
@@ -141,6 +156,15 @@ public class GraphicalPlayer {
         ListView<SortedBag<Card>> listView = new ListView<SortedBag<Card>>();
         listView.setCellFactory(v ->
                 new TextFieldListCell<>(new CardBagStringConverter()));
+
+        Button cardButton = new Button(StringsFr.CHOOSE);
+
+        Rectangle backCard = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
+        backCard.getStyleClass().add("background");
+        Rectangle foreCard = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
+        foreCard.getStyleClass().add("foreground");
+
+        cardButton.setGraphic(new Group(backCard, foreCard));
     }
 
     private void chooseAdditionalCards(SortedBag<Card> possibleAdditionalCards,
@@ -163,6 +187,15 @@ public class GraphicalPlayer {
         ListView<SortedBag<Card>> listView = new ListView<SortedBag<Card>>();
         listView.setCellFactory(v ->
                 new TextFieldListCell<>(new CardBagStringConverter()));
+
+        Button cardButton = new Button(StringsFr.CHOOSE);
+
+        Rectangle backCard = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
+        backCard.getStyleClass().add("background");
+        Rectangle foreCard = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
+        foreCard.getStyleClass().add("foreground");
+
+        cardButton.setGraphic(new Group(backCard, foreCard));
     }
 
     private void resetHandlers(){
