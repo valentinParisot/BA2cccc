@@ -199,7 +199,6 @@ public class ObservableGameState {
         return faceUpCards.get(slot);
     }
 
-    // comment l'avoir avec une route plutot qu'un int?
     public ReadOnlyObjectProperty<PlayerId> routeOwner(Route route) {
         return routeOwner.get(route);
     }

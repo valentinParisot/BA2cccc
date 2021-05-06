@@ -90,8 +90,6 @@ import javafx.scene.text.Text;
         return root;
     }
 
-    // "deux propriétés contenant chacune un gestionnaire d'action"?
-    // afficher 1seule des 5cartes visibles
     public static VBox createCardsView(ObservableGameState state,
                                        ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketProperty,
                                        ObjectProperty<ActionHandlers.DrawCardHandler> cardProperty) {
