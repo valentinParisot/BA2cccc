@@ -70,6 +70,8 @@ public class GraphicalPlayer {
         BorderPane borderPane = new BorderPane(mapView, null, cardsView, handView, infoView);
         primaryStage.setScene(new Scene(borderPane));
 
+        primaryStage.show();
+
     }
 
 
@@ -107,7 +109,7 @@ public class GraphicalPlayer {
 
         }
         if (observableGameState.canDrawCards()) {
-            resetHandlers();
+
             drawCardHandlerOP.set((i) -> {
                         resetHandlers();
                         drawCardHandler.onDrawCard(i);
@@ -172,7 +174,12 @@ public class GraphicalPlayer {
 
     public void drawCard(ActionHandlers.DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
-        resetHandlers();
+
+        drawCardHandlerOP.set((i) -> {
+                    resetHandlers();
+                    drawCardHandler.onDrawCard(i);
+                }
+        );
 
     }
 
@@ -192,7 +199,9 @@ public class GraphicalPlayer {
         text.setText(StringsFr.CHOOSE_CARDS);
         textFlow.getChildren().add(text);
 
-        ListView<SortedBag<Card>> listView = new ListView<SortedBag<Card>>();
+        ObservableList<SortedBag<Card>> cardsList = FXCollections.observableList(initialCards);
+
+        ListView<SortedBag<Card>> listView = new ListView(cardsList);
         listView.setCellFactory(v ->
                 new TextFieldListCell<>(new CardBagStringConverter()));
 
@@ -207,6 +216,11 @@ public class GraphicalPlayer {
         cardButton.disableProperty()
                 .bind(Bindings.size(listView.getSelectionModel().getSelectedItems()).lessThan(1));
 
+        cardButton.setOnAction(e -> {
+            cardStage.hide();
+            chooseCardsHandler.onChooseCards(SortedBag.of((List) listView.getSelectionModel().getSelectedItems()));
+        });
+
         vBox.getChildren().addAll(textFlow, listView, cardButton);
         Scene scene = new Scene(vBox);
         scene.getStylesheets().add("chooser.css");
@@ -215,7 +229,7 @@ public class GraphicalPlayer {
         cardStage.setOnCloseRequest(Event::consume);
     }
 
-    public void chooseAdditionalCards(SortedBag<Card> possibleAdditionalCards,
+    public void chooseAdditionalCards(List<SortedBag<Card>> possibleAdditionalCards,
                                       ActionHandlers.ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
 
@@ -231,7 +245,10 @@ public class GraphicalPlayer {
         text.setText(StringsFr.CHOOSE_ADDITIONAL_CARDS);
         textFlow.getChildren().add(text);
 
-        ListView<SortedBag<Card>> listView = new ListView<SortedBag<Card>>();
+        ObservableList<SortedBag<Card>> additionalList = FXCollections.observableList(possibleAdditionalCards);
+
+
+        ListView<SortedBag<Card>> listView = new ListView(additionalList);
         listView.setCellFactory(v ->
                 new TextFieldListCell<>(new CardBagStringConverter()));
 
