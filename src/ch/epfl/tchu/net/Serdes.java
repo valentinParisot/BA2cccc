@@ -155,7 +155,7 @@ public final class Serdes {
 
                 lastPlayer = publicGameState.lastPlayer();
 
-                if((publicGameState.lastPlayer()== null)) { // gerer comme ca quand null est last player ou alors mettre le stringnull?
+                if((publicGameState.lastPlayer()== null)) {
                     return INT_SERDE.serialize(ticketCount)
                             + DOUBLE_POINT + PUBLIC_CARD_STATE_SERDE.serialize(publicCardState)
                             + DOUBLE_POINT + PLAYER_ID_SERDE.serialize(currentPlayerId)

@@ -98,7 +98,7 @@ public final class RemotePlayerClient {
                         player.receiveInfo(info);
 
                         break;
-                    case UPDATE_STATE:  //comment est rangé la tab voir avec le class de hugo ?
+                    case UPDATE_STATE:
 
                         PublicGameState publicGameState = PUBLIC_GAME_STATE_SERDE.deSerialize(tab[1]);
                         PlayerState playerState = PLAYER_STATE_SERDE.deSerialize(tab[2]);
@@ -116,19 +116,11 @@ public final class RemotePlayerClient {
                         SortedBag<Ticket> choose = player.chooseInitialTickets();
                         write(writer,BAG_OF_TICKET_SERDE.serialize(choose));
 
-                        //writer.write(BAG_OF_TICKET_SERDE.serialize(choose));
-                        //writer.write('\n');
-                        //writer.flush();
-
                         break;
                     case NEXT_TURN:
 
                         Player.TurnKind turnKind = player.nextTurn();
                         write(writer,TURN_KIND_SERDE.serialize(turnKind));
-
-                        //writer.write(TURN_KIND_SERDE.serialize(turnKind));
-                        //writer.write('\n');
-                        //writer.flush();
 
                         break;
                     case CHOOSE_TICKETS:
@@ -137,19 +129,11 @@ public final class RemotePlayerClient {
                         SortedBag<Ticket> chooseTickets = player.chooseTickets(options);
                         write(writer,BAG_OF_TICKET_SERDE.serialize(chooseTickets));
 
-                        //writer.write(BAG_OF_TICKET_SERDE.serialize(chooseTickets));
-                        //writer.write('\n');
-                        //writer.flush();
-
                         break;
                     case DRAW_SLOT:
 
                         int drawnSlot = player.drawSlot();
-                        //writer.write(INT_SERDE.serialize(drawnSlot));
-
                         write(writer,INT_SERDE.serialize(drawnSlot));
-                        //writer.write('\n');
-                        //writer.flush();
 
                         break;
                     case ROUTE:
@@ -157,31 +141,17 @@ public final class RemotePlayerClient {
                         Route route = player.claimedRoute();
                         write(writer,ROUTE_SERDE.serialize(route));
 
-                        //writer.write(ROUTE_SERDE.serialize(route));
-                        //writer.write('\n');
-                        //writer.flush();
-
                         break;
                     case CARDS:
                         SortedBag<Card> cards = player.initialClaimCards();
                         write(writer,BAG_OF_CARD_SERDE.serialize(cards));
-                        //writer.write(BAG_OF_CARD_SERDE.serialize(cards));
-                        //writer.write('\n');
-                        //writer.flush();
 
                         break;
                     case CHOOSE_ADDITIONAL_CARDS:
 
                         List<SortedBag<Card>> options2 = LIST_OF_SORTED_BAG_CARD_SERDE.deSerialize(tab[1]);
                         SortedBag<Card> card = player.chooseAdditionalCards(options2);
-
-                        //writer.write(BAG_OF_CARD_SERDE.serialize(card));
-                        //writer.write('\n');
-                        //writer.flush();
-
                         write(writer,BAG_OF_CARD_SERDE.serialize(card));
-
-
 
                         break;
 
