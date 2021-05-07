@@ -138,7 +138,10 @@ import javafx.scene.text.Text;
             sp.disableProperty()
                     .bind(cardProperty.isNull());
 
-            cardProperty.get().onDrawCard(i);
+            int finalI = i;
+            sp.setOnMouseClicked(e -> {
+                cardProperty.get().onDrawCard(finalI);
+            });
 
             addWagonLoco(sp, root);
         }

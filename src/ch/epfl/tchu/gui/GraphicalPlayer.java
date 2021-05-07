@@ -1,11 +1,13 @@
 package ch.epfl.tchu.gui;
 
+import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.scene.Group;
@@ -44,11 +46,13 @@ public class GraphicalPlayer {
 
     private final Stage primaryStage;
 
-    public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames){
+    public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames) {
 
         observableGameState = new ObservableGameState(playerId);
         this.playerId = playerId;
         this.playerNames = playerNames;
+
+        textList = FXCollections.observableArrayList();
 
         drawTicketsHandlerOP = new SimpleObjectProperty<ActionHandlers.DrawTicketsHandler>();
         drawCardHandlerOP = new SimpleObjectProperty<ActionHandlers.DrawCardHandler>();
@@ -58,7 +62,7 @@ public class GraphicalPlayer {
         primaryStage = new Stage();
         primaryStage.setTitle("tCHu - " + playerNames.get(playerId));
 
-        Node mapView = MapViewCreator.createMapView(observableGameState, claimRouteHandlerOP, GraphicalPlayer::chooseCards);
+        Node mapView = MapViewCreator.createMapView(observableGameState, claimRouteHandlerOP, this::chooseClaimCards);
         Node cardsView = DecksViewCreator.createCardsView(observableGameState, drawTicketsHandlerOP, drawCardHandlerOP);
         Node handView = DecksViewCreator.createHandView(observableGameState);
         Node infoView = InfoViewCreator.createInfoView(playerId, playerNames, observableGameState, textList);
@@ -69,44 +73,59 @@ public class GraphicalPlayer {
     }
 
 
-
-    //creer la
-            // appler map view et tout pour le construire apres>*AQ
-
-    public void setState(PublicGameState newGameState, PlayerState newPlayerState){
+    public void setState(PublicGameState newGameState, PlayerState newPlayerState) {
         assert isFxApplicationThread();
         observableGameState.setState(newGameState, newPlayerState);
     }
 
-    public void receiveInfo(String message){
+    public void receiveInfo(String message) {
         assert isFxApplicationThread();
-        textList.add(new Text(message)); // comment en avoir 5 maximum? avoir accès aux 4 autres infos?
-        InfoViewCreator.createInfoView(playerId, playerNames, observableGameState, textList);
 
+        if (textList.size() == 5) {
+            textList.remove(0);
+            textList.add(new Text(message));
+        } else {
+            textList.add(new Text(message));
+        }
+
+        InfoViewCreator.createInfoView(playerId, playerNames, observableGameState, textList);
     }
 
     public void startTurn(ActionHandlers.DrawTicketsHandler drawTicketsHandler,
                           ActionHandlers.DrawCardHandler drawCardHandler,
-                          ActionHandlers.ClaimRouteHandler claimRouteHandler){
+                          ActionHandlers.ClaimRouteHandler claimRouteHandler) {
 
         assert isFxApplicationThread();
 
         if (observableGameState.canDrawTickets()) {
-            drawTicketsHandlerOP.set(drawTicketsHandler); // reset juste après... quel intérêt?
-            resetHandlers();
+
+            drawTicketsHandlerOP.set(() -> {
+                        resetHandlers();
+                        drawTicketsHandler.onDrawTickets();
+                    }
+            );
+
         }
-        if (observableGameState.canDrawCards()){
-            drawCardHandlerOP.set(drawCardHandler);
+        if (observableGameState.canDrawCards()) {
             resetHandlers();
+            drawCardHandlerOP.set((i) -> {
+                        resetHandlers();
+                        drawCardHandler.onDrawCard(i);
+                    }
+            );
         }
-        claimRouteHandlerOP.set(claimRouteHandler);
-        resetHandlers();
+
+        claimRouteHandlerOP.set((route, initial) -> {
+                        resetHandlers();
+                        claimRouteHandler.onClaimRoute(route, initial);
+                }
+        );
 
     }
 
-    private void chooseTicket(SortedBag<Ticket> tickets, ActionHandlers.ChooseTicketsHandler chooseTicketsHandler){
+    public void chooseTicket(SortedBag<Ticket> tickets, ActionHandlers.ChooseTicketsHandler chooseTicketsHandler) {
         assert isFxApplicationThread();
-        assert tickets.size() == 3 || tickets.size() == 5;
+        Preconditions.checkArgument(tickets.size() == 3 || tickets.size() == 5);
 
         Stage ticketStage = new Stage(StageStyle.UTILITY);
         ticketStage.setTitle(StringsFr.TICKETS_CHOICE);
@@ -120,7 +139,9 @@ public class GraphicalPlayer {
         text.setText(String.format(StringsFr.CHOOSE_TICKETS, tickets.size(), StringsFr.plural(tickets.size())));
         textFlow.getChildren().add(text);
 
-        ListView<SortedBag<Ticket>> listView = new ListView<SortedBag<Ticket>>();
+        ObservableList<Ticket> ticketsList = FXCollections.observableList(tickets.toList());
+
+        ListView<ObservableList<Ticket>> listView = new ListView(ticketsList);
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         Button ticketButton = new Button(StringsFr.CHOOSE);
@@ -137,7 +158,7 @@ public class GraphicalPlayer {
 
         ticketButton.setOnAction(e -> {
             ticketStage.hide();
-            //chooseTicketsHandler.onChooseTickets(listView.getSelectionModel().getSelectedItems());
+            chooseTicketsHandler.onChooseTickets(SortedBag.of((List) listView.getSelectionModel().getSelectedItems()));
         });
 
         vBox.getChildren().addAll(textFlow, listView, ticketButton);
@@ -149,14 +170,14 @@ public class GraphicalPlayer {
 
     }
 
-    private void drawCard(ActionHandlers.DrawCardHandler drawCardHandler){
+    public void drawCard(ActionHandlers.DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
         resetHandlers();
 
     }
 
-    private void chooseClaimCards(SortedBag<Card> initialCards,
-                                  ActionHandlers.ChooseCardsHandler chooseCardsHandler){
+    public void chooseClaimCards(List<SortedBag<Card>> initialCards,
+                                 ActionHandlers.ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
 
         Stage cardStage = new Stage(StageStyle.UTILITY);
@@ -194,8 +215,8 @@ public class GraphicalPlayer {
         cardStage.setOnCloseRequest(Event::consume);
     }
 
-    private void chooseAdditionalCards(SortedBag<Card> possibleAdditionalCards,
-                                       ActionHandlers.ChooseCardsHandler chooseCardsHandler){
+    public void chooseAdditionalCards(SortedBag<Card> possibleAdditionalCards,
+                                      ActionHandlers.ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
 
         Stage additionalStage = new Stage(StageStyle.UTILITY);
@@ -232,15 +253,10 @@ public class GraphicalPlayer {
         additionalStage.setOnCloseRequest(Event::consume);
     }
 
-    private void resetHandlers(){
+    private void resetHandlers() {
         drawTicketsHandlerOP.set(null);
         drawCardHandlerOP.set(null);
         claimRouteHandlerOP.set(null);
     }
-
-    private static void chooseCards(List<SortedBag<Card>> options,
-                                    ActionHandlers.ChooseCardsHandler chooser) {
-        chooser.onChooseCards(options.get(0));
-    } // seul option pour créer la mapView?
 
 }
