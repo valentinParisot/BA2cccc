@@ -70,6 +70,9 @@ public class GraphicalPlayer {
 
 
 
+    //creer la
+            // appler map view et tout pour le construire apres>*AQ
+
     public void setState(PublicGameState newGameState, PlayerState newPlayerState){
         assert isFxApplicationThread();
         observableGameState.setState(newGameState, newPlayerState);
