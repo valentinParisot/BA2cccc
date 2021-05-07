@@ -2,9 +2,12 @@ package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
+import javafx.beans.binding.Binding;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -108,7 +111,6 @@ public class GraphicalPlayer {
         ticketStage.initModality(Modality.WINDOW_MODAL);
 
         VBox vBox = new VBox();
-        vBox.getStyleClass().add("chooser.css");
 
         TextFlow textFlow = new TextFlow();
         Text text = new Text();
@@ -126,7 +128,21 @@ public class GraphicalPlayer {
         foreTicket.getStyleClass().add("foreground");
 
         ticketButton.setGraphic(new Group(backTicket, foreTicket));
+        ticketButton.disableProperty()
+                .bind(Bindings.size(listView.getSelectionModel().getSelectedItems())
+                        .lessThan(tickets.size() - 2));
 
+        ticketButton.setOnAction(e -> {
+            ticketStage.hide();
+            //chooseTicketsHandler.onChooseTickets(listView.getSelectionModel().getSelectedItems());
+        });
+
+        vBox.getChildren().addAll(textFlow, listView, ticketButton);
+        Scene scene = new Scene(vBox);
+        scene.getStylesheets().add("chooser.css");
+        ticketStage.setScene(scene);
+
+        ticketStage.setOnCloseRequest(Event::consume);
 
     }
 
@@ -146,7 +162,6 @@ public class GraphicalPlayer {
         cardStage.initModality(Modality.WINDOW_MODAL);
 
         VBox vBox = new VBox();
-        vBox.getStyleClass().add("chooser.css");
 
         TextFlow textFlow = new TextFlow();
         Text text = new Text();
@@ -165,6 +180,15 @@ public class GraphicalPlayer {
         foreCard.getStyleClass().add("foreground");
 
         cardButton.setGraphic(new Group(backCard, foreCard));
+        cardButton.disableProperty()
+                .bind(Bindings.size(listView.getSelectionModel().getSelectedItems()).lessThan(1));
+
+        vBox.getChildren().addAll(textFlow, listView, cardButton);
+        Scene scene = new Scene(vBox);
+        scene.getStylesheets().add("chooser.css");
+        cardStage.setScene(scene);
+
+        cardStage.setOnCloseRequest(Event::consume);
     }
 
     private void chooseAdditionalCards(SortedBag<Card> possibleAdditionalCards,
@@ -177,7 +201,6 @@ public class GraphicalPlayer {
         additionalStage.initModality(Modality.WINDOW_MODAL);
 
         VBox vBox = new VBox();
-        vBox.getStyleClass().add("chooser.css");
 
         TextFlow textFlow = new TextFlow();
         Text text = new Text();
@@ -196,6 +219,14 @@ public class GraphicalPlayer {
         foreCard.getStyleClass().add("foreground");
 
         cardButton.setGraphic(new Group(backCard, foreCard));
+
+        vBox.getChildren().addAll(textFlow, listView, cardButton);
+
+        Scene scene = new Scene(vBox);
+        scene.getStylesheets().add("chooser.css");
+        additionalStage.setScene(scene);
+
+        additionalStage.setOnCloseRequest(Event::consume);
     }
 
     private void resetHandlers(){
