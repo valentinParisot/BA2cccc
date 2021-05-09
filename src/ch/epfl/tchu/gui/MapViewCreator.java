@@ -30,6 +30,11 @@ class MapViewCreator {
     private final static int RECTANGLE_HEIGHT = 12;
     private final static int CIRCLE_RADIUS = 3;
     private final static String LOW_LINE = "_";
+    private final static String ROUTE = "route";
+    private final static String FILLED = "filled";
+    private final static String NEUTRAL = "NEUTRAL";
+    private final static String CAR = "car";
+    private final static String TRACK = "track";
 
     //----------------------------------------------------------------------------------------------------
 
@@ -69,13 +74,10 @@ class MapViewCreator {
                     ActionHandlers.ChooseCardsHandler chooseCardsH =
                             chosenCards -> claimRouteH.onClaimRoute(route, chosenCards);
                     cardChooser.chooseCards(possibleClaimCards, chooseCardsH);
-
                 }
-
             });
 
             observableGameState.routeOwner(route).addListener((o,ov,on) -> routes.getStyleClass().add(on.name()));
-
 
             generator(route,routes);
             dumpTree(routes);//debug
@@ -105,6 +107,12 @@ class MapViewCreator {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @param route
+     * @param routes
+     */
+
     private static void generator(Route route, Group routes){
 
         for (int i = 1; i <= route.length(); i++) {
@@ -112,7 +120,7 @@ class MapViewCreator {
             routes.setId(route.id());
 
             Rectangle r1 = new Rectangle(RECTANGLE_WIDTH,RECTANGLE_HEIGHT);
-            r1.getStyleClass().add("filled");
+            r1.getStyleClass().add(FILLED);
 
             Circle c1 = new Circle(CIRCLE_RADIUS);
             c1.setCenterX(12);
@@ -123,10 +131,10 @@ class MapViewCreator {
             c2.setCenterY(6);
 
             Rectangle voie = new Rectangle(RECTANGLE_WIDTH,RECTANGLE_HEIGHT);
-            voie.getStyleClass().addAll("track", "filled");
+            voie.getStyleClass().addAll(TRACK, FILLED);
 
             Group wagon = new Group(r1, c1, c2);
-            wagon.getStyleClass().addAll("car");
+            wagon.getStyleClass().addAll(CAR);
 
 
             Group box = new Group(voie,wagon);
@@ -135,16 +143,19 @@ class MapViewCreator {
         }
 
         if (route.color() == null) {
-            routes.getStyleClass().addAll("route", route.level().toString(), "NEUTRAL");
+            routes.getStyleClass().addAll(ROUTE, route.level().toString(), NEUTRAL);
 
         } else {
-            routes.getStyleClass().addAll("route", route.level().toString(), route.color().toString());
+            routes.getStyleClass().addAll(ROUTE, route.level().toString(), route.color().toString());
 
         }
     }
 
-
-    //--------------------------------------------code de déboguage-----------------------------------------
+    //----------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
+    //------------------------------------------code de déboguage-----------------------------------------
+    //----------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
 
     private static void dumpTree(Node root) {
         dumpTree(0, root);
@@ -163,6 +174,10 @@ class MapViewCreator {
         }
     }
 
+    //----------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
+    //------------------------------------------code de déboguage-----------------------------------------
+    //----------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------
 
 }

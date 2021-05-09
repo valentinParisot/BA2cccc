@@ -7,7 +7,28 @@ import javafx.util.StringConverter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * CardBagStringConverter
+ * class
+ *
+ * @author Valentin Parisot (326658)
+ * @author Hugo Jeannin (329220)
+ */
+
 public class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
+
+    //----------------------------------------------------------------------------------------------------
+
+    private static final String SPACE = " ";
+    private static final String COMMA_SPACE = ", ";
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param cards
+     * @return
+     */
 
     @Override
     public String toString(SortedBag<Card> cards) {
@@ -16,7 +37,7 @@ public class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
         for (Card c : cards.toSet()) {
 
             int n = cards.countOf(c);
-            String s = (n + " " + Info.cardName(c, n));
+            String s = (n + SPACE + Info.cardName(c, n));
             carte.add(s);
         }
 
@@ -27,7 +48,7 @@ public class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
         List<String> minusOne = new ArrayList<>(carte);
         minusOne.remove(minusOne.size() - 1);
 
-        String textMinusOne = String.join(", ", minusOne);
+        String textMinusOne = String.join(COMMA_SPACE, minusOne);
         String lastOne = carte.get(carte.size() - 1);
 
         List<String> finalText = new ArrayList<>();
@@ -37,8 +58,12 @@ public class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
         return String.join(StringsFr.AND_SEPARATOR, finalText);
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     @Override
     public SortedBag<Card> fromString(String s) {
         throw new UnsupportedOperationException();
     }
+
+    //----------------------------------------------------------------------------------------------------
 }

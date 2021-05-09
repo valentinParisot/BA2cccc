@@ -1,25 +1,49 @@
 package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.PlayerId;
-import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-import javax.crypto.Cipher;
 import java.util.Map;
 
 import static ch.epfl.tchu.gui.StringsFr.PLAYER_STATS;
 import static javafx.beans.binding.Bindings.bindContent;
 
+/**
+ * InfoViewCreator
+ * class
+ *
+ * @author Valentin Parisot (326658)
+ * @author Hugo Jeannin (329220)
+ */
+
 class InfoViewCreator {
+
+    //----------------------------------------------------------------------------------------------------
+
+    private final static String PLAYER_1 = "PLAYER_1";
+    private final static String FILLED = "filled";
+    private final static String SETID_PLAYER_STATE = "player-stats";
+    private final static String SETID_GAME_INFO = "game-info";
+    private final static int RADIUS_CIRCLE = 5;
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param playerId
+     * @param name
+     * @param observableGameState
+     * @param observableList
+     * @return
+     */
 
      public static VBox createInfoView(PlayerId playerId,
                                 Map<PlayerId,String> name,
@@ -28,7 +52,7 @@ class InfoViewCreator {
 
 
          VBox playerStats = new VBox();
-         playerStats.setId("player-stats");
+         playerStats.setId(SETID_PLAYER_STATE );
 
 
          for (PlayerId player: PlayerId.ALL) {
@@ -38,8 +62,8 @@ class InfoViewCreator {
 
 
              Circle circle = new Circle();
-             circle.setRadius(5);
-             circle.getStyleClass().add("filled");
+             circle.setRadius(RADIUS_CIRCLE);
+             circle.getStyleClass().add(FILLED);
 
              Text monText = new Text();
              monText.textProperty().bind(expression(player,observableGameState,name));
@@ -50,7 +74,7 @@ class InfoViewCreator {
          }
 
          TextFlow message = new TextFlow();
-         message.setId("game-info");
+         message.setId(SETID_GAME_INFO);
 
          if(observableList.size() <= 5 && observableList.size() > 0 ) {
              for (int i = 0; i < observableList.size(); i++) {
@@ -75,13 +99,23 @@ class InfoViewCreator {
          return root;
      }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param player
+     * @param observableGameState
+     * @param name
+     * @return
+     */
+
      private static StringExpression expression(PlayerId player,
                                                 ObservableGameState observableGameState,
                                                 Map<PlayerId,String> name ){
 
          StringExpression expression;
 
-         if(player.name().equals("PLAYER_1")){
+         if(player.name().equals(PLAYER_1)){
 
              expression = Bindings.format(PLAYER_STATS,
                      name.get(player),
@@ -103,7 +137,7 @@ class InfoViewCreator {
          return expression;
      }
 
-
+    //----------------------------------------------------------------------------------------------------
 
 }
 

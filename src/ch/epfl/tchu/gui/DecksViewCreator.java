@@ -1,4 +1,4 @@
-package  ch.epfl.tchu.gui;
+package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.ChMap;
@@ -15,11 +15,23 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+/**
+ * DecksViewCreator
+ * class
+ *
+ * @author Valentin Parisot (326658)
+ * @author Hugo Jeannin (329220)
+ */
 
- class DecksViewCreator {
 
-     private final static int BUTTON_WIDTH = 50;
-     private final static int BUTTON_HEIGHT = 5;
+class DecksViewCreator {
+
+    //----------------------------------------------------------------------------------------------------
+
+    private final static int BUTTON_WIDTH = 50;
+    private final static int BUTTON_HEIGHT = 5;
+
+    //----------------------------------------------------------------------------------------------------
 
     public static HBox createHandView(ObservableGameState state) {
 
@@ -33,22 +45,22 @@ import javafx.scene.text.Text;
         ListView<String> billets = new ListView<>();
         billets.setId("tickets");
 
-       for (Ticket t : ChMap.tickets()) {
+        for (Ticket t : ChMap.tickets()) {
 
             billets.getItems().add(t.toString());
 
         }
 
-        for (Card c: Card.ALL) {
+        for (Card c : Card.ALL) {
 
             StackPane sp = new StackPane();
 
 
-            if(c.color() == null){
+            if (c.color() == null) {
 
                 sp.getStyleClass().addAll("NEUTRAL", "card");
 
-            }else {
+            } else {
                 sp.getStyleClass().addAll(c.color().toString(), "card");
             }
 
@@ -60,7 +72,7 @@ import javafx.scene.text.Text;
             Rectangle r2 = new Rectangle();
             r2.setWidth(40);
             r2.setHeight(70);
-            r2.getStyleClass().addAll("filled","inside");
+            r2.getStyleClass().addAll("filled", "inside");
 
             Rectangle r3 = new Rectangle();
             r3.setWidth(40);
@@ -76,7 +88,7 @@ import javafx.scene.text.Text;
             compteurnoir.visibleProperty()
                     .bind(Bindings.greaterThan(state.cardMultiplicity(c), 1));
 
-            sp.getChildren().addAll(r1,r2,r3,compteurnoir);
+            sp.getChildren().addAll(r1, r2, r3, compteurnoir);
             handPane.getChildren().add(sp);
 
             sp.visibleProperty()
@@ -89,6 +101,8 @@ import javafx.scene.text.Text;
 
         return root;
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public static VBox createCardsView(ObservableGameState state,
                                        ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketProperty,
@@ -127,9 +141,9 @@ import javafx.scene.text.Text;
 
 
             StackPane sp = new StackPane();
-            sp.getStyleClass().addAll( "card");//ajouter la couelur
+            sp.getStyleClass().addAll("card");//ajouter la couelur
 
-            state.faceUpCard(i).addListener((o,ov,on) ->{ // question
+            state.faceUpCard(i).addListener((o, ov, on) -> { // question
 
                 sp.getStyleClass().setAll(on.color().toString(), "card");
 
@@ -174,7 +188,9 @@ import javafx.scene.text.Text;
         return root;
     }
 
-    private static void addWagonLoco(StackPane sp,  VBox root) {
+    //----------------------------------------------------------------------------------------------------
+
+    private static void addWagonLoco(StackPane sp, VBox root) {
 
         Rectangle r1 = new Rectangle();
         r1.setWidth(60);
@@ -215,10 +231,12 @@ import javafx.scene.text.Text;
         Text compteurnoir = new Text();
         compteurnoir.getStyleClass().add("count");
 
-        sp.getChildren().addAll(r1,r2,r3,compteurnoir);
+        sp.getChildren().addAll(r1, r2, r3, compteurnoir);
         handPane.getChildren().add(sp);
 
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     private static Button button() {
 
@@ -243,5 +261,7 @@ import javafx.scene.text.Text;
         return button;
 
     }
+
+    //----------------------------------------------------------------------------------------------------
 
 }

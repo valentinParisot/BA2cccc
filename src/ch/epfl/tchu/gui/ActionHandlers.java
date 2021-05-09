@@ -5,9 +5,17 @@ import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.Route;
 import ch.epfl.tchu.game.Ticket;
 
-import java.util.List;
+/**
+ * ActionHandlers
+ * interface
+ *
+ * @author Valentin Parisot (326658)
+ * @author Hugo Jeannin (329220)
+ */
 
 public interface ActionHandlers {
+
+    //----------------------------------------------------------------------------------------------------
 
     @FunctionalInterface
     interface DrawTicketsHandler {
@@ -18,6 +26,8 @@ public interface ActionHandlers {
         abstract void onDrawTickets();
 
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     @FunctionalInterface
     interface DrawCardHandler {
@@ -31,18 +41,22 @@ public interface ActionHandlers {
 
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     @FunctionalInterface
     interface ClaimRouteHandler {
 
         /**
          * is called when the player wishes to seize the given route by means of the given (initial) cards,
          *
-         * @param route desired route
+         * @param route   desired route
          * @param initial given cards
          */
-        abstract void onClaimRoute(Route route,SortedBag<Card> initial);
+        abstract void onClaimRoute(Route route, SortedBag<Card> initial);
 
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     @FunctionalInterface
     interface ChooseTicketsHandler {
@@ -55,6 +69,8 @@ public interface ActionHandlers {
         abstract void onChooseTickets(SortedBag<Ticket> chooseTickets);
 
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     @FunctionalInterface
     interface ChooseCardsHandler {
@@ -69,4 +85,6 @@ public interface ActionHandlers {
         abstract void onChooseCards(SortedBag<Card> givenCards);
 
     }
+
+    //----------------------------------------------------------------------------------------------------
 }
