@@ -175,7 +175,7 @@ public class GraphicalPlayer {
      * @param chooseTicketsHandler
      */
 
-    public void chooseTicket(SortedBag<Ticket> tickets, ActionHandlers.ChooseTicketsHandler chooseTicketsHandler) {
+    public void chooseTickets(SortedBag<Ticket> tickets, ActionHandlers.ChooseTicketsHandler chooseTicketsHandler) {
         assert isFxApplicationThread();
         Preconditions.checkArgument(tickets.size() == IN_GAME_TICKETS_COUNT ||
                                                 tickets.size() == INITIAL_TICKETS_COUNT);
