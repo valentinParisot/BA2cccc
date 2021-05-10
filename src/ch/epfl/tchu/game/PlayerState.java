@@ -107,20 +107,6 @@ public final class PlayerState extends PublicPlayerState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * which returns an identical state to the receiver, except that the player also has the given cards,
-     *
-     * @param additionalCards sorted bag of card
-     * @return identical state to the receiver with the cards
-     */
-
-    public PlayerState withAddedCards(SortedBag<Card> additionalCards) {
-
-        return new PlayerState(this.tickets, this.cards.union(additionalCards), routes());
-    }
-
-    //----------------------------------------------------------------------------------------------------
-
-    /**
      * returns true iff the player can seize the given route, i.e. if he has enough cars left
      * and if he has the necessary cards
      *
@@ -170,19 +156,17 @@ public final class PlayerState extends PublicPlayerState {
      *
      * @param additionalCardsCount additional cards count
      * @param initialCards         initial cards sorted bag of card
-     * @param drawnCards           drawn cards sorted bag of card
      * @return the list of all the sets
      * @throws IllegalArgumentException if the number of additional cards is not between 1 and 3 (inclusive),
      *                                  if the set of initial cards is empty or contains more than 2 different types of cards,
      *                                  or if the set of cards drawn does not contain exactly 3 cards
      */
 
-    public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
+    public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards) {
 
        Preconditions.checkArgument((additionalCardsCount <= 3 && additionalCardsCount >= 1)
                 && (!(initialCards.size() == 0))
-                && (initialCards.toSet().size() <= 2)
-                && (drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS));
+                && (initialCards.toSet().size() <= 2));
 
         SortedBag<Card> cards2 = cards.difference(initialCards);
         SortedBag.Builder<Card> builder = new SortedBag.Builder<>();

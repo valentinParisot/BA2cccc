@@ -150,11 +150,11 @@ public final class Game {
 
                         if (addCardsCount >= 1 && !gameState
                                 .currentPlayerState()
-                                .possibleAdditionalCards(addCardsCount, initialClaimCards, drawnCards).isEmpty()) {
+                                .possibleAdditionalCards(addCardsCount, initialClaimCards).isEmpty()) {
 
                             List<SortedBag<Card>> possibleAdditionalCards = gameState
                                     .currentPlayerState()
-                                    .possibleAdditionalCards(addCardsCount, initialClaimCards, drawnCards);
+                                    .possibleAdditionalCards(addCardsCount, initialClaimCards);
 
                             SortedBag<Card> selectedAddCards = current.chooseAdditionalCards(possibleAdditionalCards);
 

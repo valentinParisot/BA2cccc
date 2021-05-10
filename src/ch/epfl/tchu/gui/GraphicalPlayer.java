@@ -195,7 +195,11 @@ public class GraphicalPlayer {
 
         ticketButton.setOnAction(e -> {
             ticketStage.hide();
-            chooseTicketsHandler.onChooseTickets(SortedBag.of(listView.getSelectionModel().getSelectedItems()));
+            try {
+                chooseTicketsHandler.onChooseTickets(SortedBag.of(listView.getSelectionModel().getSelectedItems()));
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
         });
 
 
@@ -247,7 +251,11 @@ public class GraphicalPlayer {
 
         cardButton.setOnAction(e -> {
             cardStage.hide();
-            chooseCardsHandler.onChooseCards(SortedBag.of((List) listView.getSelectionModel().getSelectedItems()));
+            try {
+                chooseCardsHandler.onChooseCards(SortedBag.of((List) listView.getSelectionModel().getSelectedItems()));
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
         });
 
 

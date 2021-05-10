@@ -45,15 +45,6 @@ public class PublicCardState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * which returns the total number of cards that are not in the players hand
-     * @return number of cards that are not in the players hand
-     */
-
-    public int totalSize() { return (Constants.FACE_UP_CARDS_COUNT + deckSize + discardSize); }
-
-    //----------------------------------------------------------------------------------------------------
-
-    /**
      * return the list of the 5 cards that are face up
      * @return a list of cards the size is 5
      */
