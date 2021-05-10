@@ -24,12 +24,12 @@ public class GraphicalPlayerAdapter implements Player {
     //----------------------------------------------------------------------------------------------------
 
     private GraphicalPlayer graphicalPlayer;
-    private final BlockingQueue<SortedBag<Ticket>> sortedBagArrayBlockingQueue = new ArrayBlockingQueue<>(1);
-    private final BlockingQueue<GraphicalPlayer> graphicalPlayerArrayBlockingQueue = new ArrayBlockingQueue<>(1);
+    private final BlockingQueue<SortedBag<Ticket>> ticketsBlockingQueue = new ArrayBlockingQueue<>(1);
+    private final BlockingQueue<GraphicalPlayer> graphicalPlayerBlockingQueue = new ArrayBlockingQueue<>(1);
     private final BlockingQueue<Route> claimedRoute = new ArrayBlockingQueue<>(1);
     private final BlockingQueue<SortedBag<Card>> claimedCards = new ArrayBlockingQueue<>(1);
     private final BlockingQueue<SortedBag<Card>> givenCards = new ArrayBlockingQueue<>(1);
-    private final BlockingQueue<Integer> onDrawCardIntegerIndex = new ArrayBlockingQueue<>(1);
+    private final BlockingQueue<Integer> cardsPlace = new ArrayBlockingQueue<>(1);
     private final BlockingQueue<TurnKind> nextTurn = new ArrayBlockingQueue<>(1);
 
     //----------------------------------------------------------------------------------------------------
@@ -37,12 +37,13 @@ public class GraphicalPlayerAdapter implements Player {
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
 
+        //definir ds lambda ou ici ?
         try {
             runLater(() ->
-                    graphicalPlayerArrayBlockingQueue.add(new GraphicalPlayer(ownId, playerNames))
+                    graphicalPlayerBlockingQueue.add(new GraphicalPlayer(ownId, playerNames))
             );
 
-            this.graphicalPlayer = graphicalPlayerArrayBlockingQueue.take();
+            this.graphicalPlayer = graphicalPlayerBlockingQueue.take();
         } catch (InterruptedException e) {
             throw new Error(e);
         }
@@ -69,7 +70,8 @@ public class GraphicalPlayerAdapter implements Player {
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
 
         runLater(() ->
-                graphicalPlayer.chooseTickets(tickets, (sortedBagArrayBlockingQueue::add))
+
+                graphicalPlayer.chooseTickets(tickets, (ticketsBlockingQueue::add))
         );
     }
 
@@ -78,32 +80,67 @@ public class GraphicalPlayerAdapter implements Player {
     @Override
     public SortedBag<Ticket> chooseInitialTickets() { // peut passer que par une queun ?
 
-        BlockingQueue<SortedBag<Ticket>> sortedBagArrayBlockingQueue9 = new ArrayBlockingQueue<>(1);
+        BlockingQueue<SortedBag<Ticket>> ticketsBlockingQueue2 = new ArrayBlockingQueue<>(1);
 
         try {
             runLater(() ->
                     {
                         try {
-                            sortedBagArrayBlockingQueue9.add(sortedBagArrayBlockingQueue.take());
+                            ticketsBlockingQueue2.add(this.ticketsBlockingQueue.take());
                         } catch (InterruptedException e) {
                             throw new Error(e);
                         }
                     }
             );
 
-            return sortedBagArrayBlockingQueue9.take();
+            return ticketsBlockingQueue2.take();
+
         } catch (InterruptedException e) {
             throw new Error(e);
         }
     }
 
-    @Override
-    public TurnKind nextTurn() {
-        return null;
-    }
-
     //----------------------------------------------------------------------------------------------------
 
+
+
+    @Override
+    public TurnKind nextTurn() {//comment gerer les diff handler et le type de retour avec if ?
+
+        try {
+
+            runLater(() ->
+
+                            graphicalPlayer.startTurn
+                                    (
+
+                                    ()->{
+
+                                        nextTurn.add(TurnKind.DRAW_TICKETS);
+                                    }
+                                    ,
+                                    (o)->{
+
+                                        cardsPlace.add(o);
+                                        nextTurn.add(TurnKind.DRAW_CARDS);
+                                    }
+                                    ,
+                                    (o,p) -> {
+
+                                        claimedRoute.add(o);
+                                        claimedCards.add(p);
+                                        nextTurn.add(TurnKind.CLAIM_ROUTE);
+                                    }
+
+                                    )
+            );
+
+            return nextTurn.take();
+
+        } catch (InterruptedException e) {
+            throw new Error(e);
+        }
+    }
 
     //----------------------------------------------------------------------------------------------------
 
@@ -112,12 +149,42 @@ public class GraphicalPlayerAdapter implements Player {
 
         try {
             runLater(() ->
-                    graphicalPlayer.chooseTickets(ts, (sortedBagArrayBlockingQueue::put))
+                    graphicalPlayer.chooseTickets(ts, (ticketsBlockingQueue::put) )
             );
 
-            return sortedBagArrayBlockingQueue.take();
+            return ticketsBlockingQueue.take();
+
         } catch (InterruptedException e) {
             throw new Error(e);
+        }
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
+    @Override
+    public int drawSlot() {
+        //tester comme ca sans bloquer ?
+
+        if(!cardsPlace.isEmpty()){
+
+            try {
+                return cardsPlace.take();
+
+            } catch (InterruptedException e) {
+                throw new Error(e);
+            }
+
+        }else{
+            try {
+                runLater(() ->
+                        graphicalPlayer.drawCard(cardsPlace::add)
+                );
+
+                return cardsPlace.take();
+
+            } catch (InterruptedException e) {
+                throw new Error(e);
+            }
         }
 
     }
@@ -125,16 +192,12 @@ public class GraphicalPlayerAdapter implements Player {
     //----------------------------------------------------------------------------------------------------
 
     @Override
-    public int drawSlot() { return 0;
-    }
-
-    //----------------------------------------------------------------------------------------------------
-
-    @Override
     public Route claimedRoute() {
 
+        //passer par run later ?
         try {
             return claimedRoute.take();
+
         } catch (InterruptedException e) {
             throw new Error(e);
         }
@@ -158,6 +221,7 @@ public class GraphicalPlayerAdapter implements Player {
     @Override
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
 
+        //checker avec preconditon si la file est vide
         try {
             runLater(() ->
                     graphicalPlayer.chooseAdditionalCards(options, (givenCards::put))
@@ -172,30 +236,11 @@ public class GraphicalPlayerAdapter implements Player {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *  @Override
-     *     public TurnKind nextTurn() {//comment gerer les diff handler et le type de retour avec if ?
+     * Simplify thw way to check the try and catch
      *
-     *         try {
-     *
-     *             runLater(() ->
-     *
-     *                     graphicalPlayer.startTurn(, (onDrawCardIntegerIndex::add), )
-     *                     graphicalPlayer.startTurn(nextTurn ,
-     *                             o ->{
-     *                         nextTurn
-     *                         (onDrawCardIntegerIndex.add());
-     *                             } ,
-     *
-     *                             nextTurn::add )
-     *
-     *             );
-     *
-     *             return nextTurn.take();
-     *
-     *         } catch (InterruptedException e) {
-     *             throw new Error(e);
-     *         }
-     *     }
      */
+    private void tryCatch(){
+
+    }
 }
 
