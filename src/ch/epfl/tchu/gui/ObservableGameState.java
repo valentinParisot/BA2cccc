@@ -14,68 +14,99 @@ import static ch.epfl.tchu.game.Constants.*;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
 
+/**
+ * ObservableGameState
+ * class
+ *
+ * @author Valentin Parisot (326658)
+ * @author Hugo Jeannin (329220)
+ */
+
 public class ObservableGameState {
 
+    //----------------------------------------------------------------------------------------------------
+
+    public static final int TOTAL_TICKETS_COUNT = 46;
+    public static final int CENT = 100;
+
+    //----------------------------------------------------------------------------------------------------
 
     private PlayerId playerId;
     private PlayerState playerState;
     private PublicGameState publicGameState;
-    /*public static final Integer TICKET_COUNT = 46;
-    public static final Integer CARD_COUNT = 110;*/
 
-    // etat publique de la partie
+    //----------------------------------------------------------------------------------------------------
+    //-----------------------------------Public state of the game-----------------------------------------
+    //----------------------------------------------------------------------------------------------------
+
     private final IntegerProperty ticketPercentage, cardPercentage;
     private final List<ObjectProperty<Card>> faceUpCards;
     private final HashMap<Route, ObjectProperty<PlayerId>> routeOwner;
 
+    //----------------------------------------------------------------------------------------------------
+    //-----------------------------------Public state of each players-------------------------------------
+    //----------------------------------------------------------------------------------------------------
 
-    // etat publique de chacun des joueurs
     private final IntegerProperty ticketCount, cardCount, wagonCount, playerPoints;
     private final IntegerProperty ticketCount2, cardCount2, wagonCount2, playerPoints2;
 
+    //----------------------------------------------------------------------------------------------------
+    //--------------------------------Private state of current player ID----------------------------------
+    //----------------------------------------------------------------------------------------------------
 
-    // etat privé de playerId passé au constructeur
     private final ObjectProperty<ObservableList<Ticket>> ticketList;
     private final HashMap<Card, IntegerProperty> cardMultiplicity;
     private final HashMap<Route, BooleanProperty> canClaimRoute;
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param playerId
+     */
 
     public ObservableGameState(PlayerId playerId) {
+
         this.playerId = playerId;
         playerState = null;
         publicGameState = null;
 
-
-        ticketPercentage = createTicketPercentage();
-        cardPercentage = createCardPercentage();
+        ticketPercentage = new SimpleIntegerProperty();
+        cardPercentage = new SimpleIntegerProperty();
         faceUpCards = createFaceUpCards();
         routeOwner = createRouteOwner();
 
+        ticketCount = new SimpleIntegerProperty();
+        cardCount = new SimpleIntegerProperty();
+        wagonCount = new SimpleIntegerProperty();
+        playerPoints = new SimpleIntegerProperty();
 
-        ticketCount = createTicketCount();
-        cardCount = createCardCount();
-        wagonCount = createWagonCount();
-        playerPoints = createPlayerPoints();
-
-        ticketCount2 = createTicketCount();
-        cardCount2 = createCardCount();
-        wagonCount2 = createWagonCount();
-        playerPoints2 = createPlayerPoints();
+        ticketCount2 = new SimpleIntegerProperty();
+        cardCount2 = new SimpleIntegerProperty();
+        wagonCount2 = new SimpleIntegerProperty();
+        playerPoints2 = new SimpleIntegerProperty();
 
 
-        ticketList = createTicketList();
+        ticketList = new SimpleObjectProperty<>();
         cardMultiplicity = createCardMultiplicity();
         canClaimRoute = createCanClaimRoute();
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param newGameState
+     * @param newPlayerState
+     */
 
     public void setState(PublicGameState newGameState, PlayerState newPlayerState) {
         this.publicGameState = newGameState;
         this.playerId = newGameState.currentPlayerId();
         this.playerState = newPlayerState;
 
-        ticketPercentage.set(newGameState.ticketsCount() * 100 / 46 );
-        cardPercentage.set(newGameState.cardState().deckSize() * 100 / 110);
+        ticketPercentage.set(newGameState.ticketsCount() * CENT / TOTAL_TICKETS_COUNT);
+        cardPercentage.set(newGameState.cardState().deckSize() * CENT / TOTAL_CARDS_COUNT);
 
         for (int slot : FACE_UP_CARD_SLOTS) {
             Card newCard = newGameState.cardState().faceUpCard(slot);
@@ -108,61 +139,47 @@ public class ObservableGameState {
         for (Card card : Card.ALL) {
             cardMultiplicity.get(card).set(newPlayerState.cards().countOf(card));
         }
-
     }
-
 
     //----------------------------------------------------------------------------------------------------
-    private static IntegerProperty createTicketPercentage() {
 
-        return new SimpleIntegerProperty();
-        //Integer i = Math.round(gameState.ticketsCount() * 100 / TICKET_COUNT);
-    }
-
-    private static IntegerProperty createCardPercentage() {
-        return new SimpleIntegerProperty();
-    }
+    /**
+     *
+     * @return
+     */
 
     private static List<ObjectProperty<Card>> createFaceUpCards() {
         List<ObjectProperty<Card>> list = new ArrayList<ObjectProperty<Card>>();
-        for (int i = 0; i < 5; i++) {
-            list.add(new SimpleObjectProperty<Card>());
+        for (int i = 0; i < FACE_UP_CARDS_COUNT; i++) {
+            list.add(new SimpleObjectProperty<>());
         }
         return list;
     }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @return
+     */
 
     private static HashMap<Route, ObjectProperty<PlayerId>> createRouteOwner() {
 
         HashMap<Route, ObjectProperty<PlayerId>> map = new HashMap<>();
 
         for (Route route : ChMap.routes()) {
-            map.put(route, new SimpleObjectProperty<PlayerId>());
+            map.put(route, new SimpleObjectProperty<>());
         }
 
         return map;
     }
 
     //----------------------------------------------------------------------------------------------------
-    private static IntegerProperty createTicketCount() {
-        return new SimpleIntegerProperty();
-    }
 
-    private static IntegerProperty createCardCount() {
-        return new SimpleIntegerProperty();
-    }
-
-    private static IntegerProperty createWagonCount() {
-        return new SimpleIntegerProperty();
-    }
-
-    private static IntegerProperty createPlayerPoints() {
-        return new SimpleIntegerProperty();
-    }
-
-    //----------------------------------------------------------------------------------------------------
-    private static ObjectProperty<ObservableList<Ticket>> createTicketList() {
-        return new SimpleObjectProperty<ObservableList<Ticket>>();
-    }
+    /**
+     *
+     * @return
+     */
 
     private static HashMap<Card, IntegerProperty> createCardMultiplicity() {
 
@@ -174,6 +191,13 @@ public class ObservableGameState {
         return map;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @return
+     */
+
     private static HashMap<Route, BooleanProperty> createCanClaimRoute() {
 
         HashMap<Route, BooleanProperty> map = new HashMap<>();
@@ -184,8 +208,9 @@ public class ObservableGameState {
         return map;
     }
 
-
-//---- etat publique de la partie -----------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
+    //----------------------------------Public State of the game------------------------------------------
+    //----------------------------------------------------------------------------------------------------
 
     public ReadOnlyIntegerProperty ticketPercentage() {
         return ticketPercentage;
@@ -203,77 +228,102 @@ public class ObservableGameState {
         return routeOwner.get(route);
     }
 
-
-//---- etat publique de chacun des joueurs --------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
+    //--------------------------------Public State of each Player-----------------------------------------
+    //----------------------------------------------------------------------------------------------------
 
     public ReadOnlyIntegerProperty ticketCount() {
         return ticketCount;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public ReadOnlyIntegerProperty cardCount() {
         return cardCount;
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public ReadOnlyIntegerProperty wagonCunt() {
         return wagonCount;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public ReadOnlyIntegerProperty playerPoints() {
         return playerPoints;
     }
 
-
+    //----------------------------------------------------------------------------------------------------
 
     public ReadOnlyIntegerProperty ticketCount2() {
         return ticketCount2;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public ReadOnlyIntegerProperty cardCount2() {
         return cardCount2;
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public ReadOnlyIntegerProperty wagonCunt2() {
         return wagonCount2;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public ReadOnlyIntegerProperty playerPoints2() {
         return playerPoints2;
     }
 
+    //----------------------------------------------------------------------------------------------------
+    //--------------------------------Private state of current player ID----------------------------------
+    //----------------------------------------------------------------------------------------------------
 
-//---- etat privé de playerId passé au constructeur -----------------------------------------------------
 
     public ReadOnlyObjectProperty<ObservableList<Ticket>> ticketList() {
         return ticketList;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public ReadOnlyIntegerProperty cardMultiplicity(Card card) {
         return cardMultiplicity.get(card);
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public ReadOnlyBooleanProperty canClaimRoute(Route route) {
         return canClaimRoute.get(route);
     }
 
-
     //----------------------------------------------------------------------------------------------------
+
     public boolean canDrawTickets() {
         return publicGameState.canDrawTickets();
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     public boolean canDrawCards() {
         return publicGameState.canDrawCards();
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     public List<SortedBag<Card>> possibleClaimCards(Route route) {
         return playerState.possibleClaimCards(route);
     }
 
-    private boolean claimable(Route route) {
+    //----------------------------------------------------------------------------------------------------
 
+    private boolean claimable(Route route) {
         return ((playerState.carCount() >= route.length()) && (!(this.possibleClaimCards(route).isEmpty())));
 
-
     }
+
+    //----------------------------------------------------------------------------------------------------
 
 }

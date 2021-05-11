@@ -3,7 +3,6 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
-import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -29,22 +28,45 @@ import javafx.stage.StageStyle;
 import java.util.List;
 import java.util.Map;
 
+import static ch.epfl.tchu.game.Constants.INITIAL_TICKETS_COUNT;
+import static ch.epfl.tchu.game.Constants.IN_GAME_TICKETS_COUNT;
 import static javafx.application.Platform.isFxApplicationThread;
+
+/**
+ * GraphicalPlayer
+ * class
+ *
+ * @author Valentin Parisot (326658)
+ * @author Hugo Jeannin (329220)
+ */
 
 public class GraphicalPlayer {
 
     private final static int BUTTON_WIDTH = 50;
     private final static int BUTTON_HEIGHT = 5;
+    private final static String PREFIX_TITLE = "tCHu - ";
+    private final static String BACKGROUND = "background";
+    private final static String FOREGROUND = "foreground";
+
+
 
     private final ObservableGameState observableGameState;
     private final PlayerId playerId;
     private final Map<PlayerId, String> playerNames;
-    private ObservableList<Text> textList;
-    private ObjectProperty<ActionHandlers.DrawTicketsHandler> drawTicketsHandlerOP;
-    private ObjectProperty<ActionHandlers.DrawCardHandler> drawCardHandlerOP;
-    private ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRouteHandlerOP;
+    private final ObservableList<Text> textList;
+    private final ObjectProperty<ActionHandlers.DrawTicketsHandler> drawTicketsHandlerOP;
+    private final ObjectProperty<ActionHandlers.DrawCardHandler> drawCardHandlerOP;
+    private final ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRouteHandlerOP;
 
     private final Stage primaryStage;
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param playerId
+     * @param playerNames
+     */
 
     public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames) {
 
@@ -54,13 +76,13 @@ public class GraphicalPlayer {
 
         textList = FXCollections.observableArrayList();
 
-        drawTicketsHandlerOP = new SimpleObjectProperty<ActionHandlers.DrawTicketsHandler>();
-        drawCardHandlerOP = new SimpleObjectProperty<ActionHandlers.DrawCardHandler>();
-        claimRouteHandlerOP = new SimpleObjectProperty<ActionHandlers.ClaimRouteHandler>();
+        drawTicketsHandlerOP = new SimpleObjectProperty<>();
+        drawCardHandlerOP = new SimpleObjectProperty<>();
+        claimRouteHandlerOP = new SimpleObjectProperty<>();
 
 
         primaryStage = new Stage();
-        primaryStage.setTitle("tCHu - " + playerNames.get(playerId));
+        primaryStage.setTitle(PREFIX_TITLE + playerNames.get(playerId));
 
         Node mapView = MapViewCreator.createMapView(observableGameState, claimRouteHandlerOP, this::chooseClaimCards);
         Node cardsView = DecksViewCreator.createCardsView(observableGameState, drawTicketsHandlerOP, drawCardHandlerOP);
@@ -74,24 +96,45 @@ public class GraphicalPlayer {
 
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param newGameState
+     * @param newPlayerState
+     */
 
     public void setState(PublicGameState newGameState, PlayerState newPlayerState) {
         assert isFxApplicationThread();
         observableGameState.setState(newGameState, newPlayerState);
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param message
+     */
+
     public void receiveInfo(String message) {
         assert isFxApplicationThread();
 
-        if (textList.size() == 5) {
+        if(textList.size() == 5) {
             textList.remove(0);
-            textList.add(new Text(message));
-        } else {
-            textList.add(new Text(message));
         }
+        textList.add(new Text(message));
 
         InfoViewCreator.createInfoView(playerId, playerNames, observableGameState, textList);
     }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param drawTicketsHandler
+     * @param drawCardHandler
+     * @param claimRouteHandler
+     */
 
     public void startTurn(ActionHandlers.DrawTicketsHandler drawTicketsHandler,
                           ActionHandlers.DrawCardHandler drawCardHandler,
@@ -106,8 +149,8 @@ public class GraphicalPlayer {
                         drawTicketsHandler.onDrawTickets();
                     }
             );
-
         }
+
         if (observableGameState.canDrawCards()) {
 
             drawCardHandlerOP.set((i) -> {
@@ -118,59 +161,58 @@ public class GraphicalPlayer {
         }
 
         claimRouteHandlerOP.set((route, initial) -> {
-                        resetHandlers();
-                        claimRouteHandler.onClaimRoute(route, initial);
+                    resetHandlers();
+                    claimRouteHandler.onClaimRoute(route, initial);
                 }
         );
-
     }
 
-    public void chooseTicket(SortedBag<Ticket> tickets, ActionHandlers.ChooseTicketsHandler chooseTicketsHandler) {
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param tickets
+     * @param chooseTicketsHandler
+     */
+
+    public void chooseTickets(SortedBag<Ticket> tickets, ActionHandlers.ChooseTicketsHandler chooseTicketsHandler) {
         assert isFxApplicationThread();
-        Preconditions.checkArgument(tickets.size() == 3 || tickets.size() == 5);
+        Preconditions.checkArgument(tickets.size() == IN_GAME_TICKETS_COUNT ||
+                                                tickets.size() == INITIAL_TICKETS_COUNT);
 
-        Stage ticketStage = new Stage(StageStyle.UTILITY);
-        ticketStage.setTitle(StringsFr.TICKETS_CHOICE);
-        ticketStage.initOwner(primaryStage);
-        ticketStage.initModality(Modality.WINDOW_MODAL);
-
+        Stage ticketStage = createStage(StringsFr.TICKETS_CHOICE);
         VBox vBox = new VBox();
+        TextFlow textFlow = createTextFlow(String.format(StringsFr.CHOOSE_TICKETS, tickets.size(), StringsFr.plural(tickets.size())));
+        Button ticketButton = createButton();
+        ListView<Ticket> listView = new ListView<>(FXCollections.observableList(tickets.toList()));
 
-        TextFlow textFlow = new TextFlow();
-        Text text = new Text();
-        text.setText(String.format(StringsFr.CHOOSE_TICKETS, tickets.size(), StringsFr.plural(tickets.size())));
-        textFlow.getChildren().add(text);
 
-        ObservableList<Ticket> ticketsList = FXCollections.observableList(tickets.toList());
-
-        ListView<ObservableList<Ticket>> listView = new ListView(ticketsList);
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        Button ticketButton = new Button(StringsFr.CHOOSE);
-
-        Rectangle backTicket = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
-        backTicket.getStyleClass().add("background");
-        Rectangle foreTicket = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
-        foreTicket.getStyleClass().add("foreground");
-
-        ticketButton.setGraphic(new Group(backTicket, foreTicket));
         ticketButton.disableProperty()
                 .bind(Bindings.size(listView.getSelectionModel().getSelectedItems())
                         .lessThan(tickets.size() - 2));
 
         ticketButton.setOnAction(e -> {
             ticketStage.hide();
-            chooseTicketsHandler.onChooseTickets(SortedBag.of((List) listView.getSelectionModel().getSelectedItems()));
+            try {
+                chooseTicketsHandler.onChooseTickets(SortedBag.of(listView.getSelectionModel().getSelectedItems()));
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
         });
 
+
         vBox.getChildren().addAll(textFlow, listView, ticketButton);
-        Scene scene = new Scene(vBox);
-        scene.getStylesheets().add("chooser.css");
-        ticketStage.setScene(scene);
-
-        ticketStage.setOnCloseRequest(Event::consume);
-
+        createScene(ticketStage,vBox);
     }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param drawCardHandler
+     */
 
     public void drawCard(ActionHandlers.DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
@@ -180,100 +222,171 @@ public class GraphicalPlayer {
                     drawCardHandler.onDrawCard(i);
                 }
         );
-
     }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param initialCards
+     * @param chooseCardsHandler
+     */
 
     public void chooseClaimCards(List<SortedBag<Card>> initialCards,
                                  ActionHandlers.ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
 
-        Stage cardStage = new Stage(StageStyle.UTILITY);
-        cardStage.setTitle(StringsFr.CARDS_CHOICE);
-        cardStage.initOwner(primaryStage);
-        cardStage.initModality(Modality.WINDOW_MODAL);
-
+        Stage cardStage = createStage(StringsFr.CARDS_CHOICE);
         VBox vBox = new VBox();
+        TextFlow textFlow = createTextFlow(StringsFr.CHOOSE_CARDS);
+        Button cardButton = createButton();
+        ListView<SortedBag<Card>> listView = createListView(initialCards);
 
-        TextFlow textFlow = new TextFlow();
-        Text text = new Text();
-        text.setText(StringsFr.CHOOSE_CARDS);
-        textFlow.getChildren().add(text);
 
-        ObservableList<SortedBag<Card>> cardsList = FXCollections.observableList(initialCards);
-
-        ListView<SortedBag<Card>> listView = new ListView(cardsList);
         listView.setCellFactory(v ->
                 new TextFieldListCell<>(new CardBagStringConverter()));
 
-        Button cardButton = new Button(StringsFr.CHOOSE);
-
-        Rectangle backCard = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
-        backCard.getStyleClass().add("background");
-        Rectangle foreCard = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
-        foreCard.getStyleClass().add("foreground");
-
-        cardButton.setGraphic(new Group(backCard, foreCard));
         cardButton.disableProperty()
                 .bind(Bindings.size(listView.getSelectionModel().getSelectedItems()).lessThan(1));
 
         cardButton.setOnAction(e -> {
             cardStage.hide();
-            chooseCardsHandler.onChooseCards(SortedBag.of((List) listView.getSelectionModel().getSelectedItems()));
+            try {
+                chooseCardsHandler.onChooseCards(SortedBag.of((List) listView.getSelectionModel().getSelectedItems()));
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
         });
 
-        vBox.getChildren().addAll(textFlow, listView, cardButton);
-        Scene scene = new Scene(vBox);
-        scene.getStylesheets().add("chooser.css");
-        cardStage.setScene(scene);
 
-        cardStage.setOnCloseRequest(Event::consume);
+        vBox.getChildren().addAll(textFlow, listView, cardButton);
+        createScene(cardStage,vBox);
     }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param possibleAdditionalCards
+     * @param chooseCardsHandler
+     */
 
     public void chooseAdditionalCards(List<SortedBag<Card>> possibleAdditionalCards,
                                       ActionHandlers.ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
 
-        Stage additionalStage = new Stage(StageStyle.UTILITY);
-        additionalStage.setTitle(StringsFr.CARDS_CHOICE);
-        additionalStage.initOwner(primaryStage);
-        additionalStage.initModality(Modality.WINDOW_MODAL);
-
+        Stage additionalStage = createStage(StringsFr.CARDS_CHOICE);
         VBox vBox = new VBox();
-
-        TextFlow textFlow = new TextFlow();
-        Text text = new Text();
-        text.setText(StringsFr.CHOOSE_ADDITIONAL_CARDS);
-        textFlow.getChildren().add(text);
-
-        ObservableList<SortedBag<Card>> additionalList = FXCollections.observableList(possibleAdditionalCards);
+        TextFlow textFlow = createTextFlow(StringsFr.CHOOSE_ADDITIONAL_CARDS);
+        Button cardButton = createButton();
+        ListView<SortedBag<Card>> listView = createListView(possibleAdditionalCards);
 
 
-        ListView<SortedBag<Card>> listView = new ListView(additionalList);
         listView.setCellFactory(v ->
                 new TextFieldListCell<>(new CardBagStringConverter()));
 
-        Button cardButton = new Button(StringsFr.CHOOSE);
-
-        Rectangle backCard = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
-        backCard.getStyleClass().add("background");
-        Rectangle foreCard = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
-        foreCard.getStyleClass().add("foreground");
-
-        cardButton.setGraphic(new Group(backCard, foreCard));
 
         vBox.getChildren().addAll(textFlow, listView, cardButton);
-
-        Scene scene = new Scene(vBox);
-        scene.getStylesheets().add("chooser.css");
-        additionalStage.setScene(scene);
-
-        additionalStage.setOnCloseRequest(Event::consume);
+        createScene(additionalStage,vBox);
     }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     */
 
     private void resetHandlers() {
         drawTicketsHandlerOP.set(null);
         drawCardHandlerOP.set(null);
         claimRouteHandlerOP.set(null);
     }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @return
+     */
+
+    private Button createButton(){
+        Button button = new Button(StringsFr.CHOOSE);
+
+        Rectangle back = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
+        back.getStyleClass().add(BACKGROUND);
+        Rectangle fore = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
+        fore.getStyleClass().add(FOREGROUND);
+        button.setGraphic(new Group(back, fore));
+
+        return button;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param o
+     * @return
+     */
+
+    private ListView<SortedBag<Card>> createListView(List<SortedBag<Card>> o){
+
+        ObservableList<SortedBag<Card>> List = FXCollections.observableList(o);
+
+        return new ListView<>(List);
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param s
+     * @return
+     */
+
+    private TextFlow createTextFlow(String s){
+        TextFlow textFlow = new TextFlow();
+
+        Text text = new Text();
+        text.setText(s);
+        textFlow.getChildren().add(text);
+
+        return textFlow;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param s
+     * @return
+     */
+
+    private Stage createStage(String s){
+        Stage additionalStage = new Stage(StageStyle.UTILITY);
+        additionalStage.setTitle(s);
+        additionalStage.initOwner(primaryStage);
+        additionalStage.initModality(Modality.WINDOW_MODAL);
+
+        return additionalStage;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     * Create a scene with the given vbox and set on close request the given stage
+     * @param s stage
+     * @param vBox vbox
+     */
+
+    private void createScene(Stage s,VBox vBox){
+        Scene scene = new Scene(vBox);
+        scene.getStylesheets().add("chooser.css");
+        s.setScene(scene);
+
+        s.setOnCloseRequest(Event::consume);
+    }
+
+    //----------------------------------------------------------------------------------------------------
 
 }

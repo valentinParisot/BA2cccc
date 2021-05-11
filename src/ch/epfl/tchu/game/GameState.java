@@ -218,8 +218,6 @@ public final class GameState extends PublicGameState {
 
     public GameState withDrawnFaceUpCard(int slot) {
 
-        Preconditions.checkArgument(canDrawCards());
-
         return new GameState(ticketDeck,
                 cardstate.withDrawnFaceUpCard(slot),
                 currentPlayerId(),
@@ -237,8 +235,6 @@ public final class GameState extends PublicGameState {
      */
 
     public GameState withBlindlyDrawnCard() {
-
-        Preconditions.checkArgument(canDrawCards());
 
         return new GameState(ticketDeck,
                 cardstate.withoutTopDeckCard(),

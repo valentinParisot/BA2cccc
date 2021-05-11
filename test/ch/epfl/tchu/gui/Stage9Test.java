@@ -85,8 +85,12 @@ public final class Stage9Test extends Application {
 
     private static void chooseCards(List<SortedBag<Card>> options,
                                     ActionHandlers.ChooseCardsHandler chooser) {
-     chooser.onChooseCards(options.get(0));
-     }
+        try {
+            chooser.onChooseCards(options.get(0));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     private static void drawTickets() {
         System.out.println("Tirage de billets !");
