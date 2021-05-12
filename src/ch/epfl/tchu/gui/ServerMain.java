@@ -8,6 +8,8 @@ import ch.epfl.tchu.net.RemotePlayerProxy;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
@@ -23,7 +25,7 @@ public class ServerMain extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception { // comment utiliser le try?
+    public void start(Stage stage) { // comment utiliser le try?
 
         if (getParameters().getRaw().size() == 0) {
 
@@ -36,6 +38,9 @@ public class ServerMain extends Application {
                         Map.of(PLAYER_1, "Ada", PLAYER_2, "Charles"),
                         SortedBag.of(ChMap.tickets()),
                         new Random());
+            }
+            catch (IOException e){
+                throw(new UncheckedIOException(e));
             }
 
         } else if (getParameters().getRaw().size() == 1) {
@@ -50,6 +55,9 @@ public class ServerMain extends Application {
                         SortedBag.of(ChMap.tickets()),
                         new Random());
             }
+            catch (IOException e){
+                throw(new UncheckedIOException(e));
+            }
 
         } else {
 
@@ -62,6 +70,9 @@ public class ServerMain extends Application {
                         Map.of(PLAYER_1, getParameters().getRaw().get(0), PLAYER_2, getParameters().getRaw().get(1)),
                         SortedBag.of(ChMap.tickets()),
                         new Random());
+            }
+            catch (IOException e){
+                throw(new UncheckedIOException(e));
             }
 
         }
