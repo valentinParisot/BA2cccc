@@ -16,7 +16,7 @@ public class ClientMain extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
 
         if (getParameters().getRaw().size() == 0) {
             RemotePlayerClient client = new RemotePlayerClient(player,

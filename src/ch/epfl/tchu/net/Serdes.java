@@ -4,10 +4,7 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
@@ -178,7 +175,7 @@ public final class Serdes {
                 int i = 3;
                 for (PlayerId id : PlayerId.ALL) {
 
-                    playerStateMap.put(PLAYER_ID_SERDE.deSerialize(id.toString()),
+                    playerStateMap.put(id,
                             PUBLIC_PLAYER_STATE_SERDE.deSerialize(tab[i]));
                     i++;
                 }
