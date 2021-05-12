@@ -66,7 +66,7 @@ public interface ActionHandlers {
          *
          * @param chooseTickets tickets given
          */
-        abstract void onChooseTickets(SortedBag<Ticket> chooseTickets) throws InterruptedException;
+        abstract void onChooseTickets(SortedBag<Ticket> chooseTickets) ;
 
     }
 
@@ -82,7 +82,7 @@ public interface ActionHandlers {
          *
          * @param givenCards given cards
          */
-        abstract void onChooseCards(SortedBag<Card> givenCards) throws InterruptedException;
+        abstract void onChooseCards(SortedBag<Card> givenCards);
 
     }
 

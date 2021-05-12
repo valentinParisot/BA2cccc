@@ -149,7 +149,22 @@ public class GraphicalPlayerAdapter implements Player {
 
         try {
             runLater(() ->
-                    graphicalPlayer.chooseTickets(ts, (ticketsBlockingQueue::put) )
+
+                    graphicalPlayer.chooseTickets(ts,
+
+                            g ->{
+
+                        try {
+                            ticketsBlockingQueue.put(g);
+                        }catch (InterruptedException e) {
+                            throw new Error(e);
+                        }
+
+                            }
+
+
+
+                            )
             );
 
             return ticketsBlockingQueue.take();
@@ -224,7 +239,21 @@ public class GraphicalPlayerAdapter implements Player {
         //checker avec preconditon si la file est vide
         try {
             runLater(() ->
-                    graphicalPlayer.chooseAdditionalCards(options, (givenCards::put))
+                    graphicalPlayer.chooseAdditionalCards(options,
+
+                            g -> {
+
+                        try {
+                            givenCards.put(g);
+
+                        }catch (InterruptedException e) {
+                            throw new Error(e);
+                        }
+                            }
+
+
+
+                            )
             );
 
             return givenCards.take();
