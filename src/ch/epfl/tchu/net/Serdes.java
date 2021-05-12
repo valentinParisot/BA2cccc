@@ -172,6 +172,7 @@ public final class Serdes {
 
                 Map<PlayerId, PublicPlayerState> playerStateMap = new HashMap<>();
 
+
                 int i = 3;
                 for (PlayerId id : PlayerId.ALL) {
 
@@ -183,17 +184,20 @@ public final class Serdes {
                 if(tab[5].equals("")){
                     return new PublicGameState(INT_SERDE.deSerialize(tab[0]),
                             PUBLIC_CARD_STATE_SERDE.deSerialize(tab[1]),
-                            PLAYER_ID_SERDE.deSerialize(tab[2]),
+                            PLAYER_ID_SERDE.deSerialize(tab[2]),// PLAYER_ID_SERDE.deSerialize(tab[2]),
                             playerStateMap,
                             null);
                 }
-                else
+                else {
 
-                return new PublicGameState(INT_SERDE.deSerialize(tab[0]),
-                        PUBLIC_CARD_STATE_SERDE.deSerialize(tab[1]),
-                        PLAYER_ID_SERDE.deSerialize(tab[2]),
-                        playerStateMap,
-                        PLAYER_ID_SERDE.deSerialize(tab[5]));
+
+
+                    return new PublicGameState(INT_SERDE.deSerialize(tab[0]),
+                            PUBLIC_CARD_STATE_SERDE.deSerialize(tab[1]),
+                            PLAYER_ID_SERDE.deSerialize(tab[2]),
+                            playerStateMap,
+                            PLAYER_ID_SERDE.deSerialize(tab[5]));
+                }
             }
     );
     //----------------------------------------------------------------------------------------------------

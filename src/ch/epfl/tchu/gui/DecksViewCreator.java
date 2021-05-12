@@ -145,7 +145,7 @@ class DecksViewCreator {
 
             state.faceUpCard(i).addListener((o, ov, on) -> { // question
 
-                sp.getStyleClass().setAll(on.color().toString(), "card");
+                   sp.getStyleClass().setAll(on.color().toString(), "card");
 
             });
 

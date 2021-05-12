@@ -1,18 +1,16 @@
 package ch.epfl.tchu.gui;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
+import javafx.application.Application;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.application.Application;
-import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
@@ -85,11 +83,9 @@ public final class Stage9Test extends Application {
 
     private static void chooseCards(List<SortedBag<Card>> options,
                                     ActionHandlers.ChooseCardsHandler chooser) {
-        try {
+
             chooser.onChooseCards(options.get(0));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
     }
 
     private static void drawTickets() {

@@ -34,6 +34,11 @@ public class GraphicalPlayerAdapter implements Player {
 
     //----------------------------------------------------------------------------------------------------
 
+
+    public GraphicalPlayerAdapter() {
+
+    }
+
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
 
@@ -44,6 +49,7 @@ public class GraphicalPlayerAdapter implements Player {
             );
 
             this.graphicalPlayer = graphicalPlayerBlockingQueue.take();
+
         } catch (InterruptedException e) {
             throw new Error(e);
         }
@@ -112,12 +118,10 @@ public class GraphicalPlayerAdapter implements Player {
             runLater(() ->
 
                             graphicalPlayer.startTurn
+
                                     (
 
-                                    ()->{
-
-                                        nextTurn.add(TurnKind.DRAW_TICKETS);
-                                    }
+                                    ()-> nextTurn.add(TurnKind.DRAW_TICKETS)
                                     ,
                                     (o)->{
 
@@ -131,6 +135,7 @@ public class GraphicalPlayerAdapter implements Player {
                                         claimedCards.add(p);
                                         nextTurn.add(TurnKind.CLAIM_ROUTE);
                                     }
+
 
                                     )
             );
@@ -161,9 +166,6 @@ public class GraphicalPlayerAdapter implements Player {
                         }
 
                             }
-
-
-
                             )
             );
 
