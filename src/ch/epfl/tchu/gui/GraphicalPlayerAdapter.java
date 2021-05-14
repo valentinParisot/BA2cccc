@@ -43,7 +43,6 @@ public class GraphicalPlayerAdapter implements Player {
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
 
         //definir ds lambda ou ici ?
-
         runLater(() ->
                 graphicalPlayerBlockingQueue.add(new GraphicalPlayer(ownId, playerNames))
         );

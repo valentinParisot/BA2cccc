@@ -1,16 +1,16 @@
 package ch.epfl.tchu.gui;
 
-import ch.epfl.tchu.game.Player;
 import ch.epfl.tchu.net.RemotePlayerClient;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class ClientMain extends Application {
 
-    private final Player player = new GraphicalPlayerAdapter();
+    private final GraphicalPlayerAdapter player = new GraphicalPlayerAdapter();
 
     public static void main(String[] args) {
         launch();
+
     }
 
     @Override
@@ -34,5 +34,6 @@ public class ClientMain extends Application {
                     Integer.parseInt(getParameters().getRaw().get(1)));
         }
         new Thread(() -> client.run()).start();
+
     }
 }
