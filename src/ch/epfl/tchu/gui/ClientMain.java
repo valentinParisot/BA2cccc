@@ -6,33 +6,30 @@ import javafx.stage.Stage;
 
 public class ClientMain extends Application {
 
-    private final GraphicalPlayerAdapter player = new GraphicalPlayerAdapter();
+
 
     public static void main(String[] args) {
-        launch();
-
+        launch(args);
     }
 
     @Override
     public void start(Stage stage) {
 
-        RemotePlayerClient client;
+        GraphicalPlayerAdapter player = new GraphicalPlayerAdapter();
 
-        if (getParameters().getRaw().size() == 0) {
-            client = new RemotePlayerClient(player,
-                    "localhost",
-                    5108);
+        String name = "localhost";
+        int port = 5108;
 
-        } else if (getParameters().getRaw().size() == 1) {
-             client = new RemotePlayerClient(player,
-                    getParameters().getRaw().get(0),
-                    5108);
+        if (getParameters().getRaw().size() == 1) {
 
-        } else {
-            client = new RemotePlayerClient(player,
-                    getParameters().getRaw().get(0),
-                    Integer.parseInt(getParameters().getRaw().get(1)));
+            name = getParameters().getRaw().get(0);
+
+        } else if (getParameters().getRaw().size() > 1) {
+            name = getParameters().getRaw().get(0);
+            port = Integer.parseInt(getParameters().getRaw().get(0));
         }
+
+        RemotePlayerClient client = new RemotePlayerClient(player, name, port);
         new Thread(() -> client.run()).start();
 
     }
