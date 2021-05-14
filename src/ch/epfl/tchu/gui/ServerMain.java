@@ -20,6 +20,9 @@ import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
 
 public class ServerMain extends Application {
 
+    private String p1 = "Ada";
+    private String p2 = "Charles";
+
     public static void main(String[] args) {
         launch();
     }
@@ -33,33 +36,27 @@ public class ServerMain extends Application {
     @Override
     public void start(Stage stage) { // comment utiliser le try?
 
+
+
         try (ServerSocket serverSocket = new ServerSocket(5108);
              Socket socket = serverSocket.accept()) {
             RemotePlayerProxy playerProxy = new RemotePlayerProxy(socket);
 
 
-            if (getParameters().getRaw().size() == 0) {
+            if (getParameters().getRaw().size() == 1) {
 
+                p1 = getParameters().getRaw().get(0);
 
-                Game.play(Map.of(PLAYER_1, new GraphicalPlayerAdapter(), PLAYER_2, playerProxy),
-                        Map.of(PLAYER_1, "Ada", PLAYER_2, "Charles"),
-                        SortedBag.of(ChMap.tickets()),
-                        new Random());
-            } else if (getParameters().getRaw().size() == 1) {
-
-
-
-                Game.play(Map.of(PLAYER_1, new GraphicalPlayerAdapter(), PLAYER_2, playerProxy),
-                        Map.of(PLAYER_1, getParameters().getRaw().get(0), PLAYER_2, "Charles"),
-                        SortedBag.of(ChMap.tickets()),
-                        new Random());
             } else {
-
-                Game.play(Map.of(PLAYER_1, new GraphicalPlayerAdapter(), PLAYER_2, playerProxy),
-                        Map.of(PLAYER_1, getParameters().getRaw().get(0), PLAYER_2, getParameters().getRaw().get(1)),
-                        SortedBag.of(ChMap.tickets()),
-                        new Random());
+                p1 = getParameters().getRaw().get(0);
+                p2 = getParameters().getRaw().get(1);
             }
+
+            new Thread(() -> Game.play(Map.of(PLAYER_1, new GraphicalPlayerAdapter(), PLAYER_2, playerProxy),
+                    Map.of(PLAYER_1, p1, PLAYER_2, p2),
+                    SortedBag.of(ChMap.tickets()),
+                    new Random())
+            );
 
 
         } catch (IOException e) {
