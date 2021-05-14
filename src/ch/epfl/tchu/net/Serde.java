@@ -52,11 +52,17 @@ public interface Serde<Obj> {
         return new Serde<Obj>() {
             @Override
             public String serialize(Obj o){
+                if (o == null){
+                    return "";
+                }
                 return serialize.apply(o);
             }
 
             @Override
             public Obj deSerialize(String s) {
+                if (s.equals("")){
+                    return null;
+                }
                 return deSerialize.apply(s);
             }
         };
@@ -75,12 +81,18 @@ public interface Serde<Obj> {
         return new Serde<Obj>() {
             @Override
             public String serialize(Obj o) {
+                if (o == null){
+                    return "";
+                }
                 int n = list.indexOf(o);
                 return Integer.toString(n);
             }
 
             @Override
             public Obj deSerialize(String s) {
+                if (s.equals("")){
+                    return null;
+                }
                 int n = Integer.parseInt(s);
                 return list.get(n);
             }
@@ -101,6 +113,9 @@ public interface Serde<Obj> {
         return new Serde<List<Obj>>() {
             @Override
             public String serialize(List<Obj> l) {
+                if (l.size() == 0){
+                    return "";
+                }
                 List<String> list = new ArrayList<>();
                 for(Obj o : l){
                     list.add(serde.serialize(o));
@@ -110,6 +125,9 @@ public interface Serde<Obj> {
 
             @Override
             public List<Obj> deSerialize(String s) {
+                if (s.equals("")){
+                    return new ArrayList<>();
+                }
                 List<String> list = Arrays.asList(s.split(Pattern.quote(separation), -1));
                 List<Obj> objs = new ArrayList<>();
                 for(String string : list){
@@ -137,12 +155,18 @@ public interface Serde<Obj> {
 
             @Override
             public String serialize(SortedBag<Obj> sb) {
+                if (sb.size() == 0){
+                    return "";
+                }
                 List<Obj> list = sb.toList();
                 return listOf.serialize(list);
             }
 
             @Override
             public SortedBag<Obj> deSerialize(String s) {
+                if (s.equals("")){
+                    return SortedBag.of();
+                }
                 List<Obj> list = listOf.deSerialize(s);
                 return SortedBag.of(list);
             }
