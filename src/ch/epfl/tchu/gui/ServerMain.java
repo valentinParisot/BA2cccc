@@ -26,60 +26,44 @@ public class ServerMain extends Application {
 
     /**
      * starts the server an calls Game.play()
+     *
      * @param stage never used
      */
 
     @Override
     public void start(Stage stage) { // comment utiliser le try?
 
-        if (getParameters().getRaw().size() == 0) {
+        try (ServerSocket serverSocket = new ServerSocket(5108);
+             Socket socket = serverSocket.accept()) {
+            RemotePlayerProxy playerProxy = new RemotePlayerProxy(socket);
 
-            try (ServerSocket serverSocket = new ServerSocket(5108);
-                 Socket socket = serverSocket.accept()) {
 
-                RemotePlayerProxy playerProxy = new RemotePlayerProxy(socket);
+            if (getParameters().getRaw().size() == 0) {
+
 
                 Game.play(Map.of(PLAYER_1, new GraphicalPlayerAdapter(), PLAYER_2, playerProxy),
                         Map.of(PLAYER_1, "Ada", PLAYER_2, "Charles"),
                         SortedBag.of(ChMap.tickets()),
                         new Random());
-            }
-            catch (IOException e){
-                throw(new UncheckedIOException(e));
-            }
+            } else if (getParameters().getRaw().size() == 1) {
 
-        } else if (getParameters().getRaw().size() == 1) {
 
-            try (ServerSocket serverSocket = new ServerSocket(5108);
-                 Socket socket = serverSocket.accept()) {
-
-                RemotePlayerProxy playerProxy = new RemotePlayerProxy(socket);
 
                 Game.play(Map.of(PLAYER_1, new GraphicalPlayerAdapter(), PLAYER_2, playerProxy),
                         Map.of(PLAYER_1, getParameters().getRaw().get(0), PLAYER_2, "Charles"),
                         SortedBag.of(ChMap.tickets()),
                         new Random());
-            }
-            catch (IOException e){
-                throw(new UncheckedIOException(e));
-            }
-
-        } else {
-
-            try (ServerSocket serverSocket = new ServerSocket(5108);
-                 Socket socket = serverSocket.accept()) {
-
-                RemotePlayerProxy playerProxy = new RemotePlayerProxy(socket);
+            } else {
 
                 Game.play(Map.of(PLAYER_1, new GraphicalPlayerAdapter(), PLAYER_2, playerProxy),
                         Map.of(PLAYER_1, getParameters().getRaw().get(0), PLAYER_2, getParameters().getRaw().get(1)),
                         SortedBag.of(ChMap.tickets()),
                         new Random());
             }
-            catch (IOException e){
-                throw(new UncheckedIOException(e));
-            }
 
+
+        } catch (IOException e) {
+            throw (new UncheckedIOException(e));
         }
     }
 }

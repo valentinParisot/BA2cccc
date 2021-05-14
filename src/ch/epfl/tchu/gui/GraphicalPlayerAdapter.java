@@ -109,7 +109,6 @@ public class GraphicalPlayerAdapter implements Player {
     //----------------------------------------------------------------------------------------------------
 
 
-
     @Override
     public TurnKind nextTurn() {//comment gerer les diff handler et le type de retour avec if ?
 
@@ -117,19 +116,19 @@ public class GraphicalPlayerAdapter implements Player {
 
             runLater(() ->
 
-                            graphicalPlayer.startTurn
+                    graphicalPlayer.startTurn
 
-                                    (
+                            (
 
-                                    ()-> nextTurn.add(TurnKind.DRAW_TICKETS)
+                                    () -> nextTurn.add(TurnKind.DRAW_TICKETS)
                                     ,
-                                    (o)->{
+                                    (o) -> {
 
                                         cardsPlace.add(o);
                                         nextTurn.add(TurnKind.DRAW_CARDS);
                                     }
                                     ,
-                                    (o,p) -> {
+                                    (o, p) -> {
 
                                         claimedRoute.add(o);
                                         claimedCards.add(p);
@@ -137,7 +136,7 @@ public class GraphicalPlayerAdapter implements Player {
                                     }
 
 
-                                    )
+                            )
             );
 
             return nextTurn.take();
@@ -157,16 +156,16 @@ public class GraphicalPlayerAdapter implements Player {
 
                     graphicalPlayer.chooseTickets(ts,
 
-                            g ->{
+                            g -> {
 
-                        try {
-                            ticketsBlockingQueue.put(g);
-                        }catch (InterruptedException e) {
-                            throw new Error(e);
-                        }
+                                try {
+                                    ticketsBlockingQueue.put(g);
+                                } catch (InterruptedException e) {
+                                    throw new Error(e);
+                                }
 
                             }
-                            )
+                    )
             );
 
             return ticketsBlockingQueue.take();
@@ -182,7 +181,7 @@ public class GraphicalPlayerAdapter implements Player {
     public int drawSlot() {
         //tester comme ca sans bloquer ?
 
-        if(!cardsPlace.isEmpty()){
+        if (!cardsPlace.isEmpty()) {
 
             try {
                 return cardsPlace.take();
@@ -191,7 +190,7 @@ public class GraphicalPlayerAdapter implements Player {
                 throw new Error(e);
             }
 
-        }else{
+        } else {
             try {
                 runLater(() ->
                         graphicalPlayer.drawCard(cardsPlace::add)
@@ -245,17 +244,16 @@ public class GraphicalPlayerAdapter implements Player {
 
                             g -> {
 
-                        try {
-                            givenCards.put(g);
+                                try {
+                                    givenCards.put(g);
 
-                        }catch (InterruptedException e) {
-                            throw new Error(e);
-                        }
+                                } catch (InterruptedException e) {
+                                    throw new Error(e);
+                                }
                             }
 
 
-
-                            )
+                    )
             );
 
             return givenCards.take();
@@ -268,9 +266,8 @@ public class GraphicalPlayerAdapter implements Player {
 
     /**
      * Simplify thw way to check the try and catch
-     *
      */
-    private void tryCatch(){
+    private void tryCatch() {
 
     }
 }
