@@ -182,7 +182,7 @@ public class GraphicalPlayer {
 
         Stage ticketStage = createStage(StringsFr.TICKETS_CHOICE);
         VBox vBox = new VBox();
-        TextFlow textFlow = createTextFlow(String.format(StringsFr.CHOOSE_TICKETS, tickets.size(), StringsFr.plural(tickets.size())));
+        TextFlow textFlow = createTextFlow(String.format(StringsFr.CHOOSE_TICKETS, tickets.size() - Constants.DISCARDABLE_TICKETS_COUNT, StringsFr.plural(tickets.size())));//cconstantount
         Button ticketButton = createButton();
         ListView<Ticket> listView = new ListView<>(FXCollections.observableList(tickets.toList()));
 
@@ -190,8 +190,7 @@ public class GraphicalPlayer {
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         ticketButton.disableProperty()
-                .bind(Bindings.size(listView.getSelectionModel().getSelectedItems())
-                        .lessThan(tickets.size() - 2));
+                .bind(Bindings.lessThan(Bindings.size(listView.getSelectionModel().getSelectedItems()),tickets.size() - 2));//mettre ds une varibale
 
         ticketButton.setOnAction(e -> {
             ticketStage.hide();

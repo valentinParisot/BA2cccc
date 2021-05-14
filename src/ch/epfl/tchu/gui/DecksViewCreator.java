@@ -83,7 +83,7 @@ class DecksViewCreator {
             compteurnoir.getStyleClass().add("count");
 
             compteurnoir.textProperty()
-                    .bind(Bindings.convert(state.cardMultiplicity(c))); // question
+                    .bind(Bindings.convert(state.cardMultiplicity(c))); // question //stocker ds une var state.cardMultiplicity(c)
 
             compteurnoir.visibleProperty()
                     .bind(Bindings.greaterThan(state.cardMultiplicity(c), 1));
@@ -143,9 +143,13 @@ class DecksViewCreator {
             StackPane sp = new StackPane();
             sp.getStyleClass().addAll("card");//ajouter la couelur
 
-            state.faceUpCard(i).addListener((o, ov, on) -> { // question
+            state.faceUpCard(i).addListener((o, ov, on) -> {
 
-                   sp.getStyleClass().setAll(on.color().toString(), "card");
+
+                   if(on.color() == null){
+                       sp.getStyleClass().set(0,"NEUTRAL");
+                   }else
+                       sp.getStyleClass().set(0,on.color().toString());
 
             });
 
