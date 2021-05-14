@@ -95,9 +95,9 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
-     * @param newGameState
-     * @param newPlayerState
+     *modifies all the properties
+     * @param newGameState the new PublicGameState
+     * @param newPlayerState the new PlayerState
      */
 
     public void setState(PublicGameState newGameState, PlayerState newPlayerState) {

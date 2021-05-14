@@ -24,6 +24,11 @@ public class ServerMain extends Application {
         launch();
     }
 
+    /**
+     * starts the server an calls Game.play()
+     * @param stage never used
+     */
+
     @Override
     public void start(Stage stage) { // comment utiliser le try?
 
