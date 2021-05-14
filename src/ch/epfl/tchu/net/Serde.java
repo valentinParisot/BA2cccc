@@ -56,7 +56,7 @@ public interface Serde<Obj> {
                     return "";
                 }
                 return serialize.apply(o);
-            }
+            }// gerer si
 
             @Override
             public Obj deSerialize(String s) {
