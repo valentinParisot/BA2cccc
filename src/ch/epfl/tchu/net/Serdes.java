@@ -184,7 +184,7 @@ public final class Serdes {
                     i++;
                 }
 
-                if(tab[5].equals(null)){
+                if(tab[5].equals("")){
                     return new PublicGameState(INT_SERDE.deSerialize(tab[0]),
                             PUBLIC_CARD_STATE_SERDE.deSerialize(tab[1]),
                             PLAYER_ID_SERDE.deSerialize(tab[2]),// PLAYER_ID_SERDE.deSerialize(tab[2]),
