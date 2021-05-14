@@ -136,20 +136,18 @@ class DecksViewCreator {
 
         root.getChildren().add(ticketButton);
 
-
         for (int i = 0; i < Constants.FACE_UP_CARDS_COUNT; i++) {// a modifier pour prednre les faceup
 
 
             StackPane sp = new StackPane();
-            sp.getStyleClass().addAll("card");//ajouter la couelur
+            sp.getStyleClass().addAll( "card");//ajouter la couelur
 
-            state.faceUpCard(i).addListener((o, ov, on) -> {
+            state.faceUpCard(i).addListener((o,ov,on) ->{ // question
 
-
-                   if(on.color() == null){
-                       sp.getStyleClass().set(0,"NEUTRAL");
-                   }else
-                       sp.getStyleClass().set(0,on.color().toString());
+                if(on.color() == null){
+                    sp.getStyleClass().setAll("NEUTRAL","card");
+                }else
+                    sp.getStyleClass().setAll(on.color().toString(), "card");
 
             });
 
