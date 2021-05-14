@@ -144,21 +144,23 @@ public final class Serdes {
                 PublicPlayerState playerStateDeux;
                 PlayerId lastPlayer;
 
+
                 ticketCount = publicGameState.ticketsCount();
                 publicCardState = publicGameState.cardState();
                 currentPlayerId = publicGameState.currentPlayerId();
                 playerStateUn = publicGameState.playerState(PLAYER_1);
                 playerStateDeux = publicGameState.playerState(PLAYER_2);
+                String s = null;
 
                 lastPlayer = publicGameState.lastPlayer();
 
-                if((publicGameState.lastPlayer()== null)) {
+                if((publicGameState.lastPlayer() == null)) {
                     return INT_SERDE.serialize(ticketCount)
                             + DOUBLE_POINT + PUBLIC_CARD_STATE_SERDE.serialize(publicCardState)
                             + DOUBLE_POINT + PLAYER_ID_SERDE.serialize(currentPlayerId)
                             + DOUBLE_POINT + PUBLIC_PLAYER_STATE_SERDE.serialize(playerStateUn)
                             + DOUBLE_POINT + PUBLIC_PLAYER_STATE_SERDE.serialize(playerStateDeux)
-                            + DOUBLE_POINT +STRING_SERDE.serialize("");
+                            + DOUBLE_POINT + STRING_SERDE.serialize(s);
                 }else
                     return INT_SERDE.serialize(ticketCount)
                             + DOUBLE_POINT + PUBLIC_CARD_STATE_SERDE.serialize(publicCardState)
@@ -178,10 +180,11 @@ public final class Serdes {
 
                     playerStateMap.put(id,
                             PUBLIC_PLAYER_STATE_SERDE.deSerialize(tab[i]));
+                    //deser les 2 ds des vsar et add ds une map avec player 1 et 2
                     i++;
                 }
 
-                if(tab[5].equals("")){
+                if(tab[5].equals(null)){
                     return new PublicGameState(INT_SERDE.deSerialize(tab[0]),
                             PUBLIC_CARD_STATE_SERDE.deSerialize(tab[1]),
                             PLAYER_ID_SERDE.deSerialize(tab[2]),// PLAYER_ID_SERDE.deSerialize(tab[2]),
@@ -189,8 +192,6 @@ public final class Serdes {
                             null);
                 }
                 else {
-
-
 
                     return new PublicGameState(INT_SERDE.deSerialize(tab[0]),
                             PUBLIC_CARD_STATE_SERDE.deSerialize(tab[1]),
