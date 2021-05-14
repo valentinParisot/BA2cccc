@@ -161,6 +161,11 @@ public class RemotePlayerProxy implements Player {
     }
 
 
+    /**
+     * writes a message to the client
+     * @param id the type of message
+     * @param serialized the message we want to send (already serialized)
+     */
     private void send(MessageId id, String serialized) {
 
         try {
@@ -178,6 +183,10 @@ public class RemotePlayerProxy implements Player {
 
     }
 
+    /**
+     * reads the message sent by the client
+     * @return the message received
+     */
     private String receive() {
 
         try {

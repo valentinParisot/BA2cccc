@@ -22,8 +22,8 @@ public interface Serde<Obj> {
 
     /**
      *
-     * @param o
-     * @return
+     * @param o object to serialize
+     * @return the corresponding String
      */
 
     public abstract String serialize(Obj o);
@@ -32,8 +32,8 @@ public interface Serde<Obj> {
 
     /**
      *
-     * @param s
-     * @return
+     * @param s String to deserialize
+     * @return the object corresponding
      */
 
     public abstract Obj deSerialize(String s);
@@ -42,10 +42,10 @@ public interface Serde<Obj> {
 
     /**
      *
-     * @param serialize
-     * @param deSerialize
-     * @param <Obj>
-     * @return
+     * @param serialize serializing function
+     * @param deSerialize deserializing function
+     * @param <Obj> the type of object corresponding to the serde
+     * @return a corresponding serde
      */
 
     public static <Obj> Serde<Obj> of(Function<Obj, String> serialize, Function<String, Obj> deSerialize) {
@@ -66,9 +66,9 @@ public interface Serde<Obj> {
 
     /**
      *
-     * @param list
-     * @param <Obj>
-     * @return
+     * @param list list of <@Obj>
+     * @param <Obj> the type of object corresponding to the serde
+     * @return a new serde serializing the index of each @Obj in @list
      */
 
     public static <Obj> Serde<Obj> oneOf(List<Obj> list) {
@@ -91,10 +91,10 @@ public interface Serde<Obj> {
 
     /**
      *
-     * @param serde
-     * @param separation
-     * @param <Obj>
-     * @return
+     * @param serde an existing serde of @Obj
+     * @param separation the separation between every @Obj
+     * @param <Obj> the type of object corresponding to @serde
+     * @return a new serde which serialize lists of @Obj with @serde and separate them with @separation
      */
 
     public static <Obj> Serde<List<Obj>> listOf(Serde<Obj> serde, String separation) {
@@ -127,7 +127,7 @@ public interface Serde<Obj> {
      * @param serde
      * @param separation
      * @param <Obj>
-     * @return
+     * @return same as listOf but with a SortedBag instead
      */
 
     public static <Obj extends Comparable<Obj>> Serde<SortedBag<Obj>> bagOf(Serde<Obj> serde, String separation) {
