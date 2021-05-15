@@ -20,7 +20,6 @@ import static javafx.application.Platform.runLater;
 
 public class GraphicalPlayerAdapter implements Player {
 
-    //put ou add ????
     //----------------------------------------------------------------------------------------------------
 
     private GraphicalPlayer graphicalPlayer;
@@ -34,40 +33,33 @@ public class GraphicalPlayerAdapter implements Player {
 
     //----------------------------------------------------------------------------------------------------
 
-
-    public GraphicalPlayerAdapter() {
-
-    }
-
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
 
-        //definir ds lambda ou ici ?
         runLater(() ->
                 graphicalPlayerBlockingQueue.add(new GraphicalPlayer(ownId, playerNames))
         );
-
         try {
-        graphicalPlayer = graphicalPlayerBlockingQueue.take();
+            graphicalPlayer = graphicalPlayerBlockingQueue.take();
         } catch (InterruptedException e) {
             throw new Error(e);
         }
-
-
     }
 
     //----------------------------------------------------------------------------------------------------
 
     @Override
     public void receiveInfo(String info) {
-        runLater(() -> graphicalPlayer.receiveInfo(info));
+        runLater(() ->
+                graphicalPlayer.receiveInfo(info));
     }
 
     //----------------------------------------------------------------------------------------------------
 
     @Override
     public void updateState(PublicGameState newState, PlayerState ownState) {
-        runLater(() -> graphicalPlayer.setState(newState, ownState));
+        runLater(() ->
+                graphicalPlayer.setState(newState, ownState));
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -76,7 +68,6 @@ public class GraphicalPlayerAdapter implements Player {
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
 
         runLater(() ->
-
                 graphicalPlayer.chooseTickets(tickets, (ticketsBlockingQueue::add))
         );
     }
@@ -85,10 +76,8 @@ public class GraphicalPlayerAdapter implements Player {
 
     @Override
     public SortedBag<Ticket> chooseInitialTickets() { // peut passer que par une queun ?
-
         try {
             return ticketsBlockingQueue.take();
-
         } catch (InterruptedException e) {
             throw new Error(e);
         }
@@ -96,34 +85,24 @@ public class GraphicalPlayerAdapter implements Player {
 
     //----------------------------------------------------------------------------------------------------
 
-
     @Override
     public TurnKind nextTurn() {//comment gerer les diff handler et le type de retour avec if ?
-
-            runLater(() ->
-
-                    graphicalPlayer.startTurn
-
-                            (
-                                    () -> nextTurn.add(TurnKind.DRAW_TICKETS)
-                                    ,
-                                    (o) -> {
-
-                                        cardsPlace.add(o);
-                                        nextTurn.add(TurnKind.DRAW_CARDS);
-                                    }
-                                    ,
-                                    (o, p) -> {
-
-                                        claimedRoute.add(o);
-                                        claimedCards.add(p);
-                                        nextTurn.add(TurnKind.CLAIM_ROUTE);
-                                    }
-
-
-                            )
-            );
-
+        runLater(() ->
+                graphicalPlayer.startTurn(
+                        () ->
+                                nextTurn.add(TurnKind.DRAW_TICKETS)
+                        ,
+                        (o) -> {
+                                cardsPlace.add(o);
+                                nextTurn.add(TurnKind.DRAW_CARDS);
+                        }
+                        ,
+                        (o, p) -> {
+                                claimedRoute.add(o);
+                                claimedCards.add(p);
+                                nextTurn.add(TurnKind.CLAIM_ROUTE);
+                        })
+        );
         try {
 
             return nextTurn.take();
@@ -138,15 +117,11 @@ public class GraphicalPlayerAdapter implements Player {
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> ts) {
 
-            runLater(() ->
-
-                    graphicalPlayer.chooseTickets(ts,ticketsBlockingQueue::add)
-            );
-
+        runLater(() ->
+                graphicalPlayer.chooseTickets(ts, ticketsBlockingQueue::add)
+        );
         try {
-
             return ticketsBlockingQueue.take();
-
         } catch (InterruptedException e) {
             throw new Error(e);
         }
@@ -156,25 +131,17 @@ public class GraphicalPlayerAdapter implements Player {
 
     @Override
     public int drawSlot() {
-        //tester comme ca sans bloquer ?
-
 
         if (cardsPlace.isEmpty()) {
             runLater(() ->
                     graphicalPlayer.drawCard(cardsPlace::add)
             );
-
-
         }
         try {
-
-                return cardsPlace.take();
-
-
+            return cardsPlace.take();
         } catch (InterruptedException e) {
             throw new Error(e);
         }
-
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -182,7 +149,7 @@ public class GraphicalPlayerAdapter implements Player {
     @Override
     public Route claimedRoute() {
 
-        //passer par run later ?
+
         try {
             return claimedRoute.take();
 
@@ -209,14 +176,10 @@ public class GraphicalPlayerAdapter implements Player {
     @Override
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
 
-            runLater(() ->
-                    graphicalPlayer.chooseAdditionalCards(options,givenCards::add
-
-
-                    )
-            );
+        runLater(() ->
+                graphicalPlayer.chooseAdditionalCards(options, givenCards::add)
+        );
         try {
-
             return givenCards.take();
         } catch (InterruptedException e) {
             throw new Error(e);

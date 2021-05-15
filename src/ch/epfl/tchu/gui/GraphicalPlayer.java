@@ -192,16 +192,18 @@ public class GraphicalPlayer {
         ticketButton.disableProperty()
                 .bind(Bindings.lessThan(Bindings.size(listView.getSelectionModel().getSelectedItems()),tickets.size() - 2));//mettre ds une varibale
 
+        //ticketStage.setOnCloseRequest(Event::consume);
         ticketButton.setOnAction(e -> {
             ticketStage.hide();
-
                 chooseTicketsHandler.onChooseTickets(SortedBag.of(listView.getSelectionModel().getSelectedItems()));
 
         });
 
 
+
         vBox.getChildren().addAll(textFlow, listView, ticketButton);
         createScene(ticketStage,vBox);
+        ticketStage.show();
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -246,6 +248,7 @@ public class GraphicalPlayer {
         cardButton.disableProperty()
                 .bind(Bindings.size(listView.getSelectionModel().getSelectedItems()).lessThan(1));
 
+        //cardStage.setOnCloseRequest(Event::consume);
         cardButton.setOnAction(e -> {
             cardStage.hide();
 
@@ -255,6 +258,7 @@ public class GraphicalPlayer {
 
         vBox.getChildren().addAll(textFlow, listView, cardButton);
         createScene(cardStage,vBox);
+        cardStage.show();
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -275,13 +279,14 @@ public class GraphicalPlayer {
         Button cardButton = createButton();
         ListView<SortedBag<Card>> listView = createListView(possibleAdditionalCards);
 
-
+        //additionalStage.setOnCloseRequest(Event::consume);
         listView.setCellFactory(v ->
                 new TextFieldListCell<>(new CardBagStringConverter()));
 
 
         vBox.getChildren().addAll(textFlow, listView, cardButton);
         createScene(additionalStage,vBox);
+        additionalStage.show();
     }
 
     //----------------------------------------------------------------------------------------------------
