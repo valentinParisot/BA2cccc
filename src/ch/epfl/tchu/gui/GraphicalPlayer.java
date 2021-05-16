@@ -49,7 +49,6 @@ public class GraphicalPlayer {
     private final static String FOREGROUND = "foreground";
 
 
-
     private final ObservableGameState observableGameState;
     private final PlayerId playerId;
     private final Map<PlayerId, String> playerNames;
@@ -63,7 +62,6 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param playerId
      * @param playerNames
      */
@@ -99,7 +97,6 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param newGameState
      * @param newPlayerState
      */
@@ -112,14 +109,13 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param message
      */
 
     public void receiveInfo(String message) {
         assert isFxApplicationThread();
 
-        if(textList.size() == 5) {
+        if (textList.size() == 5) {
             textList.remove(0);
         }
         textList.add(new Text(message));
@@ -130,7 +126,6 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param drawTicketsHandler
      * @param drawCardHandler
      * @param claimRouteHandler
@@ -170,7 +165,6 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param tickets
      * @param chooseTicketsHandler
      */
@@ -178,38 +172,36 @@ public class GraphicalPlayer {
     public void chooseTickets(SortedBag<Ticket> tickets, ActionHandlers.ChooseTicketsHandler chooseTicketsHandler) {
         assert isFxApplicationThread();
         Preconditions.checkArgument(tickets.size() == IN_GAME_TICKETS_COUNT ||
-                                                tickets.size() == INITIAL_TICKETS_COUNT);
+                tickets.size() == INITIAL_TICKETS_COUNT);
 
         Stage ticketStage = createStage(StringsFr.TICKETS_CHOICE);
         VBox vBox = new VBox();
         TextFlow textFlow = createTextFlow(String.format(StringsFr.CHOOSE_TICKETS, tickets.size() - Constants.DISCARDABLE_TICKETS_COUNT, StringsFr.plural(tickets.size())));//cconstantount
-        Button ticketButton = createButton();
+        Button ticketButton = new Button(StringsFr.CHOOSE);
         ListView<Ticket> listView = new ListView<>(FXCollections.observableList(tickets.toList()));
 
 
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         ticketButton.disableProperty()
-                .bind(Bindings.lessThan(Bindings.size(listView.getSelectionModel().getSelectedItems()),tickets.size() - 2));//mettre ds une varibale
+                .bind(Bindings.lessThan(Bindings.size(listView.getSelectionModel().getSelectedItems()), tickets.size() - 2));//mettre ds une varibale
 
-        //ticketStage.setOnCloseRequest(Event::consume);
+        ticketStage.setOnCloseRequest(Event::consume);
         ticketButton.setOnAction(e -> {
             ticketStage.hide();
-                chooseTicketsHandler.onChooseTickets(SortedBag.of(listView.getSelectionModel().getSelectedItems()));
+            chooseTicketsHandler.onChooseTickets(SortedBag.of(listView.getSelectionModel().getSelectedItems()));
 
         });
 
 
-
         vBox.getChildren().addAll(textFlow, listView, ticketButton);
-        createScene(ticketStage,vBox);
+        createScene(ticketStage, vBox);
         ticketStage.show();
     }
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param drawCardHandler
      */
 
@@ -226,7 +218,6 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param initialCards
      * @param chooseCardsHandler
      */
@@ -238,7 +229,7 @@ public class GraphicalPlayer {
         Stage cardStage = createStage(StringsFr.CARDS_CHOICE);
         VBox vBox = new VBox();
         TextFlow textFlow = createTextFlow(StringsFr.CHOOSE_CARDS);
-        Button cardButton = createButton();
+        Button cardButton = new Button(StringsFr.CHOOSE);
         ListView<SortedBag<Card>> listView = createListView(initialCards);
 
 
@@ -248,23 +239,22 @@ public class GraphicalPlayer {
         cardButton.disableProperty()
                 .bind(Bindings.size(listView.getSelectionModel().getSelectedItems()).lessThan(1));
 
-        //cardStage.setOnCloseRequest(Event::consume);
+        cardStage.setOnCloseRequest(Event::consume);
         cardButton.setOnAction(e -> {
             cardStage.hide();
 
-                chooseCardsHandler.onChooseCards(SortedBag.of((List) listView.getSelectionModel().getSelectedItems()));
+            chooseCardsHandler.onChooseCards(SortedBag.of((List) listView.getSelectionModel().getSelectedItems()));
         });
 
 
         vBox.getChildren().addAll(textFlow, listView, cardButton);
-        createScene(cardStage,vBox);
+        createScene(cardStage, vBox);
         cardStage.show();
     }
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param possibleAdditionalCards
      * @param chooseCardsHandler
      */
@@ -276,16 +266,23 @@ public class GraphicalPlayer {
         Stage additionalStage = createStage(StringsFr.CARDS_CHOICE);
         VBox vBox = new VBox();
         TextFlow textFlow = createTextFlow(StringsFr.CHOOSE_ADDITIONAL_CARDS);
-        Button cardButton = createButton();
+        Button cardButton = new Button(StringsFr.CHOOSE);
         ListView<SortedBag<Card>> listView = createListView(possibleAdditionalCards);
 
-        //additionalStage.setOnCloseRequest(Event::consume);
+        additionalStage.setOnCloseRequest(Event::consume);
+
+        cardButton.setOnAction(e -> {
+            additionalStage.hide();
+
+            chooseCardsHandler.onChooseCards(SortedBag.of((List) listView.getSelectionModel().getSelectedItems()));
+        });
+
         listView.setCellFactory(v ->
                 new TextFieldListCell<>(new CardBagStringConverter()));
 
 
         vBox.getChildren().addAll(textFlow, listView, cardButton);
-        createScene(additionalStage,vBox);
+        createScene(additionalStage, vBox);
         additionalStage.show();
     }
 
@@ -304,11 +301,10 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @return
      */
 
-    private Button createButton(){
+    private Button createButton() {
         Button button = new Button(StringsFr.CHOOSE);
 
         Rectangle back = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -323,12 +319,11 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param o
      * @return
      */
 
-    private ListView<SortedBag<Card>> createListView(List<SortedBag<Card>> o){
+    private ListView<SortedBag<Card>> createListView(List<SortedBag<Card>> o) {
 
         ObservableList<SortedBag<Card>> List = FXCollections.observableList(o);
 
@@ -338,12 +333,11 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param s
      * @return
      */
 
-    private TextFlow createTextFlow(String s){
+    private TextFlow createTextFlow(String s) {
         TextFlow textFlow = new TextFlow();
 
         Text text = new Text();
@@ -356,12 +350,11 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param s
      * @return
      */
 
-    private Stage createStage(String s){
+    private Stage createStage(String s) {
         Stage additionalStage = new Stage(StageStyle.UTILITY);
         additionalStage.setTitle(s);
         additionalStage.initOwner(primaryStage);
@@ -374,11 +367,12 @@ public class GraphicalPlayer {
 
     /**
      * Create a scene with the given vbox and set on close request the given stage
-     * @param s stage
+     *
+     * @param s    stage
      * @param vBox vbox
      */
 
-    private void createScene(Stage s,VBox vBox){
+    private void createScene(Stage s, VBox vBox) {
         Scene scene = new Scene(vBox);
         scene.getStylesheets().add("chooser.css");
         s.setScene(scene);
