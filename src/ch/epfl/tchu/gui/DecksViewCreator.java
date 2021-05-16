@@ -45,10 +45,12 @@ class DecksViewCreator {
         ListView<String> billets = new ListView<>();
         billets.setId("tickets");
 
-        for (Ticket t : ChMap.tickets()) {
+        if (!state.ticketList().isNull().get()) {
+            for (Ticket t : state.ticketList().get()) {
 
-            billets.getItems().add(t.toString());
+                billets.getItems().add(t.toString());
 
+            }
         }
 
         for (Card c : Card.ALL) {
@@ -140,13 +142,13 @@ class DecksViewCreator {
 
 
             StackPane sp = new StackPane();
-            sp.getStyleClass().addAll( "card");//ajouter la couelur
+            sp.getStyleClass().addAll("card");//ajouter la couelur
 
-            state.faceUpCard(i).addListener((o,ov,on) ->{ // question
+            state.faceUpCard(i).addListener((o, ov, on) -> { // question
 
-                if(on.color() == null){
-                    sp.getStyleClass().setAll("NEUTRAL","card");
-                }else
+                if (on.color() == null) {
+                    sp.getStyleClass().setAll("NEUTRAL", "card");
+                } else
                     sp.getStyleClass().setAll(on.color().toString(), "card");
 
             });

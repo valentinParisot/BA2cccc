@@ -47,7 +47,7 @@ public class ServerMain extends Application {
 
                 p1 = getParameters().getRaw().get(0);
 
-            } else {
+            } else if (getParameters().getRaw().size() == 2) {
                 p1 = getParameters().getRaw().get(0);
                 p2 = getParameters().getRaw().get(1);
             }
