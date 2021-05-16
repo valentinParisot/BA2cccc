@@ -4,7 +4,6 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,9 +87,7 @@ public class RemotePlayerProxy implements Player {
         Serde<SortedBag<Ticket>> ticketSerde = Serdes.BAG_OF_TICKET_SERDE;
         send(MessageId.CHOOSE_INITIAL_TICKETS, NOTHING);
 
-        SortedBag<Ticket> cITickets = ticketSerde.deSerialize(receive());
-
-        return cITickets;
+        return ticketSerde.deSerialize(receive());
     }
 
     @Override
@@ -99,9 +96,7 @@ public class RemotePlayerProxy implements Player {
         Serde<TurnKind> ticketSerde = Serdes.TURN_KIND_SERDE;
         send(MessageId.NEXT_TURN, NOTHING);
 
-        TurnKind nextTurn = ticketSerde.deSerialize(receive());
-
-        return nextTurn;
+        return ticketSerde.deSerialize(receive());
     }
 
     @Override
@@ -110,9 +105,7 @@ public class RemotePlayerProxy implements Player {
         Serde<SortedBag<Ticket>> ticketSerde = Serdes.BAG_OF_TICKET_SERDE;
         send(MessageId.CHOOSE_TICKETS, ticketSerde.serialize(options));
 
-        SortedBag<Ticket> chooseTickets = ticketSerde.deSerialize(receive());
-
-        return chooseTickets;
+        return ticketSerde.deSerialize(receive());
     }
 
     @Override
@@ -121,9 +114,7 @@ public class RemotePlayerProxy implements Player {
         Serde<Integer> intSerde = Serdes.INT_SERDE;
         send(MessageId.DRAW_SLOT, NOTHING);
 
-        int drawSlot = intSerde.deSerialize(receive()).intValue();
-
-        return drawSlot;
+        return intSerde.deSerialize(receive()).intValue();
     }
 
     @Override
@@ -132,9 +123,7 @@ public class RemotePlayerProxy implements Player {
         Serde<Route> routeSerde = Serdes.ROUTE_SERDE;
         send(MessageId.ROUTE, NOTHING);
 
-        Route cRoute = routeSerde.deSerialize(receive());
-
-        return cRoute;
+        return routeSerde.deSerialize(receive());
     }
 
     @Override
@@ -143,9 +132,7 @@ public class RemotePlayerProxy implements Player {
         Serde<SortedBag<Card>> cardSerde = Serdes.BAG_OF_CARD_SERDE;
         send(MessageId.CARDS, NOTHING);
 
-        SortedBag<Card> iCCards = cardSerde.deSerialize(receive());
-
-        return iCCards;
+        return cardSerde.deSerialize(receive());
     }
 
     @Override
@@ -155,9 +142,8 @@ public class RemotePlayerProxy implements Player {
         Serde<List<SortedBag<Card>>> listSerde = Serdes.LIST_OF_SORTED_BAG_CARD_SERDE;
 
         send(MessageId.CHOOSE_ADDITIONAL_CARDS, listSerde.serialize(options));
-        SortedBag<Card> cACards = cardSerde.deSerialize(receive());
 
-        return cACards;
+        return cardSerde.deSerialize(receive());
     }
 
 
