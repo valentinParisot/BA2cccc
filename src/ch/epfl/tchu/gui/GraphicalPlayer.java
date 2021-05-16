@@ -112,16 +112,15 @@ public class GraphicalPlayer {
      * @param message
      */
 
-    public void receiveInfo(String message) {
-        assert isFxApplicationThread();
+   public void receiveInfo(String message){
+       assert isFxApplicationThread();
 
-        if (textList.size() == 5) {
-            textList.remove(0);
-        }
-        textList.add(new Text(message));
-
-        InfoViewCreator.createInfoView(playerId, playerNames, observableGameState, textList);
-    }
+       Text text = new Text(message);
+       textList.add(text);
+       if (textList.size() > 5){
+           textList.remove(0);
+       }
+   }
 
     //----------------------------------------------------------------------------------------------------
 
