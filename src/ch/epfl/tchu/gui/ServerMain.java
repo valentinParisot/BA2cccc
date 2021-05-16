@@ -24,7 +24,7 @@ public class ServerMain extends Application {
     private String p2 = "Charles";
 
     public static void main(String[] args) {
-        launch();
+        launch(args);
     }
 
     /**
@@ -38,8 +38,8 @@ public class ServerMain extends Application {
 
 
 
-        try (ServerSocket serverSocket = new ServerSocket(5108);
-             Socket socket = serverSocket.accept()) {
+        try (ServerSocket serverSocket = new ServerSocket(5108);) {
+            Socket socket = serverSocket.accept();
             RemotePlayerProxy playerProxy = new RemotePlayerProxy(socket);
 
 

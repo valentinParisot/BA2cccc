@@ -242,7 +242,7 @@ public class GraphicalPlayer {
         cardButton.setOnAction(e -> {
             cardStage.hide();
 
-            chooseCardsHandler.onChooseCards(SortedBag.of((List) listView.getSelectionModel().getSelectedItems()));
+            chooseCardsHandler.onChooseCards(SortedBag.of((List) listView.getSelectionModel().getSelectedItems())); //erreur
         });
 
 
