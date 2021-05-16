@@ -1,11 +1,11 @@
 package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.Card;
-import ch.epfl.tchu.game.ChMap;
 import ch.epfl.tchu.game.Constants;
 import ch.epfl.tchu.game.Ticket;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -84,17 +84,19 @@ class DecksViewCreator {
             Text compteurnoir = new Text();
             compteurnoir.getStyleClass().add("count");
 
+            ReadOnlyIntegerProperty count = state.cardMultiplicity(c);
+
             compteurnoir.textProperty()
-                    .bind(Bindings.convert(state.cardMultiplicity(c))); // question //stocker ds une var state.cardMultiplicity(c)
+                    .bind(Bindings.convert(count)); // question //stocker ds une var state.cardMultiplicity(c)
 
             compteurnoir.visibleProperty()
-                    .bind(Bindings.greaterThan(state.cardMultiplicity(c), 1));
+                    .bind(Bindings.greaterThan(count, 1));
 
             sp.getChildren().addAll(r1, r2, r3, compteurnoir);
             handPane.getChildren().add(sp);
 
             sp.visibleProperty()
-                    .bind(Bindings.greaterThan(state.cardMultiplicity(c), 0));
+                    .bind(Bindings.greaterThan(count, 0));
 
         }
 

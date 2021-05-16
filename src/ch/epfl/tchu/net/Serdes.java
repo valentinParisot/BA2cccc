@@ -154,13 +154,14 @@ public final class Serdes {
 
                 lastPlayer = publicGameState.lastPlayer();
 
+                //gerer la comment on fait
                 if((publicGameState.lastPlayer() == null)) {
                     return INT_SERDE.serialize(ticketCount)
                             + DOUBLE_POINT + PUBLIC_CARD_STATE_SERDE.serialize(publicCardState)
                             + DOUBLE_POINT + PLAYER_ID_SERDE.serialize(currentPlayerId)
                             + DOUBLE_POINT + PUBLIC_PLAYER_STATE_SERDE.serialize(playerStateUn)
                             + DOUBLE_POINT + PUBLIC_PLAYER_STATE_SERDE.serialize(playerStateDeux)
-                            + DOUBLE_POINT + STRING_SERDE.serialize(s);
+                            + DOUBLE_POINT + LIST_OF_STRING_SERDE.serialize(List.of());
                 }else
                     return INT_SERDE.serialize(ticketCount)
                             + DOUBLE_POINT + PUBLIC_CARD_STATE_SERDE.serialize(publicCardState)
