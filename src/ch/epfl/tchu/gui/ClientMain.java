@@ -26,11 +26,11 @@ public class ClientMain extends Application {
 
         } else if (getParameters().getRaw().size() > 1) {
             name = getParameters().getRaw().get(0);
-            port = Integer.parseInt(getParameters().getRaw().get(0));
+            port = Integer.parseInt(getParameters().getRaw().get(1));
         }
 
         RemotePlayerClient client = new RemotePlayerClient(player, name, port);
-        new Thread(() -> client.run()).start();
+        new Thread(client::run).start();
 
     }
 }
