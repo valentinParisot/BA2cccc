@@ -273,7 +273,11 @@ public class GraphicalPlayer {
         cardButton.setOnAction(e -> {
             additionalStage.hide();
 
-            chooseCardsHandler.onChooseCards(SortedBag.of(listView.getSelectionModel().getSelectedItem()));
+            if(listView.getSelectionModel().getSelectedItem() != null) {
+                chooseCardsHandler.onChooseCards(SortedBag.of(listView.getSelectionModel().getSelectedItem()));
+            }else
+                chooseCardsHandler.onChooseCards(SortedBag.of());
+
         });
 
         listView.setCellFactory(v ->
