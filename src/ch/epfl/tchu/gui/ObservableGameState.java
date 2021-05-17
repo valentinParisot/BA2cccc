@@ -138,7 +138,7 @@ public class ObservableGameState {
         for (Ticket t: newPlayerState.tickets()) {
             ticketList.add(t);
         }
-        //ticketList = FXCollections.observableArrayList(newPlayerState.tickets().toList());
+
 
         for (Card card : Card.ALL) {
             cardMultiplicity.get(card).set(newPlayerState.cards().countOf(card));
