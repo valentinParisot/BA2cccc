@@ -23,7 +23,6 @@ import javafx.scene.text.Text;
  * @author Hugo Jeannin (329220)
  */
 
-
 class DecksViewCreator {
 
     //----------------------------------------------------------------------------------------------------
@@ -42,16 +41,10 @@ class DecksViewCreator {
         HBox handPane = new HBox();
         handPane.setId("hand-pane");
 
-        ListView<String> billets = new ListView<>();
+
+        ListView<Ticket> billets = new ListView<>(state.ticketList());
         billets.setId("tickets");
 
-        if (!state.ticketList().isNull().get()) {
-            for (Ticket t : state.ticketList().get()) {
-
-                billets.getItems().add(t.toString());
-
-            }
-        }
 
         for (Card c : Card.ALL) {
 
@@ -100,8 +93,8 @@ class DecksViewCreator {
 
         }
 
-        root.getChildren().add(billets);
-        root.getChildren().add(handPane);
+
+        root.getChildren().addAll(billets,handPane);
 
         return root;
     }

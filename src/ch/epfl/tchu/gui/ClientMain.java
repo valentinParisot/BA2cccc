@@ -13,10 +13,6 @@ public class ClientMain extends Application {
         launch(args);
     }
 
-
-
-
-
     @Override
     public void start(Stage primarystage) {
 

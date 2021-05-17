@@ -54,7 +54,7 @@ public class ObservableGameState {
     //--------------------------------Private state of current player ID----------------------------------
     //----------------------------------------------------------------------------------------------------
 
-    private final ObjectProperty<ObservableList<Ticket>> ticketList;
+    private ObservableList<Ticket> ticketList;
     private final HashMap<Card, IntegerProperty> cardMultiplicity;
     private final HashMap<Route, BooleanProperty> canClaimRoute;
 
@@ -86,8 +86,7 @@ public class ObservableGameState {
         wagonCount2 = new SimpleIntegerProperty();
         playerPoints2 = new SimpleIntegerProperty();
 
-
-        ticketList = new SimpleObjectProperty<>();
+        ticketList = FXCollections.observableArrayList();
         cardMultiplicity = createCardMultiplicity();
         canClaimRoute = createCanClaimRoute();
     }
@@ -101,6 +100,7 @@ public class ObservableGameState {
      */
 
     public void setState(PublicGameState newGameState, PlayerState newPlayerState) {
+
         this.publicGameState = newGameState;
         this.playerId = newGameState.currentPlayerId();
         this.playerState = newPlayerState;
@@ -134,7 +134,11 @@ public class ObservableGameState {
         wagonCount2.set(newGameState.playerState(PLAYER_2).carCount());
         playerPoints2.set(newGameState.playerState(PLAYER_2).claimPoints());
 
-        ticketList.set(FXCollections.observableList(newPlayerState.tickets().toList()));
+        ticketList.clear();
+        for (Ticket t: newPlayerState.tickets()) {
+            ticketList.add(t);
+        }
+        //ticketList = FXCollections.observableArrayList(newPlayerState.tickets().toList());
 
         for (Card card : Card.ALL) {
             cardMultiplicity.get(card).set(newPlayerState.cards().countOf(card));
@@ -283,7 +287,7 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
 
-    public ReadOnlyObjectProperty<ObservableList<Ticket>> ticketList() {
+    public ObservableList<Ticket> ticketList() {
         return ticketList;
     }
 
@@ -320,7 +324,7 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     private boolean claimable(Route route) {
-        return ((playerState.carCount() >= route.length()) && (!(this.possibleClaimCards(route).isEmpty())));
+        return ((playerState.carCount() >= route.length()) && (!(this.possibleClaimCards(route).isEmpty())) && (routeOwner.get(route).get() == null));
 
     }
 

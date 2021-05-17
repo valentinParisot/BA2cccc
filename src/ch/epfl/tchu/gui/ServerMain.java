@@ -3,7 +3,6 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.ChMap;
 import ch.epfl.tchu.game.Game;
-import ch.epfl.tchu.game.Player;
 import ch.epfl.tchu.net.RemotePlayerProxy;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -56,7 +55,8 @@ public class ServerMain extends Application {
                     Map.of(PLAYER_1, p1, PLAYER_2, p2),
                     SortedBag.of(ChMap.tickets()),
                     new Random())
-            );
+
+            ).start();
 
 
         } catch (IOException e) {
