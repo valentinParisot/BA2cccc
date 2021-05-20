@@ -13,7 +13,6 @@ import javafx.scene.text.TextFlow;
 
 import java.util.Map;
 
-import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
 import static ch.epfl.tchu.gui.StringsFr.PLAYER_STATS;
 import static javafx.beans.binding.Bindings.bindContent;
 
@@ -142,7 +141,7 @@ class InfoViewCreator {
                                                ObservableGameState observableGameState,
                                                Map<PlayerId, String> name) {
 
-        StringExpression expression = null;
+        StringExpression expression ;
 
         if (player.name().equals(PLAYER_1)) {
 
@@ -153,7 +152,7 @@ class InfoViewCreator {
                     observableGameState.wagonCunt(),
                     observableGameState.playerPoints());
 
-        } else if (player.name().equals(PLAYER_2)) { // if + ondiotion
+        } else  { // if + ondiotion
 
             expression = Bindings.format(PLAYER_STATS,
                     name.get(player),
