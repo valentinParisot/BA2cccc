@@ -124,15 +124,15 @@ public class ObservableGameState {
             canClaimRoute.get(route).set(claimable(route));
         }
 
-        ticketCount.set(newPlayerState.ticketCount());
-        cardCount.set(newPlayerState.cardCount());
-        wagonCount.set(newPlayerState.carCount());
-        playerPoints.set(newPlayerState.claimPoints());
+        ticketCount.set(newGameState.playerState(PLAYER_1).ticketCount());
+        cardCount.set(newGameState.playerState(PLAYER_1).ticketCount());
+        wagonCount.set(newGameState.playerState(PLAYER_1).ticketCount());
+        playerPoints.set(newGameState.playerState(PLAYER_1).ticketCount());
 
-        ticketCount2.set(newGameState.playerState(playerId.next()).ticketCount());
-        cardCount2.set(newGameState.playerState(playerId.next()).cardCount());
-        wagonCount2.set(newGameState.playerState(playerId.next()).carCount());
-        playerPoints2.set(newGameState.playerState(playerId.next()).claimPoints());
+        ticketCount2.set(newGameState.playerState(PLAYER_2).ticketCount());
+        cardCount2.set(newGameState.playerState(PLAYER_2).cardCount());
+        wagonCount2.set(newGameState.playerState(PLAYER_2).carCount());
+        playerPoints2.set(newGameState.playerState(PLAYER_2).claimPoints());
 
         ticketList.clear();
         for (Ticket t: newPlayerState.tickets()) {
