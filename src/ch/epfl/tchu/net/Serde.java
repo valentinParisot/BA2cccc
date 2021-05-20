@@ -3,7 +3,6 @@ package ch.epfl.tchu.net;
 import ch.epfl.tchu.SortedBag;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -49,10 +48,10 @@ public interface Serde<Obj> {
      */
 
     public static <Obj> Serde<Obj> of(Function<Obj, String> serialize, Function<String, Obj> deSerialize) {
-        return new Serde<Obj>() {
+        return new Serde<>() {
             @Override
-            public String serialize(Obj o){
-                if (o == null){
+            public String serialize(Obj o) {
+                if (o == null) {
                     return "";
                 }
                 return serialize.apply(o);
@@ -60,7 +59,7 @@ public interface Serde<Obj> {
 
             @Override
             public Obj deSerialize(String s) {
-                if (s.equals("")){
+                if (s.equals("")) {
                     return null;
                 }
                 return deSerialize.apply(s);
@@ -78,7 +77,7 @@ public interface Serde<Obj> {
      */
 
     public static <Obj> Serde<Obj> oneOf(List<Obj> list) {
-        return new Serde<Obj>() {
+        return new Serde<>() {
             @Override
             public String serialize(Obj o) {
                 if (o == null){
@@ -128,7 +127,7 @@ public interface Serde<Obj> {
                 if (s.equals("")){
                     return new ArrayList<>();
                 }
-                List<String> list = Arrays.asList(s.split(Pattern.quote(separation), -1));
+                String[] list = s.split(Pattern.quote(separation), -1);
                 List<Obj> objs = new ArrayList<>();
                 for(String string : list){
                     objs.add(serde.deSerialize(string));
@@ -142,14 +141,14 @@ public interface Serde<Obj> {
 
     /**
      *
-     * @param serde
-     * @param separation
-     * @param <Obj>
+     * @param serde same as listOf
+     * @param separation same as listOf
+     * @param <Obj> same as listOf
      * @return same as listOf but with a SortedBag instead
      */
 
     public static <Obj extends Comparable<Obj>> Serde<SortedBag<Obj>> bagOf(Serde<Obj> serde, String separation) {
-        return new Serde<SortedBag<Obj>>() {
+        return new Serde<>() {
 
             Serde<List<Obj>> listOf = Serde.listOf(serde, separation);
 
