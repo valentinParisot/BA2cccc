@@ -61,7 +61,7 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * instanciates to null
+     *
      * @param playerId
      */
 
@@ -94,7 +94,7 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * modifies all the properties of @newGameState and @newPlayerState
+     *modifies all the properties
      * @param newGameState the new PublicGameState
      * @param newPlayerState the new PlayerState
      */
@@ -148,7 +148,7 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * instanciates the faceUpCards to null
+     *
      * @return
      */
 
@@ -163,7 +163,7 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * instanciates the route owners to null
+     *
      * @return
      */
 
@@ -181,7 +181,7 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * instanciates the multiplicity of each card in the player's hand to 0
+     *
      * @return
      */
 
@@ -198,7 +198,7 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * instanciates canClaimRoute to false
+     *
      * @return
      */
 
@@ -258,6 +258,29 @@ public class ObservableGameState {
         return playerPoints;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
+    public ReadOnlyIntegerProperty ticketCount2() {
+        return ticketCount2;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
+    public ReadOnlyIntegerProperty cardCount2() {
+        return cardCount2;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
+    public ReadOnlyIntegerProperty wagonCunt2() {
+        return wagonCount2;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
+    public ReadOnlyIntegerProperty playerPoints2() {
+        return playerPoints2;
+    }
 
     //----------------------------------------------------------------------------------------------------
     //--------------------------------Private state of current player ID----------------------------------
