@@ -5,6 +5,7 @@ import ch.epfl.tchu.game.Constants;
 import ch.epfl.tchu.game.Ticket;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.IntegerBinding;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.scene.Group;
@@ -31,18 +32,23 @@ class DecksViewCreator {
     private final static int BUTTON_WIDTH = 50;
     private final static int BUTTON_HEIGHT = 5;
 
+    private final static String CARD = "card";
+    private final static String NEUTRAL = "NEUTRAL";
+    private final static String DECKS = "decks.css";
+    private final static String COLORS = "colors.css";
+
     //----------------------------------------------------------------------------------------------------
 
     /**
      * creates the private view of a player's hand
+     *
      * @param state the actual state of the game we want to show
-     * @return
+     * @return the box of the hand view
      */
-
     public static HBox createHandView(ObservableGameState state) {
 
         HBox root = new HBox();
-        root.getStylesheets().addAll("decks.css", "colors.css");
+        root.getStylesheets().addAll(DECKS, COLORS);
 
         HBox handPane = new HBox();
         handPane.setId("hand-pane");
@@ -55,17 +61,17 @@ class DecksViewCreator {
             StackPane sp = new StackPane();
 
             if (c.color() == null) {
-                sp.getStyleClass().addAll("NEUTRAL", "card");
+                sp.getStyleClass().addAll(NEUTRAL, CARD);
 
             } else {
-                sp.getStyleClass().addAll(c.color().toString(), "card");
+                sp.getStyleClass().addAll(c.color().toString(), CARD);
             }
 
             sp.getChildren().addAll(
                     rOutside(),
                     rFilledInside(),
                     rTrainImage(),
-                    compteurNoir(state,c));
+                    blackCounter(state, c));
 
             handPane.getChildren().add(sp);
 
@@ -74,48 +80,53 @@ class DecksViewCreator {
 
         }
 
-        root.getChildren().addAll(billets,handPane);
+        root.getChildren().addAll(billets, handPane);
 
         return root;
     }
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * @param state          the actual state
+     * @param ticketProperty enables/disables the ticket button
+     * @param cardProperty   enables/disables the card button
+     * @return the box of the decks view
+     */
     public static VBox createCardsView(ObservableGameState state,
                                        ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketProperty,
                                        ObjectProperty<ActionHandlers.DrawCardHandler> cardProperty) {
 
         VBox root = new VBox();
         root.setId("card-pane");
-        root.getStylesheets().addAll("decks.css", "colors.css");
+        root.getStylesheets().addAll(DECKS, COLORS);
 
-        // crée le bouton de la pioche des tickets
+        // creates the draw button for the tickets
 
         Button ticketButton = createButton(StringsFr.TICKETS,
-                state.ticketPercentage().multiply(50).divide(100));
+                percentage((IntegerProperty) state.ticketPercentage()));
 
         ticketButton.disableProperty()
                 .bind(ticketProperty.isNull());
 
-        ticketButton.setOnMouseClicked(e -> {
-            ticketProperty.get().onDrawTickets();
-        });
+        ticketButton.setOnMouseClicked(e -> ticketProperty.get().onDrawTickets());
 
 
         root.getChildren().add(ticketButton);
 
-        for (int i = 0; i < Constants.FACE_UP_CARDS_COUNT; i++) { // crée les FaceUpCards
+        // creates FaceUpCards
+
+        for (int i = 0; i < Constants.FACE_UP_CARDS_COUNT; i++) {
 
 
             StackPane sp = new StackPane();
-            sp.getStyleClass().add("card");
+            sp.getStyleClass().add(CARD);
 
             state.faceUpCard(i).addListener((o, ov, on) -> {
 
-                if (on.color() == null) {
-                    sp.getStyleClass().setAll("NEUTRAL", "card");
-                } else
-                    sp.getStyleClass().setAll(on.color().toString(), "card");
+                String color = (on.color() == null) ? NEUTRAL : on.color().toString();
+
+                sp.getStyleClass().setAll(color, CARD);
 
             });
 
@@ -123,24 +134,20 @@ class DecksViewCreator {
                     .bind(cardProperty.isNull());
 
             int finalI = i;
-            sp.setOnMouseClicked(e -> {
-                cardProperty.get().onDrawCard(finalI);
-            });
+            sp.setOnMouseClicked(e -> cardProperty.get().onDrawCard(finalI));
 
             addWagonLoco(sp, root);
         }
 
-        // crée le bouton de a pioche des cartes
+        // creates the draw button for the cards
 
         Button cardButton = createButton(StringsFr.CARDS,
-                state.cardPercentage().multiply(50).divide(100));
+                percentage((IntegerProperty) state.cardPercentage()));
 
         cardButton.disableProperty()
                 .bind(cardProperty.isNull());
 
-        cardButton.setOnMouseClicked(e -> {
-            cardProperty.get().onDrawCard(-1);
-        });
+        cardButton.setOnMouseClicked(e -> cardProperty.get().onDrawCard(-1));
 
         root.getChildren().add(cardButton);
 
@@ -149,7 +156,11 @@ class DecksViewCreator {
 
     //----------------------------------------------------------------------------------------------------
 
-    private static Rectangle rOutside(){
+    /**
+     *
+     * @return a Rectangle with "outside"
+     */
+    private static Rectangle rOutside() {
         Rectangle r1 = new Rectangle();
         r1.setWidth(60);
         r1.setHeight(90);
@@ -157,7 +168,12 @@ class DecksViewCreator {
         return r1;
     }
 
-    private static Rectangle rFilledInside(){
+
+    /**
+     *
+     * @return a Rectangle with "filled" and "inside"
+     */
+    private static Rectangle rFilledInside() {
         Rectangle r2 = new Rectangle();
         r2.setWidth(40);
         r2.setHeight(70);
@@ -165,7 +181,11 @@ class DecksViewCreator {
         return r2;
     }
 
-    private static Rectangle rTrainImage(){
+    /**
+     *
+     * @return a Rectangle with "train-image"
+     */
+    private static Rectangle rTrainImage() {
         Rectangle r3 = new Rectangle();
         r3.setWidth(40);
         r3.setHeight(70);
@@ -173,21 +193,32 @@ class DecksViewCreator {
         return r3;
     }
 
-    private static Text compteurNoir(ObservableGameState state, Card c){
-        Text compteurnoir = new Text();
-        compteurnoir.getStyleClass().add("count");
+    /**
+     *
+     * @param state the actual ObservableGameState
+     * @param card a card in the player's hand
+     * @return the Text corresponding to the multiplicity of @card
+     */
+    private static Text blackCounter(ObservableGameState state, Card card) {
+        Text blackCounter = new Text();
+        blackCounter.getStyleClass().add("count");
 
-        ReadOnlyIntegerProperty count = state.cardMultiplicity(c);
+        ReadOnlyIntegerProperty count = state.cardMultiplicity(card);
 
-        compteurnoir.textProperty()
+        blackCounter.textProperty()
                 .bind(Bindings.convert(count));
 
-        compteurnoir.visibleProperty()
+        blackCounter.visibleProperty()
                 .bind(Bindings.greaterThan(count, 1));
 
-        return compteurnoir;
+        return blackCounter;
     }
 
+    /**
+     * adds the Rectangles corresponding to wagons and locomotives images to @sp and add @sp to @root
+     * @param sp a  StackPane
+     * @param root a Vbox
+     */
     private static void addWagonLoco(StackPane sp, VBox root) {
 
         Rectangle r1 = new Rectangle();
@@ -209,6 +240,12 @@ class DecksViewCreator {
         root.getChildren().add(sp);
     }
 
+    /**
+     *
+     * @param name the button's name
+     * @param binding the property of the button's gauge
+     * @return a new gauged Button
+     */
     private static Button createButton(String name, IntegerBinding binding) {
 
         Button button = new Button(name);
@@ -226,6 +263,15 @@ class DecksViewCreator {
         button.setGraphic(new Group(backCard, gaugeCard));
 
         return button;
+    }
+
+    /**
+     *
+     * @param property any IntegerProperty
+     * @return the property into percentage
+     */
+    private static IntegerBinding percentage(IntegerProperty property) {
+        return property.multiply(50).divide(100);
     }
 
     //----------------------------------------------------------------------------------------------------
