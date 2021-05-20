@@ -37,7 +37,6 @@ public class ServerMain extends Application {
     public void start(Stage stage) { // comment utiliser le try?
 
 
-
         try (ServerSocket serverSocket = new ServerSocket(5108);) {
             Socket socket = serverSocket.accept();
             RemotePlayerProxy playerProxy = new RemotePlayerProxy(socket);
