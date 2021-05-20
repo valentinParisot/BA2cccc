@@ -129,10 +129,10 @@ public class ObservableGameState {
         wagonCount.set(newPlayerState.carCount());
         playerPoints.set(newPlayerState.claimPoints());
 
-        ticketCount2.set(newGameState.playerState(PLAYER_2).ticketCount());
-        cardCount2.set(newGameState.playerState(PLAYER_2).cardCount());
-        wagonCount2.set(newGameState.playerState(PLAYER_2).carCount());
-        playerPoints2.set(newGameState.playerState(PLAYER_2).claimPoints());
+        ticketCount2.set(newGameState.playerState(playerId.next()).ticketCount());
+        cardCount2.set(newGameState.playerState(playerId.next()).cardCount());
+        wagonCount2.set(newGameState.playerState(playerId.next()).carCount());
+        playerPoints2.set(newGameState.playerState(playerId.next()).claimPoints());
 
         ticketList.clear();
         for (Ticket t: newPlayerState.tickets()) {
