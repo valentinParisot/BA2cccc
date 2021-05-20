@@ -47,8 +47,19 @@ public class ObservableGameState {
     //-----------------------------------Public state of each players-------------------------------------
     //----------------------------------------------------------------------------------------------------
 
+    /*
     private final IntegerProperty ticketCount, cardCount, wagonCount, playerPoints;
     private final IntegerProperty ticketCount2, cardCount2, wagonCount2, playerPoints2;
+    */
+
+
+    private final HashMap<PlayerId, IntegerProperty> ticketCounts;
+    private final HashMap<PlayerId, IntegerProperty> cardCounts;
+    private final HashMap<PlayerId, IntegerProperty> wagonCounts;
+    private final HashMap<PlayerId, IntegerProperty> playerPointss;
+
+
+
 
     //----------------------------------------------------------------------------------------------------
     //--------------------------------Private state of current player ID----------------------------------
@@ -76,6 +87,7 @@ public class ObservableGameState {
         faceUpCards = createFaceUpCards();
         routeOwner = createRouteOwner();
 
+        /*
         ticketCount = new SimpleIntegerProperty();
         cardCount = new SimpleIntegerProperty();
         wagonCount = new SimpleIntegerProperty();
@@ -85,10 +97,17 @@ public class ObservableGameState {
         cardCount2 = new SimpleIntegerProperty();
         wagonCount2 = new SimpleIntegerProperty();
         playerPoints2 = new SimpleIntegerProperty();
+         */
 
         ticketList = FXCollections.observableArrayList();
         cardMultiplicity = createCardMultiplicity();
         canClaimRoute = createCanClaimRoute();
+
+        ticketCounts = createTicketCounts();
+        cardCounts = createCardCounts();
+        wagonCounts = createWagonCounts();
+        playerPointss = createPlayerPoints();
+
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -124,7 +143,7 @@ public class ObservableGameState {
             canClaimRoute.get(route).set(claimable(route));
         }
 
-        ticketCount.set(newGameState.playerState(PLAYER_1).ticketCount());
+        /*ticketCount.set(newGameState.playerState(PLAYER_1).ticketCount());
         cardCount.set(newGameState.playerState(PLAYER_1).ticketCount());
         wagonCount.set(newGameState.playerState(PLAYER_1).ticketCount());
         playerPoints.set(newGameState.playerState(PLAYER_1).ticketCount());
@@ -132,7 +151,16 @@ public class ObservableGameState {
         ticketCount2.set(newGameState.playerState(PLAYER_2).ticketCount());
         cardCount2.set(newGameState.playerState(PLAYER_2).cardCount());
         wagonCount2.set(newGameState.playerState(PLAYER_2).carCount());
-        playerPoints2.set(newGameState.playerState(PLAYER_2).claimPoints());
+        playerPoints2.set(newGameState.playerState(PLAYER_2).claimPoints());*/
+
+        for (PlayerId id : PlayerId.ALL) {
+
+            ticketCounts.get(id).set(newGameState.playerState(id).ticketCount());
+            cardCounts.get(id).set(newGameState.playerState(id).cardCount());
+            wagonCounts.get(id).set(newGameState.playerState(id).carCount());
+            playerPointss.get(id).set(newGameState.playerState(id).claimPoints());
+
+        }
 
         ticketList.clear();
         for (Ticket t: newPlayerState.tickets()) {
@@ -236,6 +264,7 @@ public class ObservableGameState {
     //--------------------------------Public State of each Player-----------------------------------------
     //----------------------------------------------------------------------------------------------------
 
+    /*
     public ReadOnlyIntegerProperty ticketCount() {
         return ticketCount;
     }
@@ -256,6 +285,64 @@ public class ObservableGameState {
 
     public ReadOnlyIntegerProperty playerPoints() {
         return playerPoints;
+    }
+    */
+
+
+    private static HashMap<PlayerId, IntegerProperty> createTicketCounts() {
+
+        HashMap<PlayerId, IntegerProperty> map = new HashMap<>();
+
+        for (PlayerId playerId : PlayerId.ALL) {
+            map.put(playerId, new SimpleIntegerProperty());
+        }
+        return map;
+    }
+
+    private static HashMap<PlayerId, IntegerProperty> createCardCounts() {
+
+        HashMap<PlayerId, IntegerProperty> map = new HashMap<>();
+
+        for (PlayerId playerId : PlayerId.ALL) {
+            map.put(playerId, new SimpleIntegerProperty());
+        }
+        return map;
+    }
+
+    private static HashMap<PlayerId, IntegerProperty> createWagonCounts() {
+
+        HashMap<PlayerId, IntegerProperty> map = new HashMap<>();
+
+        for (PlayerId playerId : PlayerId.ALL) {
+            map.put(playerId, new SimpleIntegerProperty());
+        }
+        return map;
+    }
+
+    private static HashMap<PlayerId, IntegerProperty> createPlayerPoints() {
+
+        HashMap<PlayerId, IntegerProperty> map = new HashMap<>();
+
+        for (PlayerId playerId : PlayerId.ALL) {
+            map.put(playerId, new SimpleIntegerProperty());
+        }
+        return map;
+    }
+
+    public ReadOnlyIntegerProperty ticketCount(PlayerId id){
+        return ticketCounts.get(id);
+    }
+
+    public ReadOnlyIntegerProperty cardCount(PlayerId id){
+        return cardCounts.get(id);
+    }
+
+    public ReadOnlyIntegerProperty wagonCount(PlayerId id){
+        return wagonCounts.get(id);
+    }
+
+    public ReadOnlyIntegerProperty playerPoints(PlayerId id){
+        return playerPointss.get(id);
     }
 
 
@@ -305,6 +392,7 @@ public class ObservableGameState {
 
     }
 
+    /*
     public ReadOnlyIntegerProperty ticketCount2() {
         return ticketCount2;
     }
@@ -326,6 +414,8 @@ public class ObservableGameState {
     public ReadOnlyIntegerProperty playerPoints2() {
         return playerPoints2;
     }
+
+     */
 
     //----------------------------------------------------------------------------------------------------
 
