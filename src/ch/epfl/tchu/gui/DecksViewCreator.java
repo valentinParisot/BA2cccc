@@ -4,6 +4,7 @@ import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.Constants;
 import ch.epfl.tchu.game.Ticket;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.scene.Group;
@@ -32,8 +33,13 @@ class DecksViewCreator {
 
     //----------------------------------------------------------------------------------------------------
 
-    public static HBox createHandView(ObservableGameState state) {
+    /**
+     * creates the private view of a player's hand
+     * @param state the actual state of the game we want to show
+     * @return
+     */
 
+    public static HBox createHandView(ObservableGameState state) {
 
         HBox root = new HBox();
         root.getStylesheets().addAll("decks.css", "colors.css");
@@ -41,58 +47,32 @@ class DecksViewCreator {
         HBox handPane = new HBox();
         handPane.setId("hand-pane");
 
-
         ListView<Ticket> billets = new ListView<>(state.ticketList());
         billets.setId("tickets");
-
 
         for (Card c : Card.ALL) {
 
             StackPane sp = new StackPane();
 
-
             if (c.color() == null) {
-
                 sp.getStyleClass().addAll("NEUTRAL", "card");
 
             } else {
                 sp.getStyleClass().addAll(c.color().toString(), "card");
             }
 
-            Rectangle r1 = new Rectangle();
-            r1.setWidth(60);
-            r1.setHeight(90);
-            r1.getStyleClass().add("outside");
+            sp.getChildren().addAll(
+                    rOutside(),
+                    rFilledInside(),
+                    rTrainImage(),
+                    compteurNoir(state,c));
 
-            Rectangle r2 = new Rectangle();
-            r2.setWidth(40);
-            r2.setHeight(70);
-            r2.getStyleClass().addAll("filled", "inside");
-
-            Rectangle r3 = new Rectangle();
-            r3.setWidth(40);
-            r3.setHeight(70);
-            r3.getStyleClass().add("train-image");
-
-            Text compteurnoir = new Text();
-            compteurnoir.getStyleClass().add("count");
-
-            ReadOnlyIntegerProperty count = state.cardMultiplicity(c);
-
-            compteurnoir.textProperty()
-                    .bind(Bindings.convert(count)); // question //stocker ds une var state.cardMultiplicity(c)
-
-            compteurnoir.visibleProperty()
-                    .bind(Bindings.greaterThan(count, 1));
-
-            sp.getChildren().addAll(r1, r2, r3, compteurnoir);
             handPane.getChildren().add(sp);
 
             sp.visibleProperty()
-                    .bind(Bindings.greaterThan(count, 0));
+                    .bind(Bindings.greaterThan(state.cardMultiplicity(c), 0));
 
         }
-
 
         root.getChildren().addAll(billets,handPane);
 
@@ -109,19 +89,10 @@ class DecksViewCreator {
         root.setId("card-pane");
         root.getStylesheets().addAll("decks.css", "colors.css");
 
-        Button ticketButton = new Button(StringsFr.TICKETS);
-        ticketButton.getStyleClass().add("gauged");
+        // crée le bouton de la pioche des tickets
 
-        Rectangle backTicket = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
-        backTicket.getStyleClass().add("background");
-
-        Rectangle gaugeTicket = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
-        gaugeTicket.widthProperty()
-                .bind(state.ticketPercentage().multiply(50).divide(100));
-        gaugeTicket.getStyleClass().add("foreground");
-
-
-        ticketButton.setGraphic(new Group(backTicket, gaugeTicket));
+        Button ticketButton = createButton(StringsFr.TICKETS,
+                state.ticketPercentage().multiply(50).divide(100));
 
         ticketButton.disableProperty()
                 .bind(ticketProperty.isNull());
@@ -133,13 +104,13 @@ class DecksViewCreator {
 
         root.getChildren().add(ticketButton);
 
-        for (int i = 0; i < Constants.FACE_UP_CARDS_COUNT; i++) {// a modifier pour prednre les faceup
+        for (int i = 0; i < Constants.FACE_UP_CARDS_COUNT; i++) { // crée les FaceUpCards
 
 
             StackPane sp = new StackPane();
-            sp.getStyleClass().addAll("card");//ajouter la couelur
+            sp.getStyleClass().add("card");
 
-            state.faceUpCard(i).addListener((o, ov, on) -> { // question
+            state.faceUpCard(i).addListener((o, ov, on) -> {
 
                 if (on.color() == null) {
                     sp.getStyleClass().setAll("NEUTRAL", "card");
@@ -159,20 +130,10 @@ class DecksViewCreator {
             addWagonLoco(sp, root);
         }
 
-        Button cardButton = new Button(StringsFr.CARDS);
-        cardButton.getStyleClass().add("gauged");
+        // crée le bouton de a pioche des cartes
 
-        Rectangle backCard = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
-        backCard.getStyleClass().add("background");
-
-        Rectangle gaugeCard = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
-
-        gaugeCard.widthProperty()
-                .bind(state.cardPercentage().multiply(50).divide(100));
-        gaugeCard.getStyleClass().add("foreground");
-
-        cardButton.setGraphic(new Group(backCard, gaugeCard));
-        cardButton.setText(StringsFr.CARDS);
+        Button cardButton = createButton(StringsFr.CARDS,
+                state.cardPercentage().multiply(50).divide(100));
 
         cardButton.disableProperty()
                 .bind(cardProperty.isNull());
@@ -183,11 +144,49 @@ class DecksViewCreator {
 
         root.getChildren().add(cardButton);
 
-
         return root;
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    private static Rectangle rOutside(){
+        Rectangle r1 = new Rectangle();
+        r1.setWidth(60);
+        r1.setHeight(90);
+        r1.getStyleClass().add("outside");
+        return r1;
+    }
+
+    private static Rectangle rFilledInside(){
+        Rectangle r2 = new Rectangle();
+        r2.setWidth(40);
+        r2.setHeight(70);
+        r2.getStyleClass().addAll("filled", "inside");
+        return r2;
+    }
+
+    private static Rectangle rTrainImage(){
+        Rectangle r3 = new Rectangle();
+        r3.setWidth(40);
+        r3.setHeight(70);
+        r3.getStyleClass().add("train-image");
+        return r3;
+    }
+
+    private static Text compteurNoir(ObservableGameState state, Card c){
+        Text compteurnoir = new Text();
+        compteurnoir.getStyleClass().add("count");
+
+        ReadOnlyIntegerProperty count = state.cardMultiplicity(c);
+
+        compteurnoir.textProperty()
+                .bind(Bindings.convert(count));
+
+        compteurnoir.visibleProperty()
+                .bind(Bindings.greaterThan(count, 1));
+
+        return compteurnoir;
+    }
 
     private static void addWagonLoco(StackPane sp, VBox root) {
 
@@ -210,55 +209,23 @@ class DecksViewCreator {
         root.getChildren().add(sp);
     }
 
-    private static void addWagonLoco(StackPane sp, HBox handPane) {
+    private static Button createButton(String name, IntegerBinding binding) {
 
-        Rectangle r1 = new Rectangle();
-        r1.setWidth(60);
-        r1.setHeight(90);
-        r1.getStyleClass().add("outside");
-
-        Rectangle r2 = new Rectangle();
-        r1.setWidth(40);
-        r1.setHeight(70);
-        r1.getStyleClass().addAll("filled", "inside");
-
-        Rectangle r3 = new Rectangle();
-        r1.setWidth(40);
-        r1.setHeight(70);
-        r1.getStyleClass().add("train-image");
-
-        Text compteurnoir = new Text();
-        compteurnoir.getStyleClass().add("count");
-
-        sp.getChildren().addAll(r1, r2, r3, compteurnoir);
-        handPane.getChildren().add(sp);
-
-    }
-
-    //----------------------------------------------------------------------------------------------------
-
-    private static Button button() {
-
-        Button button = new Button();
+        Button button = new Button(name);
         button.getStyleClass().add("gauged");
 
-        Rectangle back = new Rectangle();
-        back.setHeight(5);
-        back.setWidth(50);
-        back.getStyleClass().add("background");
+        Rectangle backCard = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
+        backCard.getStyleClass().add("background");
 
-        Rectangle fore = new Rectangle();
-        fore.setHeight(5);
-        fore.setWidth(50);
-        fore.getStyleClass().add("foreground");
+        Rectangle gaugeCard = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
 
-        Group graphic = new Group();
-        graphic.getChildren().addAll(back, fore);
+        gaugeCard.widthProperty()
+                .bind(binding);
+        gaugeCard.getStyleClass().add("foreground");
 
-        button.setGraphic(graphic);
+        button.setGraphic(new Group(backCard, gaugeCard));
 
         return button;
-
     }
 
     //----------------------------------------------------------------------------------------------------

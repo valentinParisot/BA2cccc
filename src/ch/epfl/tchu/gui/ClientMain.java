@@ -10,6 +10,11 @@ public class ClientMain extends Application {
         launch(args);
     }
 
+
+    /**
+     * sarts the server to play local or online (run after the server)
+     * @param stage not used
+     */
     @Override
     public void start(Stage stage) {
 
