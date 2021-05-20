@@ -9,7 +9,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -18,7 +17,6 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
@@ -42,16 +40,9 @@ import static javafx.application.Platform.isFxApplicationThread;
 
 public class GraphicalPlayer {
 
-    private final static int BUTTON_WIDTH = 50;
-    private final static int BUTTON_HEIGHT = 5;
     private final static String PREFIX_TITLE = "tCHu - ";
-    private final static String BACKGROUND = "background";
-    private final static String FOREGROUND = "foreground";
-
 
     private final ObservableGameState observableGameState;
-    private final PlayerId playerId;
-    private final Map<PlayerId, String> playerNames;
     private final ObservableList<Text> textList;
     private final ObjectProperty<ActionHandlers.DrawTicketsHandler> drawTicketsHandlerOP;
     private final ObjectProperty<ActionHandlers.DrawCardHandler> drawCardHandlerOP;
@@ -62,15 +53,13 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param playerId
-     * @param playerNames
+     * @param playerId the id corresponding to the player watching
+     * @param playerNames the names of all players
      */
 
     public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames) {
 
         observableGameState = new ObservableGameState(playerId);
-        this.playerId = playerId;
-        this.playerNames = playerNames;
 
         textList = FXCollections.observableArrayList();
 
@@ -97,8 +86,8 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param newGameState
-     * @param newPlayerState
+     * @param newGameState the new state of the game
+     * @param newPlayerState the new state of the player
      */
 
     public void setState(PublicGameState newGameState, PlayerState newPlayerState) {
@@ -109,25 +98,25 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param message
+     * @param message the message we received
      */
 
-   public void receiveInfo(String message){
-       assert isFxApplicationThread();
+    public void receiveInfo(String message) {
+        assert isFxApplicationThread();
 
-       Text text = new Text(message);
-       textList.add(text);
-       if (textList.size() > 5){
-           textList.remove(0);
-       }
-   }
+        Text text = new Text(message);
+        textList.add(text);
+        if (textList.size() > 5) {
+            textList.remove(0);
+        }
+    }
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param drawTicketsHandler
-     * @param drawCardHandler
-     * @param claimRouteHandler
+     * @param drawTicketsHandler enables/disables the draw of tickets
+     * @param drawCardHandler enables/disables the draw of cards
+     * @param claimRouteHandler enables/disables the claim of a route
      */
 
     public void startTurn(ActionHandlers.DrawTicketsHandler drawTicketsHandler,
@@ -164,8 +153,8 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param tickets
-     * @param chooseTicketsHandler
+     * @param tickets the tickets proposed to the player
+     * @param chooseTicketsHandler chooses the tickets
      */
 
     public void chooseTickets(SortedBag<Ticket> tickets, ActionHandlers.ChooseTicketsHandler chooseTicketsHandler) {
@@ -173,9 +162,14 @@ public class GraphicalPlayer {
         Preconditions.checkArgument(tickets.size() == IN_GAME_TICKETS_COUNT ||
                 tickets.size() == INITIAL_TICKETS_COUNT);
 
+        int minimumTicketSize = tickets.size() -2;
+        int minimumTicketCount = tickets.size() - Constants.DISCARDABLE_TICKETS_COUNT;
+
         Stage ticketStage = createStage(StringsFr.TICKETS_CHOICE);
         VBox vBox = new VBox();
-        TextFlow textFlow = createTextFlow(String.format(StringsFr.CHOOSE_TICKETS, tickets.size() - Constants.DISCARDABLE_TICKETS_COUNT, StringsFr.plural(tickets.size())));//cconstantount
+
+
+        TextFlow textFlow = createTextFlow(String.format(StringsFr.CHOOSE_TICKETS, minimumTicketCount, StringsFr.plural(tickets.size())));
         Button ticketButton = new Button(StringsFr.CHOOSE);
         ListView<Ticket> listView = new ListView<>(FXCollections.observableList(tickets.toList()));
 
@@ -183,7 +177,7 @@ public class GraphicalPlayer {
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         ticketButton.disableProperty()
-                .bind(Bindings.lessThan(Bindings.size(listView.getSelectionModel().getSelectedItems()), tickets.size() - 2));//mettre ds une varibale
+                .bind(Bindings.lessThan(Bindings.size(listView.getSelectionModel().getSelectedItems()), minimumTicketSize));
 
         ticketStage.setOnCloseRequest(Event::consume);
         ticketButton.setOnAction(e -> {
@@ -201,7 +195,7 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param drawCardHandler
+     * @param drawCardHandler draws a card
      */
 
     public void drawCard(ActionHandlers.DrawCardHandler drawCardHandler) {
@@ -217,8 +211,8 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param initialCards
-     * @param chooseCardsHandler
+     * @param initialCards all the possible cards for the player to take a route
+     * @param chooseCardsHandler chooses the cards
      */
 
     public void chooseClaimCards(List<SortedBag<Card>> initialCards,
@@ -242,7 +236,7 @@ public class GraphicalPlayer {
         cardButton.setOnAction(e -> {
             cardStage.hide();
 
-            chooseCardsHandler.onChooseCards(SortedBag.of(listView.getSelectionModel().getSelectedItem())); //erreur
+            chooseCardsHandler.onChooseCards(SortedBag.of(listView.getSelectionModel().getSelectedItem()));
         });
 
 
@@ -254,8 +248,8 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param possibleAdditionalCards
-     * @param chooseCardsHandler
+     * @param possibleAdditionalCards alla the possible additional cards to take a tunnel
+     * @param chooseCardsHandler chooses the additional cards (can be null)
      */
 
     public void chooseAdditionalCards(List<SortedBag<Card>> possibleAdditionalCards,
@@ -271,12 +265,14 @@ public class GraphicalPlayer {
         additionalStage.setOnCloseRequest(Event::consume);
 
         cardButton.setOnAction(e -> {
+
             additionalStage.hide();
 
-            if(listView.getSelectionModel().getSelectedItem() != null) {
-                chooseCardsHandler.onChooseCards(SortedBag.of(listView.getSelectionModel().getSelectedItem()));
-            }else
-                chooseCardsHandler.onChooseCards(SortedBag.of());
+            SortedBag chosenCards = (listView.getSelectionModel().getSelectedItem() != null)
+                    ? SortedBag.of(listView.getSelectionModel().getSelectedItem())
+                    : SortedBag.of();
+
+            chooseCardsHandler.onChooseCards(chosenCards);
 
         });
 
@@ -301,34 +297,17 @@ public class GraphicalPlayer {
         claimRouteHandlerOP.set(null);
     }
 
-    //----------------------------------------------------------------------------------------------------
-
-    /**
-     * @return
-     */
-
-    private Button createButton() {
-        Button button = new Button(StringsFr.CHOOSE);
-
-        Rectangle back = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
-        back.getStyleClass().add(BACKGROUND);
-        Rectangle fore = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
-        fore.getStyleClass().add(FOREGROUND);
-        button.setGraphic(new Group(back, fore));
-
-        return button;
-    }
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param o
-     * @return
+     * @param sortedBags the sortedBags we want to see
+     * @return their ListView
      */
 
-    private ListView<SortedBag<Card>> createListView(List<SortedBag<Card>> o) {
+    private ListView<SortedBag<Card>> createListView(List<SortedBag<Card>> sortedBags) {
 
-        ObservableList<SortedBag<Card>> List = FXCollections.observableList(o);
+        ObservableList<SortedBag<Card>> List = FXCollections.observableList(sortedBags);
 
         return new ListView<>(List);
     }
@@ -336,8 +315,8 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param s
-     * @return
+     * @param s the text corresponding
+     * @return a new TextFlow
      */
 
     private TextFlow createTextFlow(String s) {
@@ -353,8 +332,8 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param s
-     * @return
+     * @param s the text corresponding
+     * @return a new Stage
      */
 
     private Stage createStage(String s) {

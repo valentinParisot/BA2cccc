@@ -157,7 +157,7 @@ public class RemotePlayerProxy implements Player {
     /**
      * Make the communication of the chosen tickets
      * @param options the additional tickets proposed to the player
-     * @return
+     * @return th chosen tickets
      */
 
     @Override
@@ -262,8 +262,7 @@ public class RemotePlayerProxy implements Player {
 
     private String receive() {
         try {
-            String message = r.readLine();
-            return message;
+            return r.readLine();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
