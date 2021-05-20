@@ -55,7 +55,7 @@ public interface Serde<Obj> {
                     return "";
                 }
                 return serialize.apply(o);
-            }// gerer si
+            }
 
             @Override
             public Obj deSerialize(String s) {
@@ -128,11 +128,11 @@ public interface Serde<Obj> {
                     return new ArrayList<>();
                 }
                 String[] list = s.split(Pattern.quote(separation), -1);
-                List<Obj> objs = new ArrayList<>();
+                List<Obj> obj = new ArrayList<>();
                 for(String string : list){
-                    objs.add(serde.deSerialize(string));
+                    obj.add(serde.deSerialize(string));
                 }
-                return objs;
+                return obj;
             }
         };
     }
