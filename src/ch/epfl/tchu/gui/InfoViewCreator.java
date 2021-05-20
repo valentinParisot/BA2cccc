@@ -50,60 +50,8 @@ class InfoViewCreator {
     public static VBox createInfoView(PlayerId id, Map<PlayerId, String> name,
                                       ObservableGameState observableGameState,
                                       ObservableList<Text> observableList) {
-        VBox playerStats = new VBox();
-        playerStats.setId(SET_ID_PLAYER_STATE);
 
-        //statistics(observableGameState, name, playerStats);
-
-
-
-
-
-        for (PlayerId player: PlayerId.ALL) {
-
-            TextFlow statistic = new TextFlow();
-            statistic.getStyleClass().add(player.name());
-
-
-            Circle circle = new Circle();
-            circle.setRadius(RADIUS_CIRCLE);
-            circle.getStyleClass().add(FILLED);
-
-            Text monText = new Text();
-            monText.textProperty().bind(expression(player,observableGameState,name));
-
-            statistic.getChildren().addAll(circle,monText);
-            playerStats.getChildren().add(statistic);
-
-        }
-
-        TextFlow message = new TextFlow();
-        message.setId(SET_ID_GAME_INFO);
-
-        if(observableList.size() <= 5 && observableList.size() > 0 ) {
-            for (int i = 0; i < observableList.size(); i++) {
-
-                Text t = new Text();
-                t.setText(String.valueOf(observableList.get(i))); // j'ai rajouté ça sinon c'était vide non?
-                message.getChildren().add(t);
-
-            }
-        }
-        else if(observableList.size() != 0){
-            throw new IllegalArgumentException("trop de messages c'est max 5");
-        }
-
-        bindContent(message.getChildren(),observableList);
-
-        Separator separator1 = new Separator(Orientation.HORIZONTAL);
-        VBox root = new VBox(playerStats,separator1,message);
-        root.getStylesheets().addAll("info.css","colors.css");
-
-
-        return root;
-    }
-
-    /** VBox playerStats = new VBox();
+     VBox playerStats = new VBox();
      playerStats.setId(SET_ID_PLAYER_STATE);
 
      statistics(observableGameState, name, playerStats);
@@ -123,7 +71,8 @@ class InfoViewCreator {
 
      bindContent(message.getChildren(), observableList);
 
-     return createVbox(playerStats, message);**/
+     return createVbox(playerStats, message);
+    }
 
 
     //----------------------------------------------------------------------------------------------------
@@ -140,27 +89,14 @@ class InfoViewCreator {
     private static StringExpression expression(PlayerId player,
                                                ObservableGameState observableGameState,
                                                Map<PlayerId, String> name) {
-
         StringExpression expression ;
 
-        if (player.name().equals(PLAYER_1)) {
-
             expression = Bindings.format(PLAYER_STATS,
                     name.get(player),
-                    observableGameState.ticketCount(),
-                    observableGameState.cardCount(),
-                    observableGameState.wagonCunt(),
-                    observableGameState.playerPoints());
-
-        } else  { // if + ondiotion
-
-            expression = Bindings.format(PLAYER_STATS,
-                    name.get(player),
-                    observableGameState.ticketCount2(),
-                    observableGameState.cardCount2(),
-                    observableGameState.wagonCunt2(),
-                    observableGameState.playerPoints2());
-        }
+                    observableGameState.ticketCount(player),
+                    observableGameState.cardCount(player),
+                    observableGameState.wagonCount(player),
+                    observableGameState.playerPoints(player));
 
         return expression;
     }
