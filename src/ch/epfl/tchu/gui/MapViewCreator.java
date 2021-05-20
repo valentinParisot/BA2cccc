@@ -6,11 +6,8 @@ import ch.epfl.tchu.game.ChMap;
 import ch.epfl.tchu.game.Route;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
@@ -25,6 +22,8 @@ import java.util.List;
  */
 
 class MapViewCreator {
+
+    //----------------------------------------------------------------------------------------------------
 
     private final static int RECTANGLE_WIDTH = 36;
     private final static int RECTANGLE_HEIGHT = 12;
@@ -55,36 +54,7 @@ class MapViewCreator {
         root.getChildren().add(iv);
         root.getStylesheets().addAll("map.css","colors.css");
 
-
-        for (Route route : ChMap.routes()) {
-
-            Group routes = new Group();
-
-            routes.setOnMouseClicked((e) -> {
-
-                List<SortedBag<Card>> possibleClaimCards = observableGameState.possibleClaimCards(route);
-
-                if(possibleClaimCards.size() == 1 ){
-
-                    objectProperty.get().onClaimRoute(route, possibleClaimCards.get(0));
-
-                }else {
-
-                    ActionHandlers.ClaimRouteHandler claimRouteH = objectProperty.get() ;
-                    ActionHandlers.ChooseCardsHandler chooseCardsH =
-                            chosenCards -> claimRouteH.onClaimRoute(route, chosenCards);
-                    cardChooser.chooseCards(possibleClaimCards, chooseCardsH);
-                }
-            });
-
-            observableGameState.routeOwner(route).addListener((o,ov,on) -> routes.getStyleClass().add(on.name()));
-
-            generator(route,routes);
-            dumpTree(routes);//debug
-
-            root.getChildren().add(routes);
-            routes.disableProperty().bind(objectProperty.isNull().or(observableGameState.canClaimRoute(route).not()));
-        }
+        Creator(observableGameState,objectProperty,cardChooser,root);
 
         return root ;
     }
@@ -108,9 +78,9 @@ class MapViewCreator {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
-     * @param route
-     * @param routes
+     * generate all geometrics figure that the map needs
+     * @param route route in the map
+     * @param routes group of routes in the map
      */
 
     private static void generator(Route route, Group routes){
@@ -150,36 +120,50 @@ class MapViewCreator {
 
         }
     }
-
-    //----------------------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------------------
-    //------------------------------------------code de déboguage-----------------------------------------
-    //----------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------
 
-    private static void dumpTree(Node root) {
-        dumpTree(0, root);
-    }
+    /**
+     * Create and add the property of the map
+     * @param observableGameState observableGameState of the game
+     * @param objectProperty different property given
+     * @param cardChooser usefull when the player want to choose a card
+     * @param root current pane, where the method must put the whole work done
+     */
 
-    private static void dumpTree(int indent, Node root) {
-        System.out.printf("%s%s (id: %s, classes: [%s])%n",
-                " ".repeat(indent),
-                root.getTypeSelector(),
-                root.getId(),
-                String.join(", ", root.getStyleClass()));
-        if (root instanceof Parent) {
-            Parent parent = ((Parent) root);
-            for (Node child : parent.getChildrenUnmodifiable())
-                dumpTree(indent + 2, child);
+    private static void Creator(ObservableGameState observableGameState,
+                      ObjectProperty<ActionHandlers.ClaimRouteHandler> objectProperty,
+                      CardChooser cardChooser,Pane root){
+
+        for (Route route : ChMap.routes()) {
+
+            Group routes = new Group();
+
+            routes.setOnMouseClicked((e) -> {
+
+                List<SortedBag<Card>> possibleClaimCards = observableGameState.possibleClaimCards(route);
+
+                if(possibleClaimCards.size() == 1 ){
+
+                    objectProperty.get().onClaimRoute(route, possibleClaimCards.get(0));
+
+                }else {
+
+                    ActionHandlers.ClaimRouteHandler claimRouteH = objectProperty.get();
+
+                    ActionHandlers.ChooseCardsHandler chooseCardsH =
+                            chosenCards -> claimRouteH.onClaimRoute(route, chosenCards);
+                    cardChooser.chooseCards(possibleClaimCards, chooseCardsH);
+                }
+            });
+
+            observableGameState.routeOwner(route).addListener((o,ov,on) -> routes.getStyleClass().add(on.name()));
+
+            generator(route,routes);
+
+            root.getChildren().add(routes);
+            routes.disableProperty().bind(objectProperty.isNull().or(observableGameState.canClaimRoute(route).not()));
         }
     }
-
-    //----------------------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------------------
-    //------------------------------------------code de déboguage-----------------------------------------
-    //----------------------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------------------
-
 }
 
 

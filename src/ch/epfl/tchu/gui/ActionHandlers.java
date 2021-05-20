@@ -23,7 +23,7 @@ public interface ActionHandlers {
         /**
          * Useful when the player wants to draw tickets
          */
-        abstract void onDrawTickets();
+        void onDrawTickets();
 
     }
 
@@ -37,7 +37,7 @@ public interface ActionHandlers {
          *
          * @param index given location ( between 0 and 4, or -1)
          */
-        abstract void onDrawCard(int index); //checke rindex 0--4 et -1 ?
+        void onDrawCard(int index);
 
     }
 
@@ -52,7 +52,7 @@ public interface ActionHandlers {
          * @param route   desired route
          * @param initial given cards
          */
-        abstract void onClaimRoute(Route route, SortedBag<Card> initial);
+        void onClaimRoute(Route route, SortedBag<Card> initial);
 
     }
 
@@ -66,7 +66,7 @@ public interface ActionHandlers {
          *
          * @param chooseTickets tickets given
          */
-        abstract void onChooseTickets(SortedBag<Ticket> chooseTickets) ;
+        void onChooseTickets(SortedBag<Ticket> chooseTickets);
 
     }
 
@@ -82,7 +82,7 @@ public interface ActionHandlers {
          *
          * @param givenCards given cards
          */
-        abstract void onChooseCards(SortedBag<Card> givenCards);
+        void onChooseCards(SortedBag<Card> givenCards);
 
     }
 
