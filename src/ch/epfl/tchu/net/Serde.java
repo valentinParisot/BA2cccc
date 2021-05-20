@@ -110,7 +110,7 @@ public interface Serde<Obj> {
      */
 
     public static <Obj> Serde<List<Obj>> listOf(Serde<Obj> serde, String separation) {
-        return new Serde<List<Obj>>() {
+        return new Serde<>() {
             @Override
             public String serialize(List<Obj> l) {
                 if (l.size() == 0){
