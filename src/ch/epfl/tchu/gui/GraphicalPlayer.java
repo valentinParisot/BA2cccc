@@ -74,7 +74,7 @@ public class GraphicalPlayer {
         primaryStage = new Stage();
         primaryStage.setTitle(PREFIX_TITLE + playerNames.get(playerId));
 
-        Node mapView = MapViewCreator.createMapView(observableGameState, claimRouteHandlerOP, this::chooseClaimCards);
+        Node mapView = MapViewCreator.createMapView(observableGameState, claimRouteHandlerOP, (this::chooseClaimCards));
         Node cardsView = DecksViewCreator.createCardsView(observableGameState, drawTicketsHandlerOP, drawCardHandlerOP);
         Node handView = DecksViewCreator.createHandView(observableGameState);
         Node infoView = InfoViewCreator.createInfoView(playerId, playerNames, observableGameState, textList);

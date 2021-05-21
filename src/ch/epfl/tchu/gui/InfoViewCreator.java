@@ -3,6 +3,7 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.game.PlayerId;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Separator;
@@ -114,32 +115,22 @@ class InfoViewCreator {
      */
 
     private static void statistics(ObservableGameState observableGameState, Map<PlayerId, String> name, VBox vbox,PlayerId playerId) {
-
+        for (PlayerId id: PlayerId.ALL) {
             TextFlow statistic = new TextFlow();
-            statistic.getStyleClass().add(playerId.name());
+            statistic.getStyleClass().add(id.name());
 
             Circle circle = new Circle();
             circle.setRadius(RADIUS_CIRCLE);
             circle.getStyleClass().add(FILLED);
 
-            TextFlow statistic2 = new TextFlow();
-            statistic2.getStyleClass().add(playerId.next().name());
-
-            Circle circle2 = new Circle();
-            circle2.setRadius(RADIUS_CIRCLE);
-            circle2.getStyleClass().add(FILLED);
-
-            Text monText2 = new Text();
-            monText2.textProperty().bind(expression(playerId.next(), observableGameState, name));
-
             Text monText = new Text();
-            monText.textProperty().bind(expression(playerId, observableGameState, name));
+            monText.textProperty().bind(expression(id, observableGameState, name));
 
             statistic.getChildren().addAll(circle, monText);
-            statistic2.getChildren().addAll(circle2, monText2);
 
-            vbox.getChildren().addAll(statistic,statistic2);
-
+            vbox.getChildren().add(statistic);
+        }
+        FXCollections.rotate(vbox.getChildren(), playerId.ordinal());
     }
 
     //----------------------------------------------------------------------------------------------------

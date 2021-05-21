@@ -37,6 +37,8 @@ class DecksViewCreator {
     private final static int R2_HEIGHT = 70;
     private final static int R3_WIDTH = 40;
     private final static int R3_HEIGHT = 70;
+    private final static int MULTIPLY_50 = 50;
+    private final static int PERCENTAGE_100 = 100;
 
     private final static String HAND_PANE = "hand-pane";
     private final static String TICKETS = "tickets";
@@ -57,7 +59,7 @@ class DecksViewCreator {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * creates the private view of a player's hand
+     * Creates the private view of a player's hand
      *
      * @param state the actual state of the game we want to show
      * @return the box of the hand view
@@ -163,8 +165,7 @@ class DecksViewCreator {
         Button cardButton = createButton(StringsFr.CARDS,
                 percentage((IntegerProperty) state.cardPercentage()));
 
-        cardButton.disableProperty()
-                .bind(cardProperty.isNull());
+        cardButton.disableProperty().bind(cardProperty.isNull());
 
         cardButton.setOnMouseClicked(e -> cardProperty.get().onDrawCard(-1));
 
@@ -314,7 +315,7 @@ class DecksViewCreator {
      */
 
     private static IntegerBinding percentage(IntegerProperty property) {
-        return property.multiply(50).divide(100);
+        return property.multiply(MULTIPLY_50).divide(PERCENTAGE_100);
     }
 
     //----------------------------------------------------------------------------------------------------

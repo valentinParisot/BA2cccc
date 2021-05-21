@@ -31,7 +31,7 @@ public class ObservableGameState {
 
     //----------------------------------------------------------------------------------------------------
 
-    private PlayerId playerId;
+    private final PlayerId playerId;
     private PlayerState playerState;
     private PublicGameState publicGameState;
 
@@ -105,7 +105,6 @@ public class ObservableGameState {
     public void setState(PublicGameState newGameState, PlayerState newPlayerState) {
 
         this.publicGameState = newGameState;
-        this.playerId = newGameState.currentPlayerId();
         this.playerState = newPlayerState;
 
         ticketPercentage.set(newGameState.ticketsCount() * CENT / TOTAL_TICKETS_COUNT);
