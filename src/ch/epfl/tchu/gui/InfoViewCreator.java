@@ -28,7 +28,8 @@ class InfoViewCreator {
 
     //----------------------------------------------------------------------------------------------------
 
-    private final static String PLAYER_1 = "PLAYER_1";
+    private final static String INFO_CSS = "info.css";
+    private final static String COLORS_CSS = "colors.css";
     private final static String FILLED = "filled";
     private final static String SET_ID_PLAYER_STATE = "player-stats";
     private final static String SET_ID_GAME_INFO = "game-info";
@@ -51,27 +52,28 @@ class InfoViewCreator {
                                       ObservableGameState observableGameState,
                                       ObservableList<Text> observableList) {
 
-     VBox playerStats = new VBox();
-     playerStats.setId(SET_ID_PLAYER_STATE);
+        VBox playerStats = new VBox();
+        playerStats.setId(SET_ID_PLAYER_STATE);
 
-     statistics(observableGameState, name, playerStats);
+        statistics(observableGameState, name, playerStats);
 
-     TextFlow message = new TextFlow();
-     message.setId(SET_ID_GAME_INFO);
+        TextFlow message = new TextFlow();
+        message.setId(SET_ID_GAME_INFO);
 
-     if (observableList.size() <= MAX_INFO && observableList.size() > 0) {
-         for (Text text : observableList) {
+        if (observableList.size() <= MAX_INFO && observableList.size() > 0) {
+            for (Text text : observableList) {
 
-             Text t = new Text();
-             t.setText(String.valueOf(text));
-             message.getChildren().add(t);
+                Text t = new Text();
+                t.setText(String.valueOf(text));
+                message.getChildren().add(t);
 
-         }
-     }
+            }
+        }
 
-     bindContent(message.getChildren(), observableList);
+        bindContent(message.getChildren(), observableList);
 
-     return createVbox(playerStats, message);
+        return createVbox(playerStats, message);
+
     }
 
 
@@ -89,14 +91,14 @@ class InfoViewCreator {
     private static StringExpression expression(PlayerId player,
                                                ObservableGameState observableGameState,
                                                Map<PlayerId, String> name) {
-        StringExpression expression ;
+        StringExpression expression;
 
-            expression = Bindings.format(PLAYER_STATS,
-                    name.get(player),
-                    observableGameState.ticketCount(player),
-                    observableGameState.cardCount(player),
-                    observableGameState.wagonCount(player),
-                    observableGameState.playerPoints(player));
+        expression = Bindings.format(PLAYER_STATS,
+                name.get(player),
+                observableGameState.ticketCount(player),
+                observableGameState.cardCount(player),
+                observableGameState.wagonCount(player),
+                observableGameState.playerPoints(player));
 
         return expression;
     }
@@ -142,7 +144,7 @@ class InfoViewCreator {
 
         Separator separator1 = new Separator(Orientation.HORIZONTAL);
         VBox vBox = new VBox(playerStats, separator1, message);
-        vBox.getStylesheets().addAll("info.css", "colors.css");
+        vBox.getStylesheets().addAll(INFO_CSS, COLORS_CSS);
         return vBox;
     }
 

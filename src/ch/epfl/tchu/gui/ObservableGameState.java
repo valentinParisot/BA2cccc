@@ -63,7 +63,11 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * instantiates to null
+     * At creation, all the properties have their default value:
+     * null for those containing an object,
+     * 0 for those containing an integer,
+     * false for those containing a Boolean value.
+     *
      * @param playerId the id of the player "watching"
      */
 
@@ -92,8 +96,9 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * modifies all the properties of @newGameState and @newPlayerState
-     * @param newGameState the new PublicGameState
+     * This method updates all of the properties described below based on these two states
+     *
+     * @param newGameState   the new PublicGameState
      * @param newPlayerState the new PlayerState
      */
 
@@ -132,10 +137,9 @@ public class ObservableGameState {
         }
 
         ticketList.clear();
-        for (Ticket t: newPlayerState.tickets()) {
+        for (Ticket t : newPlayerState.tickets()) {
             ticketList.add(t);
         }
-
 
         for (Card card : Card.ALL) {
             cardMultiplicity.get(card).set(newPlayerState.cards().countOf(card));
@@ -145,7 +149,8 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * instantiates the faceUpCards to null
+     * Instantiates the faceUpCards to null
+     *
      * @return a null list
      */
 
@@ -160,9 +165,11 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * instantiates the route owners to null
+     * Instantiates the route owners to null
+     *
      * @return a null map
      */
+
     private static HashMap<Route, ObjectProperty<PlayerId>> createRouteOwner() {
 
         HashMap<Route, ObjectProperty<PlayerId>> map = new HashMap<>();
@@ -177,9 +184,11 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * instantiates ticketCounts to null
+     * Instantiates ticketCounts to null
+     *
      * @return a null map
      */
+
     private static HashMap<PlayerId, IntegerProperty> createTicketCounts() {
 
         HashMap<PlayerId, IntegerProperty> map = new HashMap<>();
@@ -193,9 +202,11 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * instantiates cardCounts to null
+     * Instantiates cardCounts to null
+     *
      * @return a null map
      */
+
     private static HashMap<PlayerId, IntegerProperty> createCardCounts() {
 
         HashMap<PlayerId, IntegerProperty> map = new HashMap<>();
@@ -209,9 +220,11 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * instantiates wagonCounts to null
+     * Instantiates wagonCounts to null
+     *
      * @return a null map
      */
+
     private static HashMap<PlayerId, IntegerProperty> createWagonCounts() {
 
         HashMap<PlayerId, IntegerProperty> map = new HashMap<>();
@@ -225,9 +238,11 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * instantiates playerPoints to null
+     * Instantiates playerPoints to null
+     *
      * @return a null map
      */
+
     private static HashMap<PlayerId, IntegerProperty> createPlayerPoints() {
 
         HashMap<PlayerId, IntegerProperty> map = new HashMap<>();
@@ -241,9 +256,11 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * instantiates the multiplicity of each card in the player's hand to 0
+     * Instantiates the multiplicity of each card in the player's hand to 0
+     *
      * @return a null map
      */
+
     private static HashMap<Card, IntegerProperty> createCardMultiplicity() {
 
         HashMap<Card, IntegerProperty> map = new HashMap<>();
@@ -257,7 +274,8 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * instantiates canClaimRoute to false
+     * Instantiates canClaimRoute to false
+     *
      * @return a null map
      */
 
@@ -268,6 +286,7 @@ public class ObservableGameState {
         for (Route route : ChMap.routes()) {
             map.put(route, new SimpleBooleanProperty());
         }
+
         return map;
     }
 
@@ -276,77 +295,89 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @return the percentage of a player's tickets
      */
+
     public ReadOnlyIntegerProperty ticketPercentage() {
         return ticketPercentage;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     /**
-     *
      * @return the percentage of a player's cards
      */
+
     public ReadOnlyIntegerProperty cardPercentage() {
         return cardPercentage;
     }
 
+    //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param slot the index of the faceUpCard
      * @return the n° @slot faceUpCard property
      */
+
     public ReadOnlyObjectProperty<Card> faceUpCard(int slot) {
         return faceUpCards.get(slot);
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     /**
-     *
      * @param route the route we want to know the owner of
      * @return the @route 's owner property
      */
+
     public ReadOnlyObjectProperty<PlayerId> routeOwner(Route route) {
         return routeOwner.get(route);
     }
+
 
     //----------------------------------------------------------------------------------------------------
     //--------------------------------Public State of each Player-----------------------------------------
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param id the id corresponding to the player
      * @return the number of tickets of @id
      */
-    public ReadOnlyIntegerProperty ticketCount(PlayerId id){
+
+    public ReadOnlyIntegerProperty ticketCount(PlayerId id) {
         return ticketCounts.get(id);
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     /**
-     *
      * @param id the id corresponding to the player
      * @return the number of cards of @id
      */
-    public ReadOnlyIntegerProperty cardCount(PlayerId id){
+
+    public ReadOnlyIntegerProperty cardCount(PlayerId id) {
         return cardCounts.get(id);
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     /**
-     *
      * @param id the id corresponding to the player
      * @return the number of cars of @id
      */
-    public ReadOnlyIntegerProperty wagonCount(PlayerId id){
+
+    public ReadOnlyIntegerProperty wagonCount(PlayerId id) {
         return wagonCounts.get(id);
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     /**
-     *
      * @param id the id corresponding to the player
      * @return the amount of points of @id
      */
-    public ReadOnlyIntegerProperty playerPoints(PlayerId id){
+
+    public ReadOnlyIntegerProperty playerPoints(PlayerId id) {
         return playerPoints.get(id);
     }
 
@@ -355,11 +386,10 @@ public class ObservableGameState {
     //--------------------------------Private state of current player ID----------------------------------
     //----------------------------------------------------------------------------------------------------
 
-
     /**
-     *
      * @return the list of tickets of the player watching
      */
+
     public ObservableList<Ticket> ticketList() {
         return ticketList;
     }
@@ -367,10 +397,10 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param card any card of tCHu
      * @return the multiplicity of @card in the hand of the player watching
      */
+
     public ReadOnlyIntegerProperty cardMultiplicity(Card card) {
         return cardMultiplicity.get(card);
     }
@@ -378,10 +408,10 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param route any route of tCHu
      * @return if the player watching can claim @route
      */
+
     public ReadOnlyBooleanProperty canClaimRoute(Route route) {
         return canClaimRoute.get(route);
     }
@@ -391,11 +421,10 @@ public class ObservableGameState {
     //-----------------------------------------Other methods----------------------------------------------
     //----------------------------------------------------------------------------------------------------
 
-
     /**
-     *
      * @return if the current player can draw a ticket
      */
+
     public boolean canDrawTickets() {
         return publicGameState.canDrawTickets();
     }
@@ -403,9 +432,9 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @return if the current player can draw a card
      */
+
     public boolean canDrawCards() {
         return publicGameState.canDrawCards();
     }
@@ -413,10 +442,10 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param route any route of tCHu
      * @return all the cards that the player can use to claim @route
      */
+
     public List<SortedBag<Card>> possibleClaimCards(Route route) {
         return playerState.possibleClaimCards(route);
     }
@@ -424,13 +453,19 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * Check if the given route is claimable
      *
      * @param route any route of tCHu
      * @return if @route can be taken
      */
+
     private boolean claimable(Route route) {
-        return ((playerState.carCount() >= route.length()) && (!(this.possibleClaimCards(route).isEmpty())) && (routeOwner.get(route).get() == null));
+        return ((playerState.carCount() >= route.length()) &&
+                (!(this.possibleClaimCards(route).isEmpty())) &&
+                (routeOwner.get(route).get() == null));
 
     }
+
+    //----------------------------------------------------------------------------------------------------
 
 }

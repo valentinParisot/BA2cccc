@@ -25,9 +25,10 @@ public class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * Override methode for ListView in GraphicalPlayer
-     * @param cards
-     * @return
+     * Create string with given cards
+     *
+     * @param cards given cards
+     * @return String with given cards
      */
 
     @Override

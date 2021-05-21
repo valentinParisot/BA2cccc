@@ -28,17 +28,24 @@ class MapViewCreator {
     private final static int RECTANGLE_WIDTH = 36;
     private final static int RECTANGLE_HEIGHT = 12;
     private final static int CIRCLE_RADIUS = 3;
+    private final static int C1_X = 12;
+    private final static int C1_Y = 6;
+    private final static int C2_X = 24;
+    private final static int C2_Y = 6;
+
     private final static String LOW_LINE = "_";
     private final static String ROUTE = "route";
     private final static String FILLED = "filled";
     private final static String NEUTRAL = "NEUTRAL";
     private final static String CAR = "car";
     private final static String TRACK = "track";
+    private final static String MAP_CSS = "map.css";
+    private final static String COLOR_CSS = "colors.css";
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * create the view of the map
+     * Create the view of the map
      *
      * @param observableGameState state of the game observable
      * @param objectProperty      a property containing the action manager to use when the player wants to seize a road
@@ -47,16 +54,16 @@ class MapViewCreator {
 
     public static Pane createMapView(ObservableGameState observableGameState,
                                      ObjectProperty<ActionHandlers.ClaimRouteHandler> objectProperty,
-                                     CardChooser cardChooser){
+                                     CardChooser cardChooser) {
 
         ImageView iv = new ImageView();
         Pane root = new Pane();
         root.getChildren().add(iv);
-        root.getStylesheets().addAll("map.css","colors.css");
+        root.getStylesheets().addAll(MAP_CSS, COLOR_CSS);
 
-        Creator(observableGameState,objectProperty,cardChooser,root);
+        Creator(observableGameState, objectProperty, cardChooser, root);
 
-        return root ;
+        return root;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -66,48 +73,49 @@ class MapViewCreator {
     interface CardChooser {
 
         /**
-         * called when the player must choose the cards he wishes to use to seize a road.
+         * Called when the player must choose the cards he wishes to use to seize a road.
          *
          * @param options The possibilities open to him
          * @param handler handler the action handler is intended to be used when he has made his choice
          */
-        void chooseCards(List<SortedBag<Card>> options , ActionHandlers.ChooseCardsHandler handler );
+        void chooseCards(List<SortedBag<Card>> options, ActionHandlers.ChooseCardsHandler handler);
 
     }
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * generate all geometrics figure that the map needs
-     * @param route route in the map
+     * Generate all geometrics figure that the map needs
+     *
+     * @param route  route in the map
      * @param routes group of routes in the map
      */
 
-    private static void generator(Route route, Group routes){
+    private static void generator(Route route, Group routes) {
 
         for (int i = 1; i <= route.length(); i++) {
 
             routes.setId(route.id());
 
-            Rectangle r1 = new Rectangle(RECTANGLE_WIDTH,RECTANGLE_HEIGHT);
+            Rectangle r1 = new Rectangle(RECTANGLE_WIDTH, RECTANGLE_HEIGHT);
             r1.getStyleClass().add(FILLED);
 
             Circle c1 = new Circle(CIRCLE_RADIUS);
-            c1.setCenterX(12);
-            c1.setCenterY(6);
+            c1.setCenterX(C1_X);
+            c1.setCenterY(C1_Y);
 
             Circle c2 = new Circle(CIRCLE_RADIUS);
-            c2.setCenterX(24);
-            c2.setCenterY(6);
+            c2.setCenterX(C2_X);
+            c2.setCenterY(C2_Y);
 
-            Rectangle voie = new Rectangle(RECTANGLE_WIDTH,RECTANGLE_HEIGHT);
-            voie.getStyleClass().addAll(TRACK, FILLED);
+            Rectangle rectangle = new Rectangle(RECTANGLE_WIDTH, RECTANGLE_HEIGHT);
+            rectangle.getStyleClass().addAll(TRACK, FILLED);
 
             Group wagon = new Group(r1, c1, c2);
             wagon.getStyleClass().addAll(CAR);
 
 
-            Group box = new Group(voie,wagon);
+            Group box = new Group(rectangle, wagon);
             box.setId(route.id() + LOW_LINE + i);
             routes.getChildren().add(box);
         }
@@ -120,19 +128,21 @@ class MapViewCreator {
 
         }
     }
+
     //----------------------------------------------------------------------------------------------------
 
     /**
      * Create and add the property of the map
+     *
      * @param observableGameState observableGameState of the game
-     * @param objectProperty different property given
-     * @param cardChooser usefull when the player want to choose a card
-     * @param root current pane, where the method must put the whole work done
+     * @param objectProperty      different property given
+     * @param cardChooser         useful when the player want to choose a card
+     * @param root                current pane, where the method must put the whole work done
      */
 
     private static void Creator(ObservableGameState observableGameState,
-                      ObjectProperty<ActionHandlers.ClaimRouteHandler> objectProperty,
-                      CardChooser cardChooser,Pane root){
+                                ObjectProperty<ActionHandlers.ClaimRouteHandler> objectProperty,
+                                CardChooser cardChooser, Pane root) {
 
         for (Route route : ChMap.routes()) {
 
@@ -142,11 +152,11 @@ class MapViewCreator {
 
                 List<SortedBag<Card>> possibleClaimCards = observableGameState.possibleClaimCards(route);
 
-                if(possibleClaimCards.size() == 1 ){
+                if (possibleClaimCards.size() == 1) {
 
                     objectProperty.get().onClaimRoute(route, possibleClaimCards.get(0));
 
-                }else {
+                } else {
 
                     ActionHandlers.ClaimRouteHandler claimRouteH = objectProperty.get();
 
@@ -156,14 +166,16 @@ class MapViewCreator {
                 }
             });
 
-            observableGameState.routeOwner(route).addListener((o,ov,on) -> routes.getStyleClass().add(on.name()));
+            observableGameState.routeOwner(route).addListener((o, ov, on) -> routes.getStyleClass().add(on.name()));
 
-            generator(route,routes);
+            generator(route, routes);
 
             root.getChildren().add(routes);
             routes.disableProperty().bind(objectProperty.isNull().or(observableGameState.canClaimRoute(route).not()));
         }
     }
+
+    //----------------------------------------------------------------------------------------------------
 }
 
 

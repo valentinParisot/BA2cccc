@@ -40,7 +40,12 @@ import static javafx.application.Platform.isFxApplicationThread;
 
 public class GraphicalPlayer {
 
+    //----------------------------------------------------------------------------------------------------
+
     private final static String PREFIX_TITLE = "tCHu - ";
+    private final static String CHOOSER_CSS = "chooser.css";
+
+    private final static int MAX_TEXT_SIZE = 5;
 
     private final ObservableGameState observableGameState;
     private final ObservableList<Text> textList;
@@ -53,7 +58,7 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param playerId the id corresponding to the player watching
+     * @param playerId    the id corresponding to the player watching
      * @param playerNames the names of all players
      */
 
@@ -66,8 +71,6 @@ public class GraphicalPlayer {
         drawTicketsHandlerOP = new SimpleObjectProperty<>();
         drawCardHandlerOP = new SimpleObjectProperty<>();
         claimRouteHandlerOP = new SimpleObjectProperty<>();
-
-
         primaryStage = new Stage();
         primaryStage.setTitle(PREFIX_TITLE + playerNames.get(playerId));
 
@@ -86,7 +89,9 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param newGameState the new state of the game
+     * Set the state
+     *
+     * @param newGameState   the new state of the game
      * @param newPlayerState the new state of the player
      */
 
@@ -98,6 +103,10 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * Adding at the bottom of the game progress information,
+     * which is presented in the lower part of the information view;
+     * this view should only contain the last five messages received
+     *
      * @param message the message we received
      */
 
@@ -106,7 +115,7 @@ public class GraphicalPlayer {
 
         Text text = new Text(message);
         textList.add(text);
-        if (textList.size() > 5) {
+        if (textList.size() > MAX_TEXT_SIZE) {
             textList.remove(0);
         }
     }
@@ -114,9 +123,11 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * Start the turn
+     *
      * @param drawTicketsHandler enables/disables the draw of tickets
-     * @param drawCardHandler enables/disables the draw of cards
-     * @param claimRouteHandler enables/disables the claim of a route
+     * @param drawCardHandler    enables/disables the draw of cards
+     * @param claimRouteHandler  enables/disables the claim of a route
      */
 
     public void startTurn(ActionHandlers.DrawTicketsHandler drawTicketsHandler,
@@ -153,7 +164,10 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param tickets the tickets proposed to the player
+     * Opens a window allowing the player to make his choice once this is confirmed
+     * the choice handler is called with this choice as an argument
+     *
+     * @param tickets              the tickets proposed to the player
      * @param chooseTicketsHandler chooses the tickets
      */
 
@@ -162,22 +176,25 @@ public class GraphicalPlayer {
         Preconditions.checkArgument(tickets.size() == IN_GAME_TICKETS_COUNT ||
                 tickets.size() == INITIAL_TICKETS_COUNT);
 
-        int minimumTicketSize = tickets.size() -2;
+        int minimumTicketSize = tickets.size() - 2;
         int minimumTicketCount = tickets.size() - Constants.DISCARDABLE_TICKETS_COUNT;
 
         Stage ticketStage = createStage(StringsFr.TICKETS_CHOICE);
         VBox vBox = new VBox();
 
+        TextFlow textFlow = createTextFlow(String.format(
+                StringsFr.CHOOSE_TICKETS,
+                minimumTicketCount,
+                StringsFr.plural(tickets.size())));
 
-        TextFlow textFlow = createTextFlow(String.format(StringsFr.CHOOSE_TICKETS, minimumTicketCount, StringsFr.plural(tickets.size())));
         Button ticketButton = new Button(StringsFr.CHOOSE);
         ListView<Ticket> listView = new ListView<>(FXCollections.observableList(tickets.toList()));
-
 
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         ticketButton.disableProperty()
-                .bind(Bindings.lessThan(Bindings.size(listView.getSelectionModel().getSelectedItems()), minimumTicketSize));
+                .bind(Bindings.lessThan(Bindings.size(
+                        listView.getSelectionModel().getSelectedItems()), minimumTicketSize));
 
         ticketStage.setOnCloseRequest(Event::consume);
         ticketButton.setOnAction(e -> {
@@ -185,7 +202,6 @@ public class GraphicalPlayer {
             chooseTicketsHandler.onChooseTickets(SortedBag.of(listView.getSelectionModel().getSelectedItems()));
 
         });
-
 
         vBox.getChildren().addAll(textFlow, listView, ticketButton);
         createScene(ticketStage, vBox);
@@ -195,6 +211,11 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * Allows the player to choose a wagon / locomotive card, either one of the five whose side is visible,
+     * or the one at the top of the deck once the player has clicked on one of these cards,
+     * the manager is called with the player's choice; this method is meant to be called when the player has already
+     * drawn a first card and must now draw the second
+     *
      * @param drawCardHandler draws a card
      */
 
@@ -211,7 +232,10 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * @param initialCards all the possible cards for the player to take a route
+     * Opens a window allowing the player to make his choice;
+     * once this has been done and confirmed, the choice handler is called with the player's choice as an argument;
+     *
+     * @param initialCards       all the possible cards for the player to take a route
      * @param chooseCardsHandler chooses the cards
      */
 
@@ -248,8 +272,11 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * opens a window allowing the player to make his choice;
+     * once this has been done and confirmed, the choice handler is called with the player's choice as an argument
+     *
      * @param possibleAdditionalCards alla the possible additional cards to take a tunnel
-     * @param chooseCardsHandler chooses the additional cards (can be null)
+     * @param chooseCardsHandler      chooses the additional cards (can be null)
      */
 
     public void chooseAdditionalCards(List<SortedBag<Card>> possibleAdditionalCards,
@@ -268,7 +295,7 @@ public class GraphicalPlayer {
 
             additionalStage.hide();
 
-            SortedBag chosenCards = (listView.getSelectionModel().getSelectedItem() != null)
+            SortedBag<Card> chosenCards = (listView.getSelectionModel().getSelectedItem() != null)
                     ? SortedBag.of(listView.getSelectionModel().getSelectedItem())
                     : SortedBag.of();
 
@@ -288,7 +315,10 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
+     * Reset those Handlers :
+     * - drawTicketsHandler
+     * - drawCardHandler
+     * - claimRouteHandle
      */
 
     private void resetHandlers() {
@@ -301,6 +331,8 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * Create a list view with given List<SortedBag<Card>>
+     *
      * @param sortedBags the sortedBags we want to see
      * @return their ListView
      */
@@ -315,6 +347,8 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * Create a text flow with a given string
+     *
      * @param s the text corresponding
      * @return a new TextFlow
      */
@@ -332,6 +366,8 @@ public class GraphicalPlayer {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * Create a stage with a given string
+     *
      * @param s the text corresponding
      * @return a new Stage
      */
@@ -356,7 +392,7 @@ public class GraphicalPlayer {
 
     private void createScene(Stage s, VBox vBox) {
         Scene scene = new Scene(vBox);
-        scene.getStylesheets().add("chooser.css");
+        scene.getStylesheets().add(CHOOSER_CSS);
         s.setScene(scene);
 
         s.setOnCloseRequest(Event::consume);

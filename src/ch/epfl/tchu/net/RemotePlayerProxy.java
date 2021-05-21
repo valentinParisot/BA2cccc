@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
@@ -33,6 +34,7 @@ public class RemotePlayerProxy implements Player {
     /**
      * Its constructor takes as argument the "socket"
      * which the proxy uses to communicate through the network with the client by exchanging text messages
+     *
      * @param socket socket use to communicate
      * @throws IOException if the channel is non blocking mode
      */
@@ -52,6 +54,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * initialize players in the game
+     *
      * @param ownId       the ID of the player
      * @param playerNames the name of each player
      */
@@ -66,8 +69,8 @@ public class RemotePlayerProxy implements Player {
         list.add(playerNames.get(PlayerId.PLAYER_2));
 
         String initPlayers = (idSerde.serialize(ownId)
-                                + SPACE
-                                + listSerde.serialize(list));
+                + SPACE
+                + listSerde.serialize(list));
 
         send(MessageId.INIT_PLAYERS, initPlayers);
     }
@@ -76,6 +79,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Make receive the information
+     *
      * @param info any information the player should receive
      */
 
@@ -91,6 +95,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Send the state updated
+     *
      * @param newState the new state of the game
      * @param ownState the new state of the player
      */
@@ -100,17 +105,19 @@ public class RemotePlayerProxy implements Player {
         Serde<PublicGameState> pgsSerde = Serdes.PUBLIC_GAME_STATE_SERDE;
         Serde<PlayerState> stringSerde = Serdes.PLAYER_STATE_SERDE;
 
-        String updateState = (pgsSerde.serialize(newState)
-                                + SPACE
-                                + stringSerde.serialize(ownState));
+        StringJoiner updateState = new StringJoiner(SPACE);
+        updateState
+                .add(pgsSerde.serialize(newState))
+                .add(stringSerde.serialize(ownState));
 
-        send(MessageId.UPDATE_STATE, updateState);
+        send(MessageId.UPDATE_STATE, updateState.toString());
     }
 
     //----------------------------------------------------------------------------------------------------
 
     /**
      * Send the Set initial tickets in the game
+     *
      * @param tickets the 5 initial tickets distributed to the player
      */
 
@@ -126,6 +133,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Make the communication of the chosen initial tickets
+     *
      * @return Sorted bag of chosen tickets
      */
 
@@ -141,6 +149,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Make the communication about the kind of the turn
+     *
      * @return kind of the turn
      */
 
@@ -156,8 +165,9 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Make the communication of the chosen tickets
+     *
      * @param options the additional tickets proposed to the player
-     * @return th chosen tickets
+     * @return SortedBag of ticket
      */
 
     @Override
@@ -172,6 +182,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Make the communication about the slot and the action is drawn
+     *
      * @return the drawn slot
      */
 
@@ -187,6 +198,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Make the communication about the claimed route
+     *
      * @return claimed route
      */
 
@@ -202,6 +214,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Make the communication about the initialClaimCards
+     *
      * @return sorted bag of initialClaimCards
      */
 
@@ -217,6 +230,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Make the communication about chooseAdditionalCards
+     *
      * @param options the additional cards proposed to the player
      * @return sorted bag of chooseAdditionalCards
      */
@@ -235,6 +249,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Writes a message to the client
+     *
      * @param id         the type of message
      * @param serialized the message we want to send (already serialized)
      */
@@ -248,6 +263,7 @@ public class RemotePlayerProxy implements Player {
             w.write(message);
             w.write('\n');
             w.flush();
+
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -257,6 +273,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Reads the message sent by the client
+     *
      * @return the message received
      */
 

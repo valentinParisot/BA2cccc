@@ -31,7 +31,24 @@ class DecksViewCreator {
 
     private final static int BUTTON_WIDTH = 50;
     private final static int BUTTON_HEIGHT = 5;
+    private final static int R1_WIDTH = 60;
+    private final static int R1_HEIGHT = 90;
+    private final static int R2_WIDTH = 40;
+    private final static int R2_HEIGHT = 70;
+    private final static int R3_WIDTH = 40;
+    private final static int R3_HEIGHT = 70;
 
+    private final static String HAND_PANE = "hand-pane";
+    private final static String TICKETS = "tickets";
+    private final static String CARD_PANE = "card-pane";
+    private final static String OUTSIDE = "outside";
+    private final static String FILLED = "filled";
+    private final static String INSIDE = "inside";
+    private final static String COUNT = "count";
+    private final static String TRAIN_IMAGE = "train-image";
+    private final static String GAUGED = "gauged";
+    private final static String BACKGROUND = "background";
+    private final static String FOREGROUND = "foreground";
     private final static String CARD = "card";
     private final static String NEUTRAL = "NEUTRAL";
     private final static String DECKS = "decks.css";
@@ -51,10 +68,10 @@ class DecksViewCreator {
         root.getStylesheets().addAll(DECKS, COLORS);
 
         HBox handPane = new HBox();
-        handPane.setId("hand-pane");
+        handPane.setId(HAND_PANE);
 
         ListView<Ticket> billets = new ListView<>(state.ticketList());
-        billets.setId("tickets");
+        billets.setId(TICKETS);
 
         for (Card c : Card.ALL) {
 
@@ -88,6 +105,8 @@ class DecksViewCreator {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * Main box of the deck view
+     *
      * @param state          the actual state
      * @param ticketProperty enables/disables the ticket button
      * @param cardProperty   enables/disables the card button
@@ -98,7 +117,7 @@ class DecksViewCreator {
                                        ObjectProperty<ActionHandlers.DrawCardHandler> cardProperty) {
 
         VBox root = new VBox();
-        root.setId("card-pane");
+        root.setId(CARD_PANE);
         root.getStylesheets().addAll(DECKS, COLORS);
 
         // creates the draw button for the tickets
@@ -157,51 +176,64 @@ class DecksViewCreator {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * Create rectangle with outside orientation
      *
      * @return a Rectangle with "outside"
      */
+
     private static Rectangle rOutside() {
         Rectangle r1 = new Rectangle();
-        r1.setWidth(60);
-        r1.setHeight(90);
-        r1.getStyleClass().add("outside");
+        r1.setWidth(R1_WIDTH);
+        r1.setHeight(R1_HEIGHT);
+        r1.getStyleClass().add(OUTSIDE);
         return r1;
     }
 
+    //----------------------------------------------------------------------------------------------------
 
     /**
+     * Create rectangle filled inside
      *
      * @return a Rectangle with "filled" and "inside"
      */
+
     private static Rectangle rFilledInside() {
         Rectangle r2 = new Rectangle();
-        r2.setWidth(40);
-        r2.setHeight(70);
-        r2.getStyleClass().addAll("filled", "inside");
+        r2.setWidth(R2_WIDTH);
+        r2.setHeight(R2_HEIGHT);
+        r2.getStyleClass().addAll(FILLED, INSIDE);
         return r2;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     /**
+     * Create rectangle with train image
      *
      * @return a Rectangle with "train-image"
      */
+
     private static Rectangle rTrainImage() {
         Rectangle r3 = new Rectangle();
-        r3.setWidth(40);
-        r3.setHeight(70);
-        r3.getStyleClass().add("train-image");
+        r3.setWidth(R3_WIDTH);
+        r3.setHeight(R3_HEIGHT);
+        r3.getStyleClass().add(TRAIN_IMAGE);
         return r3;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     /**
+     * Create text with the multiplicity of the given card
      *
      * @param state the actual ObservableGameState
-     * @param card a card in the player's hand
+     * @param card  a card in the player's hand
      * @return the Text corresponding to the multiplicity of @card
      */
+
     private static Text blackCounter(ObservableGameState state, Card card) {
         Text blackCounter = new Text();
-        blackCounter.getStyleClass().add("count");
+        blackCounter.getStyleClass().add(COUNT);
 
         ReadOnlyIntegerProperty count = state.cardMultiplicity(card);
 
@@ -214,62 +246,73 @@ class DecksViewCreator {
         return blackCounter;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     /**
-     * adds the Rectangles corresponding to wagons and locomotives images to @sp and add @sp to @root
-     * @param sp a  StackPane
+     * Adds the Rectangles corresponding to wagons and locomotives images to @sp and add @sp to @root
+     *
+     * @param sp   a  StackPane
      * @param root a Vbox
      */
-    private static void addWagonLoco(StackPane sp, VBox root) {
 
+    private static void addWagonLoco(StackPane sp, VBox root) {
         Rectangle r1 = new Rectangle();
-        r1.setWidth(60);
-        r1.setHeight(90);
-        r1.getStyleClass().add("outside");
+        r1.setWidth(R1_WIDTH);
+        r1.setHeight(R1_HEIGHT);
+        r1.getStyleClass().add(OUTSIDE);
 
         Rectangle r2 = new Rectangle();
-        r2.setWidth(40);
-        r2.setHeight(70);
-        r2.getStyleClass().addAll("filled", "inside");
+        r2.setWidth(R2_WIDTH);
+        r2.setHeight(R2_HEIGHT);
+        r2.getStyleClass().addAll(FILLED, INSIDE);
 
         Rectangle r3 = new Rectangle();
-        r3.setWidth(40);
-        r3.setHeight(70);
-        r3.getStyleClass().add("train-image");
+        r3.setWidth(R3_WIDTH);
+        r3.setHeight(R3_HEIGHT);
+        r3.getStyleClass().add(TRAIN_IMAGE);
 
         sp.getChildren().addAll(r1, r2, r3);
         root.getChildren().add(sp);
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     /**
+     * Create a button with a given name
      *
-     * @param name the button's name
+     * @param name    the button's name
      * @param binding the property of the button's gauge
      * @return a new gauged Button
      */
+
     private static Button createButton(String name, IntegerBinding binding) {
 
         Button button = new Button(name);
-        button.getStyleClass().add("gauged");
+        button.getStyleClass().add(GAUGED);
 
         Rectangle backCard = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
-        backCard.getStyleClass().add("background");
+        backCard.getStyleClass().add(BACKGROUND);
 
         Rectangle gaugeCard = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
 
         gaugeCard.widthProperty()
                 .bind(binding);
-        gaugeCard.getStyleClass().add("foreground");
+        gaugeCard.getStyleClass().add(FOREGROUND);
 
         button.setGraphic(new Group(backCard, gaugeCard));
 
         return button;
     }
 
+    //----------------------------------------------------------------------------------------------------
+
     /**
+     * Create an percentage
      *
      * @param property any IntegerProperty
      * @return the property into percentage
      */
+
     private static IntegerBinding percentage(IntegerProperty property) {
         return property.multiply(50).divide(100);
     }
