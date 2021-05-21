@@ -55,7 +55,7 @@ class InfoViewCreator {
         VBox playerStats = new VBox();
         playerStats.setId(SET_ID_PLAYER_STATE);
 
-        statistics(observableGameState, name, playerStats);
+        statistics(observableGameState, name, playerStats,id);
 
         TextFlow message = new TextFlow();
         message.setId(SET_ID_GAME_INFO);
@@ -113,21 +113,33 @@ class InfoViewCreator {
      * @param vbox                vbox who contains statistics
      */
 
-    private static void statistics(ObservableGameState observableGameState, Map<PlayerId, String> name, VBox vbox) {
-        for (PlayerId id : PlayerId.ALL) {
+    private static void statistics(ObservableGameState observableGameState, Map<PlayerId, String> name, VBox vbox,PlayerId playerId) {
+
             TextFlow statistic = new TextFlow();
-            statistic.getStyleClass().add(id.name());
+            statistic.getStyleClass().add(playerId.name());
 
             Circle circle = new Circle();
             circle.setRadius(RADIUS_CIRCLE);
             circle.getStyleClass().add(FILLED);
 
+            TextFlow statistic2 = new TextFlow();
+            statistic2.getStyleClass().add(playerId.next().name());
+
+            Circle circle2 = new Circle();
+            circle2.setRadius(RADIUS_CIRCLE);
+            circle2.getStyleClass().add(FILLED);
+
+            Text monText2 = new Text();
+            monText2.textProperty().bind(expression(playerId.next(), observableGameState, name));
+
             Text monText = new Text();
-            monText.textProperty().bind(expression(id, observableGameState, name));
+            monText.textProperty().bind(expression(playerId, observableGameState, name));
 
             statistic.getChildren().addAll(circle, monText);
-            vbox.getChildren().add(statistic);
-        }
+            statistic2.getChildren().addAll(circle2, monText2);
+
+            vbox.getChildren().addAll(statistic,statistic2);
+
     }
 
     //----------------------------------------------------------------------------------------------------
