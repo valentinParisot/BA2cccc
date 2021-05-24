@@ -80,6 +80,7 @@ public class GraphicalPlayer {
         Node infoView = InfoViewCreator.createInfoView(playerId, playerNames, observableGameState, textList);
 
         BorderPane borderPane = new BorderPane(mapView, null, cardsView, handView, infoView);
+
         primaryStage.setScene(new Scene(borderPane));
 
         primaryStage.show();
@@ -203,9 +204,7 @@ public class GraphicalPlayer {
 
         });
 
-        vBox.getChildren().addAll(textFlow, listView, ticketButton);
-        createScene(ticketStage, vBox);
-        ticketStage.show();
+        addAndShow(ticketStage, vBox, textFlow, listView, ticketButton);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -263,10 +262,7 @@ public class GraphicalPlayer {
             chooseCardsHandler.onChooseCards(SortedBag.of(listView.getSelectionModel().getSelectedItem()));
         });
 
-
-        vBox.getChildren().addAll(textFlow, listView, cardButton);
-        createScene(cardStage, vBox);
-        cardStage.show();
+        addAndShow(cardStage, vBox, textFlow, listView, cardButton);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -307,9 +303,7 @@ public class GraphicalPlayer {
                 new TextFieldListCell<>(new CardBagStringConverter()));
 
 
-        vBox.getChildren().addAll(textFlow, listView, cardButton);
-        createScene(additionalStage, vBox);
-        additionalStage.show();
+        addAndShow(additionalStage, vBox, textFlow, listView, cardButton);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -399,5 +393,11 @@ public class GraphicalPlayer {
     }
 
     //----------------------------------------------------------------------------------------------------
+
+    private void addAndShow(Stage stage, VBox vBox, TextFlow textFlow, ListView listView, Button button){
+        vBox.getChildren().addAll(textFlow, listView, button);
+        createScene(stage, vBox);
+        stage.show();
+    }
 
 }
