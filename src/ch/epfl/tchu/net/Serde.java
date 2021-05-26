@@ -20,17 +20,15 @@ public interface Serde<Obj> {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param o object to serialize
      * @return the corresponding String
      */
 
-   String serialize(Obj o);
+    String serialize(Obj o);
 
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
      * @param s String to deserialize
      * @return the object corresponding
      */
@@ -40,14 +38,13 @@ public interface Serde<Obj> {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
-     * @param serialize serializing function
+     * @param serialize   serializing function
      * @param deSerialize deserializing function
-     * @param <Obj> the type of object corresponding to the serde
+     * @param <Obj>       the type of object corresponding to the serde
      * @return a corresponding serde
      */
 
-     static <Obj> Serde<Obj> of(Function<Obj, String> serialize, Function<String, Obj> deSerialize) {
+    static <Obj> Serde<Obj> of(Function<Obj, String> serialize, Function<String, Obj> deSerialize) {
         return new Serde<>() {
             @Override
             public String serialize(Obj o) {
@@ -70,17 +67,16 @@ public interface Serde<Obj> {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
-     * @param list list of <@Obj>
+     * @param list  list of <@Obj>
      * @param <Obj> the type of object corresponding to the serde
      * @return a new serde serializing the index of each @Obj in @list
      */
 
-     static <Obj> Serde<Obj> oneOf(List<Obj> list) {
+    static <Obj> Serde<Obj> oneOf(List<Obj> list) {
         return new Serde<>() {
             @Override
             public String serialize(Obj o) {
-                if (o == null){
+                if (o == null) {
                     return "";
                 }
                 int n = list.indexOf(o);
@@ -89,7 +85,7 @@ public interface Serde<Obj> {
 
             @Override
             public Obj deSerialize(String s) {
-                if (s.equals("")){
+                if (s.equals("")) {
                     return null;
                 }
                 int n = Integer.parseInt(s);
@@ -101,22 +97,21 @@ public interface Serde<Obj> {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
-     * @param serde an existing serde of @Obj
+     * @param serde      an existing serde of @Obj
      * @param separation the separation between every @Obj
-     * @param <Obj> the type of object corresponding to @serde
+     * @param <Obj>      the type of object corresponding to @serde
      * @return a new serde which serialize lists of @Obj with @serde and separate them with @separation
      */
 
-     static <Obj> Serde<List<Obj>> listOf(Serde<Obj> serde, String separation) {
+    static <Obj> Serde<List<Obj>> listOf(Serde<Obj> serde, String separation) {
         return new Serde<>() {
             @Override
             public String serialize(List<Obj> l) {
-                if (l.size() == 0){
+                if (l.size() == 0) {
                     return "";
                 }
                 List<String> list = new ArrayList<>();
-                for(Obj o : l){
+                for (Obj o : l) {
                     list.add(serde.serialize(o));
                 }
                 return String.join(separation, list);
@@ -124,12 +119,12 @@ public interface Serde<Obj> {
 
             @Override
             public List<Obj> deSerialize(String s) {
-                if (s.equals("")){
+                if (s.equals("")) {
                     return new ArrayList<>();
                 }
                 String[] list = s.split(Pattern.quote(separation), -1);
                 List<Obj> obj = new ArrayList<>();
-                for(String string : list){
+                for (String string : list) {
                     obj.add(serde.deSerialize(string));
                 }
                 return obj;
@@ -140,22 +135,21 @@ public interface Serde<Obj> {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     *
-     * @param serde same as listOf
+     * @param serde      same as listOf
      * @param separation same as listOf
-     * @param <Obj> same as listOf
+     * @param <Obj>      same as listOf
      * @return same as listOf but with a SortedBag instead
      */
 
-     static <Obj extends Comparable<Obj>> Serde<SortedBag<Obj>> bagOf(Serde<Obj> serde, String separation) {
+    static <Obj extends Comparable<Obj>> Serde<SortedBag<Obj>> bagOf(Serde<Obj> serde, String separation) {
         return new Serde<>() {
 
             final Serde<List<Obj>> listOf = Serde.listOf(serde, separation);
 
             @Override
             public String serialize(SortedBag<Obj> sb) {
-                if (sb.size() == 0){
-                   return "";
+                if (sb.size() == 0) {
+                    return "";
                 }
                 List<Obj> list = sb.toList();
                 return listOf.serialize(list);
@@ -163,7 +157,7 @@ public interface Serde<Obj> {
 
             @Override
             public SortedBag<Obj> deSerialize(String s) {
-                if (s.equals("")){
+                if (s.isEmpty()) {//ajouter is empty
                     return SortedBag.of();
                 }
                 List<Obj> list = listOf.deSerialize(s);

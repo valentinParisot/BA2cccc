@@ -56,7 +56,7 @@ class InfoViewCreator {
         VBox playerStats = new VBox();
         playerStats.setId(SET_ID_PLAYER_STATE);
 
-        statistics(observableGameState, name, playerStats,id);
+        statistics(observableGameState, name, playerStats, id);
 
         TextFlow message = new TextFlow();
         message.setId(SET_ID_GAME_INFO);
@@ -114,8 +114,8 @@ class InfoViewCreator {
      * @param vbox                vbox who contains statistics
      */
 
-    private static void statistics(ObservableGameState observableGameState, Map<PlayerId, String> name, VBox vbox,PlayerId playerId) {
-        for (PlayerId id: PlayerId.ALL) {
+    private static void statistics(ObservableGameState observableGameState, Map<PlayerId, String> name, VBox vbox, PlayerId playerId) {
+        for (PlayerId id : PlayerId.ALL) {
             TextFlow statistic = new TextFlow();
             statistic.getStyleClass().add(id.name());
 

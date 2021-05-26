@@ -36,7 +36,7 @@ public final class Serdes {
 
     public static final Serde<String> STRING_SERDE = Serde.of(
             s -> Base64.getEncoder().encodeToString(s.getBytes(StandardCharsets.UTF_8)),
-            s -> new String(Base64.getDecoder().decode(s),StandardCharsets.UTF_8));
+            s -> new String(Base64.getDecoder().decode(s), StandardCharsets.UTF_8));
 
     //----------------------------------------------------------------------------------------------------
 
@@ -130,15 +130,15 @@ public final class Serdes {
                         LIST_OF_STRING_SERDE.serialize(List.of()) :
                         PLAYER_ID_SERDE.serialize(publicGameState.lastPlayer());
 
-                    sj
-                            .add(INT_SERDE.serialize(publicGameState.ticketsCount()))
-                            .add(PUBLIC_CARD_STATE_SERDE.serialize(publicGameState.cardState()))
-                            .add(PLAYER_ID_SERDE.serialize(publicGameState.currentPlayerId()))
-                            .add(PUBLIC_PLAYER_STATE_SERDE.serialize(publicGameState.playerState(PLAYER_1)))
-                            .add(PUBLIC_PLAYER_STATE_SERDE.serialize(publicGameState.playerState(PLAYER_2)))
-                            .add(lastPlayer);
+                sj
+                        .add(INT_SERDE.serialize(publicGameState.ticketsCount()))
+                        .add(PUBLIC_CARD_STATE_SERDE.serialize(publicGameState.cardState()))
+                        .add(PLAYER_ID_SERDE.serialize(publicGameState.currentPlayerId()))
+                        .add(PUBLIC_PLAYER_STATE_SERDE.serialize(publicGameState.playerState(PLAYER_1)))
+                        .add(PUBLIC_PLAYER_STATE_SERDE.serialize(publicGameState.playerState(PLAYER_2)))
+                        .add(lastPlayer);
 
-                    return sj.toString();
+                return sj.toString();
 
             }
             , s -> {
@@ -157,14 +157,13 @@ public final class Serdes {
                     i++;
                 }
 
-                if(tab[5].equals("")){
+                if (tab[5].equals("")) {
                     return new PublicGameState(INT_SERDE.deSerialize(tab[0]),
                             PUBLIC_CARD_STATE_SERDE.deSerialize(tab[1]),
                             PLAYER_ID_SERDE.deSerialize(tab[2]),// PLAYER_ID_SERDE.deSerialize(tab[2]),
                             playerStateMap,
                             null);
-                }
-                else {
+                } else {
 
                     return new PublicGameState(INT_SERDE.deSerialize(tab[0]),
                             PUBLIC_CARD_STATE_SERDE.deSerialize(tab[1]),
@@ -175,24 +174,24 @@ public final class Serdes {
             }
 
 
-                /**
+            /**
 
-                String[] tab = s.split(Pattern.quote(DOUBLE_POINT), -1);
+             String[] tab = s.split(Pattern.quote(DOUBLE_POINT), -1);
 
-                PublicPlayerState publicPlayerState1 = PUBLIC_PLAYER_STATE_SERDE.deSerialize(tab[3]);
-                PublicPlayerState publicPlayerState2 = PUBLIC_PLAYER_STATE_SERDE.deSerialize(tab[4]);
+             PublicPlayerState publicPlayerState1 = PUBLIC_PLAYER_STATE_SERDE.deSerialize(tab[3]);
+             PublicPlayerState publicPlayerState2 = PUBLIC_PLAYER_STATE_SERDE.deSerialize(tab[4]);
 
-                PlayerId playerId = tab[5].equals("") ?
-                        null :
-                        PLAYER_ID_SERDE.deSerialize(tab[5]);
+             PlayerId playerId = tab[5].equals("") ?
+             null :
+             PLAYER_ID_SERDE.deSerialize(tab[5]);
 
-                    return new PublicGameState(INT_SERDE.deSerialize(tab[0]),
-                            PUBLIC_CARD_STATE_SERDE.deSerialize(tab[1]),
-                            PLAYER_ID_SERDE.deSerialize(tab[2]),
-                            Map.of(PLAYER_1,publicPlayerState1,
-                                    PLAYER_2,publicPlayerState2),
-                            playerId);
-            }**/
+             return new PublicGameState(INT_SERDE.deSerialize(tab[0]),
+             PUBLIC_CARD_STATE_SERDE.deSerialize(tab[1]),
+             PLAYER_ID_SERDE.deSerialize(tab[2]),
+             Map.of(PLAYER_1,publicPlayerState1,
+             PLAYER_2,publicPlayerState2),
+             playerId);
+             }**/
     );
     //----------------------------------------------------------------------------------------------------
 }

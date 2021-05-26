@@ -6,9 +6,7 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static ch.epfl.tchu.game.Constants.*;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
@@ -123,7 +121,18 @@ public class ObservableGameState {
             } else {
                 routeOwner.get(route).set(null);
             }
-            canClaimRoute.get(route).set(claimable(route));
+            //canClaimRoute.get(route).set(claimable(route));
+        }
+
+        Set<List<Station>> se = new HashSet<>();
+        for(Route r : newGameState.claimedRoutes()){
+            se.add(r.stations());
+        }
+        for (Route r: canClaimRoute.keySet()) {
+
+            canClaimRoute.get(r).setValue((newGameState.currentPlayerId().equals(playerId)) &&
+                    (playerState.canClaimRoute(r)) && !(se.contains(r.stations())));
+
         }
 
         for (PlayerId id : PlayerId.ALL) {

@@ -220,13 +220,11 @@ public class GraphicalPlayer {
 
     public void drawCard(ActionHandlers.DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
-        if(observableGameState.canDrawCards()) {
             drawCardHandlerOP.set((i) -> {
                         resetHandlers();
                         drawCardHandler.onDrawCard(i);
                     }
             );
-        }
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -395,7 +393,7 @@ public class GraphicalPlayer {
 
     //----------------------------------------------------------------------------------------------------
 
-    private void addAndShow(Stage stage, VBox vBox, TextFlow textFlow, ListView listView, Button button){
+    private void addAndShow(Stage stage, VBox vBox, TextFlow textFlow, ListView listView, Button button) {
         vBox.getChildren().addAll(textFlow, listView, button);
         createScene(stage, vBox);
         stage.show();
