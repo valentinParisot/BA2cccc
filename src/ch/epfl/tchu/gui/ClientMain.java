@@ -8,12 +8,18 @@ import java.util.List;
 
 public class ClientMain extends Application {
 
+    //----------------------------------------------------------------------------------------------------
+
     private static final String HOST = "localhost";
     private static final int PORT = 5108;
+
+    //----------------------------------------------------------------------------------------------------
 
     public static void main(String[] args) {
         launch(args);
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     /**
      * start the server to play local or online (run after the server)
@@ -30,4 +36,7 @@ public class ClientMain extends Application {
         RemotePlayerClient client = new RemotePlayerClient(new GraphicalPlayerAdapter(), host, port);
         new Thread(client::run).start();
     }
+
+    //----------------------------------------------------------------------------------------------------
+
 }

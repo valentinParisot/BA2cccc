@@ -20,12 +20,24 @@ import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
 
 public class ServerMain extends Application {
 
+    //----------------------------------------------------------------------------------------------------
+
     private static final String FIRST = "Ada";
     private static final String SECOND = "Charles";
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     * Launch the game
+     *
+     * @param args argument
+     */
 
     public static void main(String[] args) {
         launch(args);
     }
+
+    //----------------------------------------------------------------------------------------------------
 
     /**
      * starts the server an calls Game.play()
@@ -56,4 +68,6 @@ public class ServerMain extends Application {
             e.printStackTrace();
         }
     }
+
+    //----------------------------------------------------------------------------------------------------
 }

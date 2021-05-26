@@ -121,14 +121,13 @@ public class ObservableGameState {
             } else {
                 routeOwner.get(route).set(null);
             }
-            //canClaimRoute.get(route).set(claimable(route));
         }
 
         Set<List<Station>> se = new HashSet<>();
-        for(Route r : newGameState.claimedRoutes()){
+        for (Route r : newGameState.claimedRoutes()) {
             se.add(r.stations());
         }
-        for (Route r: canClaimRoute.keySet()) {
+        for (Route r : canClaimRoute.keySet()) {
 
             canClaimRoute.get(r).setValue((newGameState.currentPlayerId().equals(playerId)) &&
                     (playerState.canClaimRoute(r)) && !(se.contains(r.stations())));

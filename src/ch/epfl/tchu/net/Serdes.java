@@ -127,7 +127,7 @@ public final class Serdes {
             publicGameState -> {
                 StringJoiner sj = new StringJoiner(DOUBLE_POINT);
                 String lastPlayer = publicGameState.lastPlayer() == null ?
-                        LIST_OF_STRING_SERDE.serialize(List.of()) :
+                        STRING_SERDE.serialize("") :
                         PLAYER_ID_SERDE.serialize(publicGameState.lastPlayer());
 
                 sj
@@ -145,53 +145,20 @@ public final class Serdes {
 
                 String[] tab = s.split(Pattern.quote(DOUBLE_POINT), -1);
 
-                Map<PlayerId, PublicPlayerState> playerStateMap = new HashMap<>();
+                PublicPlayerState publicPlayerState1 = PUBLIC_PLAYER_STATE_SERDE.deSerialize(tab[3]);
+                PublicPlayerState publicPlayerState2 = PUBLIC_PLAYER_STATE_SERDE.deSerialize(tab[4]);
 
+                PlayerId playerId = tab[5].equals("") ?
+                        null :
+                        PLAYER_ID_SERDE.deSerialize(tab[5]);
 
-                int i = 3;
-                for (PlayerId id : PlayerId.ALL) {
-
-                    playerStateMap.put(id,
-                            PUBLIC_PLAYER_STATE_SERDE.deSerialize(tab[i]));
-                    //deser les 2 ds des vsar et add ds une map avec player 1 et 2
-                    i++;
-                }
-
-                if (tab[5].equals("")) {
-                    return new PublicGameState(INT_SERDE.deSerialize(tab[0]),
-                            PUBLIC_CARD_STATE_SERDE.deSerialize(tab[1]),
-                            PLAYER_ID_SERDE.deSerialize(tab[2]),// PLAYER_ID_SERDE.deSerialize(tab[2]),
-                            playerStateMap,
-                            null);
-                } else {
-
-                    return new PublicGameState(INT_SERDE.deSerialize(tab[0]),
-                            PUBLIC_CARD_STATE_SERDE.deSerialize(tab[1]),
-                            PLAYER_ID_SERDE.deSerialize(tab[2]),
-                            playerStateMap,
-                            PLAYER_ID_SERDE.deSerialize(tab[5]));
-                }
+                return new PublicGameState(INT_SERDE.deSerialize(tab[0]),
+                        PUBLIC_CARD_STATE_SERDE.deSerialize(tab[1]),
+                        PLAYER_ID_SERDE.deSerialize(tab[2]),
+                        Map.of(PLAYER_1,publicPlayerState1,
+                                PLAYER_2,publicPlayerState2),
+                        playerId);
             }
-
-
-            /**
-
-             String[] tab = s.split(Pattern.quote(DOUBLE_POINT), -1);
-
-             PublicPlayerState publicPlayerState1 = PUBLIC_PLAYER_STATE_SERDE.deSerialize(tab[3]);
-             PublicPlayerState publicPlayerState2 = PUBLIC_PLAYER_STATE_SERDE.deSerialize(tab[4]);
-
-             PlayerId playerId = tab[5].equals("") ?
-             null :
-             PLAYER_ID_SERDE.deSerialize(tab[5]);
-
-             return new PublicGameState(INT_SERDE.deSerialize(tab[0]),
-             PUBLIC_CARD_STATE_SERDE.deSerialize(tab[1]),
-             PLAYER_ID_SERDE.deSerialize(tab[2]),
-             Map.of(PLAYER_1,publicPlayerState1,
-             PLAYER_2,publicPlayerState2),
-             playerId);
-             }**/
     );
     //----------------------------------------------------------------------------------------------------
 }
