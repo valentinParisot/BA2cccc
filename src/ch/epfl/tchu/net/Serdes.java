@@ -126,20 +126,9 @@ public final class Serdes {
     public static final Serde<PublicGameState> PUBLIC_GAME_STATE_SERDE = Serde.of(
             publicGameState -> {
                 StringJoiner sj = new StringJoiner(DOUBLE_POINT);
-
-                if((publicGameState.lastPlayer() == null)) {
-
-                    sj
-                            .add(INT_SERDE.serialize(publicGameState.ticketsCount()))
-                            .add(PUBLIC_CARD_STATE_SERDE.serialize(publicGameState.cardState()))
-                            .add(PLAYER_ID_SERDE.serialize(publicGameState.currentPlayerId()))
-                            .add(PUBLIC_PLAYER_STATE_SERDE.serialize(publicGameState.playerState(PLAYER_1)))
-                            .add(PUBLIC_PLAYER_STATE_SERDE.serialize(publicGameState.playerState(PLAYER_2)))
-                            .add(LIST_OF_STRING_SERDE.serialize(List.of()));
-
-                    return sj.toString();
-
-                }else
+                String lastPlayer = publicGameState.lastPlayer() == null ?
+                        LIST_OF_STRING_SERDE.serialize(List.of()) :
+                        PLAYER_ID_SERDE.serialize(publicGameState.lastPlayer());
 
                     sj
                             .add(INT_SERDE.serialize(publicGameState.ticketsCount()))
@@ -147,13 +136,13 @@ public final class Serdes {
                             .add(PLAYER_ID_SERDE.serialize(publicGameState.currentPlayerId()))
                             .add(PUBLIC_PLAYER_STATE_SERDE.serialize(publicGameState.playerState(PLAYER_1)))
                             .add(PUBLIC_PLAYER_STATE_SERDE.serialize(publicGameState.playerState(PLAYER_2)))
-                            .add(PLAYER_ID_SERDE.serialize(publicGameState.lastPlayer()));
+                            .add(lastPlayer);
 
                     return sj.toString();
+
             }
             , s -> {
 
-                //demander a sara
                 String[] tab = s.split(Pattern.quote(DOUBLE_POINT), -1);
 
                 Map<PlayerId, PublicPlayerState> playerStateMap = new HashMap<>();
@@ -184,6 +173,26 @@ public final class Serdes {
                             PLAYER_ID_SERDE.deSerialize(tab[5]));
                 }
             }
+
+
+                /**
+
+                String[] tab = s.split(Pattern.quote(DOUBLE_POINT), -1);
+
+                PublicPlayerState publicPlayerState1 = PUBLIC_PLAYER_STATE_SERDE.deSerialize(tab[3]);
+                PublicPlayerState publicPlayerState2 = PUBLIC_PLAYER_STATE_SERDE.deSerialize(tab[4]);
+
+                PlayerId playerId = tab[5].equals("") ?
+                        null :
+                        PLAYER_ID_SERDE.deSerialize(tab[5]);
+
+                    return new PublicGameState(INT_SERDE.deSerialize(tab[0]),
+                            PUBLIC_CARD_STATE_SERDE.deSerialize(tab[1]),
+                            PLAYER_ID_SERDE.deSerialize(tab[2]),
+                            Map.of(PLAYER_1,publicPlayerState1,
+                                    PLAYER_2,publicPlayerState2),
+                            playerId);
+            }**/
     );
     //----------------------------------------------------------------------------------------------------
 }

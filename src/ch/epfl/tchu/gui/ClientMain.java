@@ -4,36 +4,30 @@ import ch.epfl.tchu.net.RemotePlayerClient;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 public class ClientMain extends Application {
+
+    private static final String HOST = "localhost";
+    private static final int PORT = 5108;
 
     public static void main(String[] args) {
         launch(args);
     }
 
-
     /**
-     * sarts the server to play local or online (run after the server)
+     * start the server to play local or online (run after the server)
+     *
      * @param stage not used
      */
     @Override
     public void start(Stage stage) {
+        List<String> arg = this.getParameters().getRaw();
 
-        GraphicalPlayerAdapter player = new GraphicalPlayerAdapter();
+        String host = arg.size() >= 1 ? arg.get(0) : HOST;
+        int port = arg.size() == 2 ? Integer.parseInt(arg.get(1)) : PORT;
 
-        String name = "localhost";
-        int port = 5108;
-
-        if (getParameters().getRaw().size() == 1) {
-
-            name = getParameters().getRaw().get(0);
-
-        } else if (getParameters().getRaw().size() > 1) {
-            name = getParameters().getRaw().get(0);
-            port = Integer.parseInt(getParameters().getRaw().get(1));
-        }
-
-        RemotePlayerClient client = new RemotePlayerClient(player, name, port);
+        RemotePlayerClient client = new RemotePlayerClient(new GraphicalPlayerAdapter(), host, port);
         new Thread(client::run).start();
-
     }
 }

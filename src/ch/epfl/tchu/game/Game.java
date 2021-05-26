@@ -148,13 +148,23 @@ public final class Game {
 
                         sendInfo(currentInfo.drewAdditionalCards(drawnCards, addCardsCount), players);
 
-                        if (addCardsCount >= 1 && !gameState
-                                .currentPlayerState()
-                                .possibleAdditionalCards(addCardsCount, initialClaimCards).isEmpty()) {
+                        // &&  gameState
+                        //                                .currentPlayerState()
+                        //                                .possibleAdditionalCards(addCardsCount, initialClaimCards).size() >=  addCardsCount
+                        if (addCardsCount >= 1 ){
 
-                            List<SortedBag<Card>> possibleAdditionalCards = gameState
+                                List<SortedBag<Card>> possibleAdditionalCards = gameState
                                     .currentPlayerState()
                                     .possibleAdditionalCards(addCardsCount, initialClaimCards);
+
+
+
+                            if(possibleAdditionalCards.size() == 0){
+                                sendInfo(currentInfo.didNotClaimRoute(route), players);
+                                gameState = gameState.withMoreDiscardedCards(drawnCards.union(initialClaimCards));
+                                gameState = gameState.withMoreDiscardedCards(drawnCards.union(drawnCards));
+                                break;
+                            }
 
                             SortedBag<Card> selectedAddCards = current.chooseAdditionalCards(possibleAdditionalCards);
 

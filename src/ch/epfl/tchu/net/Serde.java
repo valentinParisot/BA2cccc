@@ -25,7 +25,7 @@ public interface Serde<Obj> {
      * @return the corresponding String
      */
 
-    public abstract String serialize(Obj o);
+   String serialize(Obj o);
 
     //----------------------------------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ public interface Serde<Obj> {
      * @return the object corresponding
      */
 
-    public abstract Obj deSerialize(String s);
+    Obj deSerialize(String s);
 
     //----------------------------------------------------------------------------------------------------
 
@@ -47,7 +47,7 @@ public interface Serde<Obj> {
      * @return a corresponding serde
      */
 
-    public static <Obj> Serde<Obj> of(Function<Obj, String> serialize, Function<String, Obj> deSerialize) {
+     static <Obj> Serde<Obj> of(Function<Obj, String> serialize, Function<String, Obj> deSerialize) {
         return new Serde<>() {
             @Override
             public String serialize(Obj o) {
@@ -76,7 +76,7 @@ public interface Serde<Obj> {
      * @return a new serde serializing the index of each @Obj in @list
      */
 
-    public static <Obj> Serde<Obj> oneOf(List<Obj> list) {
+     static <Obj> Serde<Obj> oneOf(List<Obj> list) {
         return new Serde<>() {
             @Override
             public String serialize(Obj o) {
@@ -108,7 +108,7 @@ public interface Serde<Obj> {
      * @return a new serde which serialize lists of @Obj with @serde and separate them with @separation
      */
 
-    public static <Obj> Serde<List<Obj>> listOf(Serde<Obj> serde, String separation) {
+     static <Obj> Serde<List<Obj>> listOf(Serde<Obj> serde, String separation) {
         return new Serde<>() {
             @Override
             public String serialize(List<Obj> l) {
@@ -147,15 +147,15 @@ public interface Serde<Obj> {
      * @return same as listOf but with a SortedBag instead
      */
 
-    public static <Obj extends Comparable<Obj>> Serde<SortedBag<Obj>> bagOf(Serde<Obj> serde, String separation) {
+     static <Obj extends Comparable<Obj>> Serde<SortedBag<Obj>> bagOf(Serde<Obj> serde, String separation) {
         return new Serde<>() {
 
-            Serde<List<Obj>> listOf = Serde.listOf(serde, separation);
+            final Serde<List<Obj>> listOf = Serde.listOf(serde, separation);
 
             @Override
             public String serialize(SortedBag<Obj> sb) {
                 if (sb.size() == 0){
-                    return "";
+                   return "";
                 }
                 List<Obj> list = sb.toList();
                 return listOf.serialize(list);

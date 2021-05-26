@@ -220,12 +220,13 @@ public class GraphicalPlayer {
 
     public void drawCard(ActionHandlers.DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
-
-        drawCardHandlerOP.set((i) -> {
-                    resetHandlers();
-                    drawCardHandler.onDrawCard(i);
-                }
-        );
+        if(observableGameState.canDrawCards()) {
+            drawCardHandlerOP.set((i) -> {
+                        resetHandlers();
+                        drawCardHandler.onDrawCard(i);
+                    }
+            );
+        }
     }
 
     //----------------------------------------------------------------------------------------------------
