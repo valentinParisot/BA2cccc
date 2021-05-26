@@ -20,6 +20,8 @@ public interface Serde<Obj> {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * Serialize the given object
+     *
      * @param o object to serialize
      * @return the corresponding String
      */
@@ -29,6 +31,8 @@ public interface Serde<Obj> {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * deserialize the given string
+     *
      * @param s String to deserialize
      * @return the object corresponding
      */
@@ -38,6 +42,8 @@ public interface Serde<Obj> {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * create a serde of the given objects
+     *
      * @param serialize   serializing function
      * @param deSerialize deserializing function
      * @param <Obj>       the type of object corresponding to the serde
@@ -63,6 +69,8 @@ public interface Serde<Obj> {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * create a serde of the given object
+     *
      * @param list  list of <@Obj>
      * @param <Obj> the type of object corresponding to the serde
      * @return a new serde serializing the index of each @Obj in @list
@@ -89,6 +97,8 @@ public interface Serde<Obj> {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * create a serde of the given object
+     *
      * @param serde      an existing serde of @Obj
      * @param separation the separation between every @Obj
      * @param <Obj>      the type of object corresponding to @serde
@@ -125,6 +135,8 @@ public interface Serde<Obj> {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * create a serde of the given object
+     *
      * @param serde      same as listOf
      * @param separation same as listOf
      * @param <Obj>      same as listOf

@@ -13,7 +13,7 @@ import java.util.StringJoiner;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
 /**
- * InfoViewCreator
+ * RemotePlayerProxy
  * class
  *
  * @author Valentin Parisot (326658)
@@ -24,8 +24,8 @@ public class RemotePlayerProxy implements Player {
 
     //----------------------------------------------------------------------------------------------------
 
-    private final BufferedReader r;
-    private final BufferedWriter w;
+    private final BufferedReader bufferedReader;
+    private final BufferedWriter bufferedWriter;
     private final static String SPACE = " ";
     private final static String NOTHING = "";
 
@@ -40,11 +40,11 @@ public class RemotePlayerProxy implements Player {
      */
 
     public RemotePlayerProxy(Socket socket) throws IOException {
-        this.r =
+        this.bufferedReader =
                 new BufferedReader(
                         new InputStreamReader(socket.getInputStream(),
                                 US_ASCII));
-        this.w =
+        this.bufferedWriter =
                 new BufferedWriter(
                         new OutputStreamWriter(socket.getOutputStream(),
                                 US_ASCII));
@@ -260,9 +260,9 @@ public class RemotePlayerProxy implements Player {
                     ? (id.name())
                     : (id.name() + SPACE + serialized);
 
-            w.write(message);
-            w.write('\n');
-            w.flush();
+            bufferedWriter.write(message);
+            bufferedWriter.write('\n');
+            bufferedWriter.flush();
 
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -279,7 +279,7 @@ public class RemotePlayerProxy implements Player {
 
     private String receive() {
         try {
-            return r.readLine();
+            return bufferedReader.readLine();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

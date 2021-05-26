@@ -220,11 +220,11 @@ public class GraphicalPlayer {
 
     public void drawCard(ActionHandlers.DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
-            drawCardHandlerOP.set((i) -> {
-                        resetHandlers();
-                        drawCardHandler.onDrawCard(i);
-                    }
-            );
+        drawCardHandlerOP.set((i) -> {
+                    resetHandlers();
+                    drawCardHandler.onDrawCard(i);
+                }
+        );
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -393,10 +393,21 @@ public class GraphicalPlayer {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * Add all given items in the vbox and show the vbox
+     *
+     * @param stage    given stage
+     * @param vBox     vbox to show
+     * @param textFlow given text flow
+     * @param listView given list view
+     * @param button   given button
+     */
     private void addAndShow(Stage stage, VBox vBox, TextFlow textFlow, ListView listView, Button button) {
         vBox.getChildren().addAll(textFlow, listView, button);
         createScene(stage, vBox);
         stage.show();
     }
+
+    //----------------------------------------------------------------------------------------------------
 
 }

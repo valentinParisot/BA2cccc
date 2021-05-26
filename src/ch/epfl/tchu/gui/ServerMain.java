@@ -18,6 +18,14 @@ import java.util.Random;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
 
+/**
+ * ServerMain
+ * class
+ *
+ * @author Valentin Parisot (326658)
+ * @author Hugo Jeannin (329220)
+ */
+
 public class ServerMain extends Application {
 
     //----------------------------------------------------------------------------------------------------
@@ -40,7 +48,7 @@ public class ServerMain extends Application {
     //----------------------------------------------------------------------------------------------------
 
     /**
-     * starts the server an calls Game.play()
+     * starts the server and initiate players
      *
      * @param stage never used
      */
