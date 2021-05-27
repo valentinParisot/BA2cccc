@@ -12,6 +12,9 @@ import java.util.List;
 
 public enum MessageId {
 
+    //----------------------------------------------------------------------------------------------------
+
+
     INIT_PLAYERS,
     RECEIVE_INFO,
     UPDATE_STATE,
@@ -25,6 +28,21 @@ public enum MessageId {
     CHOOSE_ADDITIONAL_CARDS;
 
 
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     * List of message Id
+     */
+
     public static final List<MessageId> ALL = List.of(values());
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     * The size of all message
+     */
+
     public static final int COUNT = ALL.size();
+
+    //----------------------------------------------------------------------------------------------------
 }

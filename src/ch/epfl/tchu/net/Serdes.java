@@ -22,11 +22,19 @@ public final class Serdes {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * Separator for the following serdes
+     */
+
     private static final String COMMA = ",";
     private static final String SEMICOLON = ";";
     private static final String DOUBLE_POINT = ":";
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     * Create serde of Integer
+     */
 
     public static final Serde<Integer> INT_SERDE = Serde.of(
             i -> Integer.toString(i),
@@ -34,11 +42,24 @@ public final class Serdes {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * Create serde of String
+     */
+
     public static final Serde<String> STRING_SERDE = Serde.of(
             s -> Base64.getEncoder().encodeToString(s.getBytes(StandardCharsets.UTF_8)),
             s -> new String(Base64.getDecoder().decode(s), StandardCharsets.UTF_8));
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     * Create serde the different items in game
+     * -Serde of Player Id
+     * -Serde of TurnKind
+     * -Serde of Card
+     * -Serde of Route
+     * -Serde of Ticket
+     */
 
     public static final Serde<PlayerId> PLAYER_ID_SERDE = Serde.oneOf(PlayerId.ALL);
     public static final Serde<Player.TurnKind> TURN_KIND_SERDE = Serde.oneOf(Player.TurnKind.ALL);
@@ -48,6 +69,15 @@ public final class Serdes {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * Create serde the different useful objects in game
+     * -Serde of List of String
+     * -Serde of List of Card
+     * -Serde of List of Route
+     * -Serde of Sorted bag of Card
+     * -Serde of List of Sorted bag of Card
+     */
+
     public static final Serde<List<String>> LIST_OF_STRING_SERDE = Serde.listOf(STRING_SERDE, COMMA);
     public static final Serde<List<Card>> LIST_OF_CARD_SERDE = Serde.listOf(CARD_SERDE, COMMA);
     public static final Serde<List<Route>> LIST_OF_ROUTE_SERDE = Serde.listOf(ROUTE_SERDE, COMMA);
@@ -56,6 +86,12 @@ public final class Serdes {
     public static final Serde<List<SortedBag<Card>>> LIST_OF_SORTED_BAG_CARD_SERDE = Serde.listOf(BAG_OF_CARD_SERDE, SEMICOLON);
 
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     * Create serde of PublicCardState
+     * Serialize a publicCardState
+     * Deserialize a String
+     */
 
     public static final Serde<PublicCardState> PUBLIC_CARD_STATE_SERDE = Serde.of(
             publicCardState -> {
@@ -80,6 +116,12 @@ public final class Serdes {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * Create serde of PublicPlayerState
+     * Serialize a PublicPlayerState
+     * Deserialize a String
+     */
+
     public static final Serde<PublicPlayerState> PUBLIC_PLAYER_STATE_SERDE = Serde.of(
             publicPlayerState -> {
                 StringJoiner sj = new StringJoiner(SEMICOLON);
@@ -102,6 +144,12 @@ public final class Serdes {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * Create serde of PlayerState
+     * Serialize a PlayerState
+     * Deserialize a String
+     */
+
     public static final Serde<PlayerState> PLAYER_STATE_SERDE = Serde.of(
             playerState -> {
                 StringJoiner sj = new StringJoiner(SEMICOLON);
@@ -122,6 +170,12 @@ public final class Serdes {
             }
     );
     //----------------------------------------------------------------------------------------------------
+
+    /**
+     * Create serde of PublicGameState
+     * Serialize a PublicGameState
+     * Deserialize a String
+     */
 
     public static final Serde<PublicGameState> PUBLIC_GAME_STATE_SERDE = Serde.of(
             publicGameState -> {
@@ -155,8 +209,8 @@ public final class Serdes {
                 return new PublicGameState(INT_SERDE.deSerialize(tab[0]),
                         PUBLIC_CARD_STATE_SERDE.deSerialize(tab[1]),
                         PLAYER_ID_SERDE.deSerialize(tab[2]),
-                        Map.of(PLAYER_1,publicPlayerState1,
-                                PLAYER_2,publicPlayerState2),
+                        Map.of(PLAYER_1, publicPlayerState1,
+                                PLAYER_2, publicPlayerState2),
                         playerId);
             }
     );

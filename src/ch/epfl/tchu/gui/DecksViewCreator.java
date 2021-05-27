@@ -25,7 +25,7 @@ import javafx.scene.text.Text;
  * @author Hugo Jeannin (329220)
  */
 
-class DecksViewCreator {
+ class DecksViewCreator {
 
     //----------------------------------------------------------------------------------------------------
 

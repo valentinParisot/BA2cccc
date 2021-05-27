@@ -116,38 +116,6 @@ public class ObservableGameState {
     }
 
     //----------------------------------------------------------------------------------------------------
-
-    /**
-     * Instantiates the faceUpCards to null
-     *
-     * @return a null list
-     */
-
-    private static List<ObjectProperty<Card>> createFaceUpCards() {
-        List<ObjectProperty<Card>> list = new ArrayList<>();
-        for (int i = 0; i < FACE_UP_CARDS_COUNT; i++) {
-            list.add(new SimpleObjectProperty<>());
-        }
-        return list;
-    }
-
-    /**
-     * Instantiates the multiplicity of each card in the player's hand to 0
-     *
-     * @return a null map
-     */
-
-    private static HashMap<Card, IntegerProperty> createCardMultiplicity() {
-
-        HashMap<Card, IntegerProperty> map = new HashMap<>();
-
-        for (Card card : Card.ALL) {
-            map.put(card, new SimpleIntegerProperty());
-        }
-        return map;
-    }
-
-    //----------------------------------------------------------------------------------------------------
     //----------------------------------Public State of the game------------------------------------------
     //----------------------------------------------------------------------------------------------------
 
@@ -275,7 +243,7 @@ public class ObservableGameState {
 
 
     //----------------------------------------------------------------------------------------------------
-    //-----------------------------------------Other methods----------------------------------------------
+    //----------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------
 
     /**
@@ -310,6 +278,40 @@ public class ObservableGameState {
     //----------------------------------------------------------------------------------------------------
 
     /**
+     * Instantiates the faceUpCards to null
+     *
+     * @return a null list
+     */
+
+    private static List<ObjectProperty<Card>> createFaceUpCards() {
+        List<ObjectProperty<Card>> list = new ArrayList<>();
+        for (int i = 0; i < FACE_UP_CARDS_COUNT; i++) {
+            list.add(new SimpleObjectProperty<>());
+        }
+        return list;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
+     * Instantiates the multiplicity of each card in the player's hand to 0
+     *
+     * @return a null map
+     */
+
+    private static HashMap<Card, IntegerProperty> createCardMultiplicity() {
+
+        HashMap<Card, IntegerProperty> map = new HashMap<>();
+
+        for (Card card : Card.ALL) {
+            map.put(card, new SimpleIntegerProperty());
+        }
+        return map;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
+    /**
      * Create new map with the generics given
      *
      * @param OO  Given list of the generic types
@@ -318,6 +320,7 @@ public class ObservableGameState {
      * @param <P> Value
      * @return new HashMap with the given generic types
      */
+
     private <O, P> Map<O, P> MapCreator(List<O> OO, Supplier<P> PP) {
         Map<O, P> hash = new HashMap<>();
         for (O o : OO) {
@@ -420,7 +423,7 @@ public class ObservableGameState {
      * @param newPlayerState newPlayerState
      */
 
-    public void CardHandler(PlayerState newPlayerState) {
+    private void CardHandler(PlayerState newPlayerState) {
         for (Card card : Card.ALL) {
             cardMultiplicity.get(card).set(newPlayerState.cards().countOf(card));
         }
