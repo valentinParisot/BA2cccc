@@ -17,6 +17,9 @@ public interface ActionHandlers {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * handler used to draw a ticket
+     */
     @FunctionalInterface
     interface DrawTicketsHandler {
 
@@ -29,6 +32,9 @@ public interface ActionHandlers {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * handler used to draw a ticket
+     */
     @FunctionalInterface
     interface DrawCardHandler {
 
@@ -43,6 +49,9 @@ public interface ActionHandlers {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * handler used when claiming a route
+     */
     @FunctionalInterface
     interface ClaimRouteHandler {
 
@@ -58,6 +67,9 @@ public interface ActionHandlers {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * handler used when choosing ticket
+     */
     @FunctionalInterface
     interface ChooseTicketsHandler {
 
@@ -72,6 +84,9 @@ public interface ActionHandlers {
 
     //----------------------------------------------------------------------------------------------------
 
+    /**
+     * handler used when choosing cards
+     */
     @FunctionalInterface
     interface ChooseCardsHandler {
 
