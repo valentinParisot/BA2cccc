@@ -83,11 +83,7 @@ public final class StringsFr {
      */
     public static String plural(int value) {
 
-        if(value == 0){
-            return "";
-        }
-        else {
-            return Math.abs(value) == 1 ? "" : "s";
-        }
+            return Math.abs(value) <= 1 ? "" : "s";
+
     }
 }
