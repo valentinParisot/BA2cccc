@@ -15,6 +15,7 @@ import javafx.scene.text.TextFlow;
 import java.util.Map;
 
 import static ch.epfl.tchu.gui.StringsFr.PLAYER_STATS;
+import static ch.epfl.tchu.gui.StringsFr.PLAYER_STATS_CHINOIS;
 import static javafx.beans.binding.Bindings.bindContent;
 
 /**
@@ -51,12 +52,13 @@ class InfoViewCreator {
 
     public static VBox createInfoView(PlayerId id, Map<PlayerId, String> name,
                                       ObservableGameState observableGameState,
-                                      ObservableList<Text> observableList) {
+                                      ObservableList<Text> observableList,
+                                      int chinois) {
 
         VBox playerStats = new VBox();
         playerStats.setId(SET_ID_PLAYER_STATE);
 
-        statistics(observableGameState, name, playerStats, id);
+        statistics(observableGameState, name, playerStats, id,chinois);
 
         TextFlow message = new TextFlow();
         message.setId(SET_ID_GAME_INFO);
@@ -91,9 +93,18 @@ class InfoViewCreator {
 
     private static StringExpression expression(PlayerId player,
                                                ObservableGameState observableGameState,
-                                               Map<PlayerId, String> name) {
+                                               Map<PlayerId, String> name,int chinois) {
         StringExpression expression;
 
+        if(chinois == 1){
+            expression = Bindings.format(PLAYER_STATS_CHINOIS,
+                    name.get(player),
+                    observableGameState.ticketCount(player),
+                    observableGameState.cardCount(player),
+                    observableGameState.wagonCount(player),
+                    observableGameState.playerPoints(player));
+        }
+        else
         expression = Bindings.format(PLAYER_STATS,
                 name.get(player),
                 observableGameState.ticketCount(player),
@@ -114,7 +125,7 @@ class InfoViewCreator {
      * @param vbox                vbox who contains statistics
      */
 
-    private static void statistics(ObservableGameState observableGameState, Map<PlayerId, String> name, VBox vbox, PlayerId playerId) {
+    private static void statistics(ObservableGameState observableGameState, Map<PlayerId, String> name, VBox vbox, PlayerId playerId,int chinois) {
         for (PlayerId id : PlayerId.ALL) {
             TextFlow statistic = new TextFlow();
             statistic.getStyleClass().add(id.name());
@@ -124,7 +135,7 @@ class InfoViewCreator {
             circle.getStyleClass().add(FILLED);
 
             Text monText = new Text();
-            monText.textProperty().bind(expression(id, observableGameState, name));
+            monText.textProperty().bind(expression(id, observableGameState, name,chinois));
 
             statistic.getChildren().addAll(circle, monText);
 

@@ -24,6 +24,9 @@ public class GraphicalPlayerAdapter implements Player {
 
     private final static int CAPACITY = 1;
 
+    private final BlockingQueue<Integer> playMenu = new ArrayBlockingQueue<>(CAPACITY);
+
+
     private GraphicalPlayer graphicalPlayer;
 
     private final BlockingQueue<SortedBag<Ticket>> ticketsBlockingQueue = new ArrayBlockingQueue<>(CAPACITY);
@@ -43,7 +46,10 @@ public class GraphicalPlayerAdapter implements Player {
      * @param playerNames the name of each player.
      */
 
-    @Override
+
+    //----------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------
+//ici je fais manuelle mais sinon jepeux pas overridfe
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
         runLater(() ->
                 graphicalPlayerBlockingQueue.add(new GraphicalPlayer(ownId, playerNames))
@@ -246,7 +252,27 @@ public class GraphicalPlayerAdapter implements Player {
         }
     }
 
+    @Override
+    public void playMenu() {
+        runLater(() -> graphicalPlayer.playMenu(playMenu::add));
+
+    }
+
+    @Override
+    public void startGame() {
+
+        tryCatch(playMenu);
+
+        runLater(() ->
+                graphicalPlayer.startGame()
+        );
+
+
+    }
+
     //----------------------------------------------------------------------------------------------------
+
+
 
 }
 

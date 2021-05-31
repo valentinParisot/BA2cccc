@@ -132,6 +132,10 @@ public final class Ticket implements Comparable<Ticket> {
         return representation;
     }
 
+    public String toString(StationConnectivity s) {
+        return s.toString();
+    }
+
     //----------------------------------------------------------------------------------------------------
 }
 

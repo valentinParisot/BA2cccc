@@ -2,9 +2,13 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
+import ch.epfl.tchu.gui.GraphicalPlayer;
 import ch.epfl.tchu.gui.Info;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Game
@@ -36,10 +40,15 @@ public final class Game {
 
         Preconditions.checkArgument((players.size() == EXACT_SIZE_MAP_PLAYER) && (playerNames.size() == EXACT_SIZE_MAP_PLAYER));
 
+
         GameState gameState = GameState.initial(tickets, rng);
 
-        Info i1 = new Info(playerNames.get(PlayerId.PLAYER_1));
-        Info i2 = new Info(playerNames.get(PlayerId.PLAYER_2));
+
+
+
+
+        Info i1 = new Info(playerNames.get(PlayerId.PLAYER_1), GraphicalPlayer.languge);
+        Info i2 = new Info(playerNames.get(PlayerId.PLAYER_2),GraphicalPlayer.languge);
 
 
         List<String> nameList = new ArrayList<>();
@@ -51,7 +60,16 @@ public final class Game {
             entry.getValue().initPlayers(entry.getKey(), playerNames);
         }
 
-        sendInfo(new Info(playerNames.get(gameState.currentPlayerId())).willPlayFirst(), players);
+        sendInfo(new Info(playerNames.get(gameState.currentPlayerId()),GraphicalPlayer.languge).willPlayFirst(), players);
+
+
+        for (Map.Entry<PlayerId, Player> entry : players.entrySet()) {
+            entry.getValue().playMenu();
+        }
+
+        for (Map.Entry<PlayerId, Player> entry : players.entrySet()) {
+            entry.getValue().startGame();
+        }
 
 
         for (Map.Entry<PlayerId, Player> entry : players.entrySet()) {
@@ -70,7 +88,7 @@ public final class Game {
 
         while (true) {
 
-            Info currentInfo = new Info(playerNames.get(gameState.currentPlayerId()));
+            Info currentInfo = new Info(playerNames.get(gameState.currentPlayerId()),GraphicalPlayer.languge);
 
             sendInfo(currentInfo.canPlay(), players);
 

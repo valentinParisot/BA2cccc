@@ -17,6 +17,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+import static ch.epfl.tchu.gui.StringsFr.TICKETS_CHINOIS;
+
 /**
  * DecksViewCreator
  * class
@@ -28,6 +30,9 @@ import javafx.scene.text.Text;
 class DecksViewCreator {
 
     //----------------------------------------------------------------------------------------------------
+
+
+
 
     private final static int BUTTON_WIDTH = 50;
     private final static int BUTTON_HEIGHT = 5;
@@ -64,7 +69,8 @@ class DecksViewCreator {
      * @param state the actual state of the game we want to show
      * @return the box of the hand view
      */
-    public static HBox createHandView(ObservableGameState state) {
+    public static HBox createHandView(ObservableGameState state,int chinois) {
+
 
         HBox root = new HBox();
         root.getStylesheets().addAll(DECKS, COLORS);
@@ -73,13 +79,23 @@ class DecksViewCreator {
         handPane.setId(HAND_PANE);
 
         ListView<Ticket> billets = new ListView<>(state.ticketList());
-        billets.setId(TICKETS);
+
+        /**billets.setCellFactory(v ->
+                new TextFieldListCell<>(new extenTicket(state.connectivity().get())));
+
+        state.connectivity().addListenner((o,av,nv) -> billets.setCellFactory(v ->
+                new TextFieldListCell<>(new extenTicket(nv))));**/
+
+
+        if(chinois == 1){
+            billets.setId(TICKETS_CHINOIS);
+        }else{
+            billets.setId(TICKETS);
+        }
 
         for (Card c : Card.ALL) {
 
             StackPane sp = new StackPane();
-
-
 
             if (c.color() == null) {
                 sp.getStyleClass().addAll(NEUTRAL, CARD);
@@ -118,16 +134,25 @@ class DecksViewCreator {
      */
     public static VBox createCardsView(ObservableGameState state,
                                        ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketProperty,
-                                       ObjectProperty<ActionHandlers.DrawCardHandler> cardProperty) {
+                                       ObjectProperty<ActionHandlers.DrawCardHandler> cardProperty,
+                                       int chinois) {
 
         VBox root = new VBox();
         root.setId(CARD_PANE);
         root.getStylesheets().addAll(DECKS, COLORS);
+        Button ticketButton;
 
         // creates the draw button for the tickets
 
-        Button ticketButton = createButton(StringsFr.TICKETS,
-                percentage((IntegerProperty) state.ticketPercentage()));
+        if(chinois == 1){
+            ticketButton = createButton(TICKETS_CHINOIS,
+                    percentage((IntegerProperty) state.ticketPercentage()));
+        }else{
+            ticketButton = createButton(StringsFr.TICKETS,
+                    percentage((IntegerProperty) state.ticketPercentage()));
+        }
+
+
 
         ticketButton.disableProperty()
                 .bind(ticketProperty.isNull());
@@ -170,8 +195,17 @@ class DecksViewCreator {
 
         // creates the draw button for the cards
 
-        Button cardButton = createButton(StringsFr.CARDS,
-                percentage((IntegerProperty) state.cardPercentage()));
+        Button cardButton;
+
+        if(chinois == 1){
+            cardButton = createButton(StringsFr.CARDS_CHINOIS,
+                    percentage((IntegerProperty) state.cardPercentage()));
+        }else{
+            cardButton = createButton(StringsFr.CARDS,
+                    percentage((IntegerProperty) state.cardPercentage()));
+        }
+
+
 
         cardButton.disableProperty().bind(cardProperty.isNull());
 
@@ -274,7 +308,7 @@ class DecksViewCreator {
 
 
                 default:
-                    r3.getStyleClass().addAll(NEUTRAL, CARD);
+
                     break;
 
             }
@@ -342,49 +376,49 @@ class DecksViewCreator {
             switch (on.color()) {
                 case BLUE:
 
-                    r3.getStyleClass().addAll(/**c.color().toString(),**/"blue");
+                    r3.getStyleClass().addAll("blue");
 
 
                     break;
 
                 case BLACK:
-                    r3.getStyleClass().addAll(/**c.color().toString(),**/"black");
+                    r3.getStyleClass().addAll("black");
 
 
                     break;
 
                 case GREEN:
-                    r3.getStyleClass().addAll(/**c.color().toString(),**/"green");
+                    r3.getStyleClass().addAll("green");
 
 
                     break;
 
                 case ORANGE:
-                    r3.getStyleClass().addAll(/**c.color().toString(),**/"orange");
+                    r3.getStyleClass().addAll("orange");
 
 
                     break;
 
                 case VIOLET:
-                    r3.getStyleClass().addAll(/**c.color().toString(),**/"pink");
+                    r3.getStyleClass().addAll("pink");
 
 
                     break;
 
                 case YELLOW:
-                    r3.getStyleClass().addAll(/**c.color().toString(),**/"yellow");
+                    r3.getStyleClass().addAll("yellow");
 
 
                     break;
 
                 case RED:
-                    r3.getStyleClass().addAll(/**c.color().toString(),**/"red");
+                    r3.getStyleClass().addAll("red");
 
 
                     break;
 
                 case WHITE:
-                    r3.getStyleClass().addAll(/**c.color().toString(),**/"white");
+                    r3.getStyleClass().addAll("white");
 
 
                     break;
@@ -393,7 +427,6 @@ class DecksViewCreator {
                 default:
 
 
-                    r3.getStyleClass().addAll(NEUTRAL, CARD);
                     break;
 
             }
