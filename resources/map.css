@@ -10,7 +10,6 @@ ImageView {
     -fx-stroke-type: outside;
 }
 
-
 .BLACK .track {
     -fx-stroke: grey;
 }

@@ -3,9 +3,10 @@
 .card .outside {
     -fx-arc-width: 10;
     -fx-arc-height: 10;
-    -fx-fill: white;
+    -fx-fill: black;
     -fx-stroke: dimgrey;
 }
+
 
 .card .inside {
     -fx-stroke: hsba(0, 0%, 0%, 0.3);
@@ -17,10 +18,80 @@
     -fx-opacity: 0.3;
 }
 
-.card.NEUTRAL .train-image {
+
+
+
+
+
+
+
+
+
+/**.card.NEUTRAL .train-image {
     -fx-fill: url("locomotive.png");
     -fx-opacity: 0.7;
+}**/
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+.card.NEUTRAL {
+    -fx-fill: url("loco3.png");
+    -fx-opacity: 1;
 }
+
+.card .blue{
+    -fx-fill: url("blue.png");
+    -fx-opacity: 1;
+}
+
+.card .white{
+    -fx-fill: url("white.png");
+    -fx-opacity: 1;
+}
+
+.card .orange{
+    -fx-fill: url("orange.png");
+    -fx-opacity: 1;
+}
+
+.card .yellow{
+    -fx-fill: url("yellow.png");
+    -fx-opacity: 1;
+}
+
+
+.card .red{
+    -fx-fill: url("red.png");
+    -fx-opacity: 1;
+}
+
+.card .black{
+    -fx-fill: url("black.png");
+    -fx-opacity: 1;
+}
+
+.card .pink{
+    -fx-fill: url("pink.png");
+    -fx-opacity: 1;
+}
+
+.card .green{
+    -fx-fill: url("green.png");
+    -fx-opacity: 1;
+}
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 .card.NEUTRAL .filled {
     -fx-fill: mediumturquoise;

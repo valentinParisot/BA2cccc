@@ -150,6 +150,16 @@ class GameTest1 {
                 }else
                 return options.get(rng.nextInt(options.size()));
             }
+
+            @Override
+            public void playMenu(){
+
+            }
+
+            @Override
+            public void startGame() {
+
+            }
         }
 
 

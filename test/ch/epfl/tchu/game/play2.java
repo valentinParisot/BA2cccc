@@ -178,6 +178,16 @@ public class play2 {
             }
             return builder.build();
         }
+
+        @Override
+        public void playMenu(){
+
+        }
+
+        @Override
+        public void startGame() {
+
+        }
     }
 
     private static final List<Card> ALL_CARDS = List.of(Card.values());

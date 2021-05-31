@@ -206,6 +206,16 @@ public class PlayTest {
 
       }
 
+        @Override
+        public void playMenu(){
+
+        }
+
+        @Override
+        public void startGame() {
+
+        }
+
         private static final List<Card> ALL_CARDS = List.of(Card.values());
         private SortedBag<Card> allCards() {
             var cardsBuilder = new SortedBag.Builder<Card>();
