@@ -25,7 +25,7 @@ import javafx.scene.text.Text;
  * @author Hugo Jeannin (329220)
  */
 
- class DecksViewCreator {
+class DecksViewCreator {
 
     //----------------------------------------------------------------------------------------------------
 
@@ -33,10 +33,10 @@ import javafx.scene.text.Text;
     private final static int BUTTON_HEIGHT = 5;
     private final static int R1_WIDTH = 60;
     private final static int R1_HEIGHT = 90;
-    private final static int R2_WIDTH = 40;
-    private final static int R2_HEIGHT = 70;
-    private final static int R3_WIDTH = 40;
-    private final static int R3_HEIGHT = 70;
+    private final static int R2_WIDTH = 45;
+    private final static int R2_HEIGHT = 75;
+    private final static int R3_WIDTH = 45;//45
+    private final static int R3_HEIGHT = 75;//75
     private final static int MULTIPLY_50 = 50;
     private final static int PERCENTAGE_100 = 100;
 
@@ -79,6 +79,8 @@ import javafx.scene.text.Text;
 
             StackPane sp = new StackPane();
 
+
+
             if (c.color() == null) {
                 sp.getStyleClass().addAll(NEUTRAL, CARD);
 
@@ -89,7 +91,7 @@ import javafx.scene.text.Text;
             sp.getChildren().addAll(
                     rOutside(),
                     rFilledInside(),
-                    rTrainImage(),
+                    rTrainImage(c),
                     blackCounter(state, c));
 
             handPane.getChildren().add(sp);
@@ -145,11 +147,17 @@ import javafx.scene.text.Text;
 
             state.faceUpCard(i).addListener((o, ov, on) -> {
 
+
+
                 String color = (on.color() == null) ? NEUTRAL : on.color().toString();
 
                 sp.getStyleClass().setAll(color, CARD);
 
+
+                addWagonLoco(sp, root,on);
             });
+
+
 
             sp.disableProperty()
                     .bind(cardProperty.isNull());
@@ -157,7 +165,7 @@ import javafx.scene.text.Text;
             int finalI = i;
             sp.setOnMouseClicked(e -> cardProperty.get().onDrawCard(finalI));
 
-            addWagonLoco(sp, root);
+
         }
 
         // creates the draw button for the cards
@@ -214,11 +222,66 @@ import javafx.scene.text.Text;
      * @return a Rectangle with "train-image"
      */
 
-    private static Rectangle rTrainImage() {
+    private static Rectangle rTrainImage(Card c) {
+
         Rectangle r3 = new Rectangle();
         r3.setWidth(R3_WIDTH);
         r3.setHeight(R3_HEIGHT);
-        r3.getStyleClass().add(TRAIN_IMAGE);
+
+        if (c.color() == null) {
+            r3.getStyleClass().addAll(NEUTRAL, CARD);
+
+        } else {
+
+
+            switch (c.color()) {
+                case BLUE:
+                    r3.getStyleClass().addAll(/**c.color().toString(),**/"blue");
+                    break;
+                case BLACK:
+                    r3.getStyleClass().addAll(/**c.color().toString(),**/"black");
+                    break;
+
+                case GREEN:
+                    r3.getStyleClass().addAll(/**c.color().toString(),**/"green");
+
+                    break;
+
+                case ORANGE:
+                    r3.getStyleClass().addAll(/**c.color().toString(),**/"orange");
+
+                    break;
+
+                case VIOLET:
+                    r3.getStyleClass().addAll(/**c.color().toString(),**/"pink");
+
+                    break;
+
+                case YELLOW:
+                    r3.getStyleClass().addAll(/**c.color().toString(),**/"yellow");
+
+                    break;
+
+                case RED:
+                    r3.getStyleClass().addAll(/**c.color().toString(),**/"red");
+
+                    break;
+
+                case WHITE:
+                    r3.getStyleClass().addAll(/**c.color().toString(),**/"white");
+
+                    break;
+
+
+                default:
+                    r3.getStyleClass().addAll(NEUTRAL, CARD);
+                    break;
+
+            }
+
+
+        }
+
         return r3;
     }
 
@@ -256,7 +319,7 @@ import javafx.scene.text.Text;
      * @param root a Vbox
      */
 
-    private static void addWagonLoco(StackPane sp, VBox root) {
+    private static void addWagonLoco(StackPane sp, VBox root, Card on) {
         Rectangle r1 = new Rectangle();
         r1.setWidth(R1_WIDTH);
         r1.setHeight(R1_HEIGHT);
@@ -270,7 +333,75 @@ import javafx.scene.text.Text;
         Rectangle r3 = new Rectangle();
         r3.setWidth(R3_WIDTH);
         r3.setHeight(R3_HEIGHT);
-        r3.getStyleClass().add(TRAIN_IMAGE);
+
+
+        if (on.color() == null) {
+            r3.getStyleClass().addAll(NEUTRAL, CARD);
+
+        }else
+            switch (on.color()) {
+                case BLUE:
+
+                    r3.getStyleClass().addAll(/**c.color().toString(),**/"blue");
+
+
+                    break;
+
+                case BLACK:
+                    r3.getStyleClass().addAll(/**c.color().toString(),**/"black");
+
+
+                    break;
+
+                case GREEN:
+                    r3.getStyleClass().addAll(/**c.color().toString(),**/"green");
+
+
+                    break;
+
+                case ORANGE:
+                    r3.getStyleClass().addAll(/**c.color().toString(),**/"orange");
+
+
+                    break;
+
+                case VIOLET:
+                    r3.getStyleClass().addAll(/**c.color().toString(),**/"pink");
+
+
+                    break;
+
+                case YELLOW:
+                    r3.getStyleClass().addAll(/**c.color().toString(),**/"yellow");
+
+
+                    break;
+
+                case RED:
+                    r3.getStyleClass().addAll(/**c.color().toString(),**/"red");
+
+
+                    break;
+
+                case WHITE:
+                    r3.getStyleClass().addAll(/**c.color().toString(),**/"white");
+
+
+                    break;
+
+
+                default:
+
+
+                    r3.getStyleClass().addAll(NEUTRAL, CARD);
+                    break;
+
+            }
+
+
+
+
+
 
         sp.getChildren().addAll(r1, r2, r3);
         root.getChildren().add(sp);
@@ -319,5 +450,7 @@ import javafx.scene.text.Text;
     }
 
     //----------------------------------------------------------------------------------------------------
+
+
 
 }
