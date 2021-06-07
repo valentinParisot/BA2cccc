@@ -17,8 +17,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-import static ch.epfl.tchu.gui.StringsFr.TICKETS_CHINOIS;
-
 /**
  * DecksViewCreator
  * class
@@ -31,17 +29,14 @@ class DecksViewCreator {
 
     //----------------------------------------------------------------------------------------------------
 
-
-
-
     private final static int BUTTON_WIDTH = 50;
     private final static int BUTTON_HEIGHT = 5;
     private final static int R1_WIDTH = 60;
     private final static int R1_HEIGHT = 90;
     private final static int R2_WIDTH = 45;
     private final static int R2_HEIGHT = 75;
-    private final static int R3_WIDTH = 45;//45
-    private final static int R3_HEIGHT = 75;//75
+    private final static int R3_WIDTH = 45;
+    private final static int R3_HEIGHT = 75;
     private final static int MULTIPLY_50 = 50;
     private final static int PERCENTAGE_100 = 100;
 
@@ -69,8 +64,7 @@ class DecksViewCreator {
      * @param state the actual state of the game we want to show
      * @return the box of the hand view
      */
-    public static HBox createHandView(ObservableGameState state,int chinois) {
-
+    public static HBox createHandView(ObservableGameState state,boolean chinois) {
 
         HBox root = new HBox();
         root.getStylesheets().addAll(DECKS, COLORS);
@@ -79,29 +73,22 @@ class DecksViewCreator {
         handPane.setId(HAND_PANE);
 
         ListView<Ticket> billets = new ListView<>(state.ticketList());
-
-        /**billets.setCellFactory(v ->
-                new TextFieldListCell<>(new extenTicket(state.connectivity().get())));
-
-        state.connectivity().addListenner((o,av,nv) -> billets.setCellFactory(v ->
-                new TextFieldListCell<>(new extenTicket(nv))));**/
-
-
-        if(chinois == 1){
-            billets.setId(TICKETS_CHINOIS);
-        }else{
-            billets.setId(TICKETS);
-        }
+        billets.setId(TICKETS);
 
         for (Card c : Card.ALL) {
 
             StackPane sp = new StackPane();
+            sp.getStyleClass().add(CARD);
 
             if (c.color() == null) {
-                sp.getStyleClass().addAll(NEUTRAL, CARD);
+                sp.getStyleClass().add(NEUTRAL);
 
             } else {
-                sp.getStyleClass().addAll(c.color().toString(), CARD);
+
+
+                sp.getStyleClass().add(c.name());
+
+
             }
 
             sp.getChildren().addAll(
@@ -135,23 +122,21 @@ class DecksViewCreator {
     public static VBox createCardsView(ObservableGameState state,
                                        ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketProperty,
                                        ObjectProperty<ActionHandlers.DrawCardHandler> cardProperty,
-                                       int chinois) {
+                                       boolean chinois) {
 
         VBox root = new VBox();
         root.setId(CARD_PANE);
         root.getStylesheets().addAll(DECKS, COLORS);
-        Button ticketButton;
 
         // creates the draw button for the tickets
 
-        if(chinois == 1){
-            ticketButton = createButton(TICKETS_CHINOIS,
+        Button ticketButton;
+        if(chinois){
+            ticketButton = createButton(StringsFr.TICKETS_CHINOIS,
                     percentage((IntegerProperty) state.ticketPercentage()));
-        }else{
-            ticketButton = createButton(StringsFr.TICKETS,
-                    percentage((IntegerProperty) state.ticketPercentage()));
-        }
-
+        }else
+         ticketButton = createButton(StringsFr.TICKETS,
+                percentage((IntegerProperty) state.ticketPercentage()));
 
 
         ticketButton.disableProperty()
@@ -172,17 +157,90 @@ class DecksViewCreator {
 
             state.faceUpCard(i).addListener((o, ov, on) -> {
 
-
-
                 String color = (on.color() == null) ? NEUTRAL : on.color().toString();
 
-                sp.getStyleClass().setAll(color, CARD);
+                sp.getStyleClass().setAll(color,CARD);
 
 
-                addWagonLoco(sp, root,on);
+                Rectangle r1 = new Rectangle();
+                r1.setWidth(R1_WIDTH);
+                r1.setHeight(R1_HEIGHT);
+                r1.getStyleClass().add(OUTSIDE);
+
+                Rectangle r2 = new Rectangle();
+                r2.setWidth(R2_WIDTH);
+                r2.setHeight(R2_HEIGHT);
+                r2.getStyleClass().addAll(FILLED, INSIDE);
+
+                Rectangle r3 = new Rectangle();
+                r3.setWidth(R3_WIDTH);
+                r3.setHeight(R3_HEIGHT);
+                r3.getStyleClass().addAll(CARD);
+
+
+                if (on.color() == null) {
+                    r3.getStyleClass().addAll(NEUTRAL);
+
+                }else
+                    switch (on.color()) {
+                        case BLUE:
+
+                            r3.getStyleClass().addAll("blue");
+
+
+                            break;
+
+                        case BLACK:
+                            r3.getStyleClass().addAll("black");
+
+
+                            break;
+
+                        case GREEN:
+                            r3.getStyleClass().addAll("green");
+
+
+                            break;
+
+                        case ORANGE:
+                            r3.getStyleClass().addAll("orange");
+
+
+                            break;
+
+                        case VIOLET:
+                            r3.getStyleClass().addAll("pink");
+
+
+                            break;
+
+                        case YELLOW:
+                            r3.getStyleClass().addAll("yellow");
+
+
+                            break;
+
+                        case RED:
+                            r3.getStyleClass().addAll("red");
+
+
+                            break;
+
+                        case WHITE:
+                            r3.getStyleClass().addAll("white");
+
+                            break;
+
+                        default:
+
+                            break;
+
+                    }
+
+               sp.getChildren().addAll(r1, r2 , r3);
+
             });
-
-
+            root.getChildren().add(sp);
 
             sp.disableProperty()
                     .bind(cardProperty.isNull());
@@ -190,22 +248,19 @@ class DecksViewCreator {
             int finalI = i;
             sp.setOnMouseClicked(e -> cardProperty.get().onDrawCard(finalI));
 
+            //addWagonLoco(sp, root);
 
         }
 
         // creates the draw button for the cards
 
         Button cardButton;
-
-        if(chinois == 1){
-            cardButton = createButton(StringsFr.CARDS_CHINOIS,
+        if(chinois){
+             cardButton = createButton(StringsFr.CARDS_CHINOIS,
                     percentage((IntegerProperty) state.cardPercentage()));
-        }else{
-            cardButton = createButton(StringsFr.CARDS,
-                    percentage((IntegerProperty) state.cardPercentage()));
-        }
-
-
+        }else
+         cardButton = createButton(StringsFr.CARDS,
+                percentage((IntegerProperty) state.cardPercentage()));
 
         cardButton.disableProperty().bind(cardProperty.isNull());
 
@@ -256,14 +311,15 @@ class DecksViewCreator {
      * @return a Rectangle with "train-image"
      */
 
-    private static Rectangle rTrainImage(Card c) {
-
+    private static Rectangle rTrainImage(Card c ) {
         Rectangle r3 = new Rectangle();
         r3.setWidth(R3_WIDTH);
         r3.setHeight(R3_HEIGHT);
+        //r3.getStyleClass().add(TRAIN_IMAGE);
+        r3.getStyleClass().add(CARD);
 
         if (c.color() == null) {
-            r3.getStyleClass().addAll(NEUTRAL, CARD);
+            r3.getStyleClass().addAll(NEUTRAL);
 
         } else {
 
@@ -316,6 +372,7 @@ class DecksViewCreator {
 
         }
 
+
         return r3;
     }
 
@@ -353,7 +410,7 @@ class DecksViewCreator {
      * @param root a Vbox
      */
 
-    private static void addWagonLoco(StackPane sp, VBox root, Card on) {
+    private static void addWagonLoco(StackPane sp, VBox root) {
         Rectangle r1 = new Rectangle();
         r1.setWidth(R1_WIDTH);
         r1.setHeight(R1_HEIGHT);
@@ -364,77 +421,11 @@ class DecksViewCreator {
         r2.setHeight(R2_HEIGHT);
         r2.getStyleClass().addAll(FILLED, INSIDE);
 
+
         Rectangle r3 = new Rectangle();
         r3.setWidth(R3_WIDTH);
         r3.setHeight(R3_HEIGHT);
-
-
-        if (on.color() == null) {
-            r3.getStyleClass().addAll(NEUTRAL, CARD);
-
-        }else
-            switch (on.color()) {
-                case BLUE:
-
-                    r3.getStyleClass().addAll("blue");
-
-
-                    break;
-
-                case BLACK:
-                    r3.getStyleClass().addAll("black");
-
-
-                    break;
-
-                case GREEN:
-                    r3.getStyleClass().addAll("green");
-
-
-                    break;
-
-                case ORANGE:
-                    r3.getStyleClass().addAll("orange");
-
-
-                    break;
-
-                case VIOLET:
-                    r3.getStyleClass().addAll("pink");
-
-
-                    break;
-
-                case YELLOW:
-                    r3.getStyleClass().addAll("yellow");
-
-
-                    break;
-
-                case RED:
-                    r3.getStyleClass().addAll("red");
-
-
-                    break;
-
-                case WHITE:
-                    r3.getStyleClass().addAll("white");
-
-
-                    break;
-
-
-                default:
-
-
-                    break;
-
-            }
-
-
-
-
-
+        r3.getStyleClass().add(TRAIN_IMAGE);
 
         sp.getChildren().addAll(r1, r2, r3);
         root.getChildren().add(sp);
@@ -483,7 +474,5 @@ class DecksViewCreator {
     }
 
     //----------------------------------------------------------------------------------------------------
-
-
 
 }

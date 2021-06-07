@@ -24,7 +24,7 @@ public final class TestServer {
             var playerNames = Map.of(PLAYER_1, "Ada",
                     PLAYER_2, "Charles");
 
-            Info i1 = new Info(playerNames.get(PlayerId.PLAYER_1));
+            Info i1 = new Info(playerNames.get(PlayerId.PLAYER_1),0);
 
             SortedBag<Ticket> tickets = SortedBag.of(ChMap.tickets());
 

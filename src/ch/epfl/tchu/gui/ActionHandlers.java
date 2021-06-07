@@ -101,10 +101,5 @@ public interface ActionHandlers {
 
     }
 
-    @FunctionalInterface
-    interface MenuHandler {
-        void onMenuButton(int i);
-    }
-
     //----------------------------------------------------------------------------------------------------
 }

@@ -40,15 +40,18 @@ public final class Game {
 
         Preconditions.checkArgument((players.size() == EXACT_SIZE_MAP_PLAYER) && (playerNames.size() == EXACT_SIZE_MAP_PLAYER));
 
+       /* String musicFile = "cartevisue.mp3";
+        MediaPlayer p = new javafx.scene.media.MediaPlayer(new Media(new File(musicFile).toURI().toString()));
+
+        p.play();*/
+
+        //p.stop();
+
 
         GameState gameState = GameState.initial(tickets, rng);
 
-
-
-
-
-        Info i1 = new Info(playerNames.get(PlayerId.PLAYER_1), GraphicalPlayer.languge);
-        Info i2 = new Info(playerNames.get(PlayerId.PLAYER_2),GraphicalPlayer.languge);
+        Info i1 = new Info(playerNames.get(PlayerId.PLAYER_1),GraphicalPlayer.language);
+        Info i2 = new Info(playerNames.get(PlayerId.PLAYER_2),GraphicalPlayer.language);
 
 
         List<String> nameList = new ArrayList<>();
@@ -60,16 +63,7 @@ public final class Game {
             entry.getValue().initPlayers(entry.getKey(), playerNames);
         }
 
-        sendInfo(new Info(playerNames.get(gameState.currentPlayerId()),GraphicalPlayer.languge).willPlayFirst(), players);
-
-
-        for (Map.Entry<PlayerId, Player> entry : players.entrySet()) {
-            entry.getValue().playMenu();
-        }
-
-        for (Map.Entry<PlayerId, Player> entry : players.entrySet()) {
-            entry.getValue().startGame();
-        }
+        sendInfo(new Info(playerNames.get(gameState.currentPlayerId()), GraphicalPlayer.language).willPlayFirst(), players);
 
 
         for (Map.Entry<PlayerId, Player> entry : players.entrySet()) {
@@ -88,7 +82,7 @@ public final class Game {
 
         while (true) {
 
-            Info currentInfo = new Info(playerNames.get(gameState.currentPlayerId()),GraphicalPlayer.languge);
+            Info currentInfo = new Info(playerNames.get(gameState.currentPlayerId()),GraphicalPlayer.language);
 
             sendInfo(currentInfo.canPlay(), players);
 

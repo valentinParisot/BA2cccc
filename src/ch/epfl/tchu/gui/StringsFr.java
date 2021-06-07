@@ -83,7 +83,7 @@ public final class StringsFr {
      */
     public static String plural(int value) {
 
-            return Math.abs(value) <= 1 ? "" : "s";
+        return Math.abs(value) <= 1 ? "" : "s";
 
     }
 
@@ -113,7 +113,7 @@ public final class StringsFr {
 
     // Invites
     public static final String CHOOSE_TICKETS_CHINOIS =
-            "從以下選項中至少選擇 %s 票 %s :";
+            "從以下選項中至少選擇 %s 票 :";
     public static final String CHOOSE_CARDS_CHINOIS =
             "選擇使用哪些地圖來抓取這條路線：";
     public static final String CHOOSE_ADDITIONAL_CARDS_CHINOIS =
@@ -121,13 +121,13 @@ public final class StringsFr {
 
     // Informations concernant le déroulement de la partie
     public static final String WILL_PLAY_FIRST_CHINOIS =
-            "％s 首先播放。\n\n";
+            "%s 首先播放。\n\n";
     public static final String KEPT_N_TICKETS_CHINOIS =
-            "%s 保留 %s 票%s。\n";
+            "%s 保留 %s 票。\n";
     public static final String CAN_PLAY_CHINOIS =
             "\n它是在 %s 玩。\n";
     public static final String DREW_TICKETS_CHINOIS =
-            "%s 被解僱 %s 票%s。。。\n";
+            "%s 被解僱 %s 票。。。\n";
     public static final String DREW_BLIND_CARD_CHINOIS =
             "%s 從抽牌堆中抽了一張牌。\n";
     public static final String DREW_VISIBLE_CARD_CHINOIS =
@@ -145,11 +145,11 @@ public final class StringsFr {
     public static final String DID_NOT_CLAIM_ROUTE_CHINOIS =
             "%s 不能（或不想）走這條路 %s。\n";
     public static final String LAST_TURN_BEGINS_CHINOIS =
-            "\n%s 只有 %s 車%s, 最後一輪開始 !\n";
+            "\n%s 只有 %s 車, 最後一輪開始 !\n";
     public static final String GETS_BONUS_CHINOIS =
-            "\n%s 獲得最長旅程的 10 積分獎勵 (%s)。\n";
+            "\n%s 獲得最長旅程的 十 積分獎勵 (%s)。\n";
     public static final String WINS_CHINOIS =
-            "\n%s 贏得 %s 觀點%s, 反對 %s 觀點%s !\n";
+            "\n%s 贏得 %s 觀點, 反對 %s 觀點 !\n";
     public static final String DRAW_CHINOIS =
             "\n%s 與 %s 積分 !\n";
 

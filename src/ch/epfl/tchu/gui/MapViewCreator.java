@@ -54,12 +54,18 @@ class MapViewCreator {
 
     public static Pane createMapView(ObservableGameState observableGameState,
                                      ObjectProperty<ActionHandlers.ClaimRouteHandler> objectProperty,
-                                     CardChooser cardChooser) {
+                                     CardChooser cardChooser,
+                                     boolean chinois) {
 
         ImageView iv = new ImageView();
         Pane root = new Pane();
         root.getChildren().add(iv);
-        root.getStylesheets().addAll(MAP_CSS, COLOR_CSS);
+
+        if (chinois){
+            root.getStylesheets().addAll("map-1.css", COLOR_CSS);
+        }else{
+            root.getStylesheets().addAll(MAP_CSS, COLOR_CSS);
+        }
 
         Creator(observableGameState, objectProperty, cardChooser, root);
 

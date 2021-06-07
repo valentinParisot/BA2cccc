@@ -3,34 +3,25 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
-import javafx.animation.FadeTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.cell.TextFieldListCell;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Glow;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.*;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 import javafx.util.StringConverter;
 
 import java.util.ArrayList;
@@ -53,15 +44,13 @@ public class GraphicalPlayer {
 
     //----------------------------------------------------------------------------------------------------
 
-    public static int languge;
+    public static boolean language;
+
 
     private final static String PREFIX_TITLE = "tCHu - ";
     private final static String CHOOSER_CSS = "chooser.css";
 
     private final static int MAX_TEXT_SIZE = 5;
-
-    private final PlayerId playerId;
-    private final Map<PlayerId, String> playerNames;
 
     private final ObservableGameState observableGameState;
     private final ObservableList<Text> textList;
@@ -71,10 +60,8 @@ public class GraphicalPlayer {
 
     private final Stage primaryStage;
 
-
-    private void setLanguge(int i){
-        languge = i;
-    }
+    private final PlayerId playerId;
+    private final Map<PlayerId, String> playerNames;
 
     //----------------------------------------------------------------------------------------------------
 
@@ -83,37 +70,36 @@ public class GraphicalPlayer {
      * @param playerNames the names of all players
      */
 
-    public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames) {
+    public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames, boolean isChinese) {
 
-        this.languge = 0;
+        this.language = isChinese;
+
         observableGameState = new ObservableGameState(playerId);
 
         textList = FXCollections.observableArrayList();
 
-        this.playerId = playerId;
-        this. playerNames= playerNames;
-
-        primaryStage = new Stage();
-        primaryStage.setTitle(PREFIX_TITLE + playerNames.get(playerId));
-
         drawTicketsHandlerOP = new SimpleObjectProperty<>();
         drawCardHandlerOP = new SimpleObjectProperty<>();
         claimRouteHandlerOP = new SimpleObjectProperty<>();
+        primaryStage = new Stage();
+        primaryStage.setTitle(PREFIX_TITLE + playerNames.get(playerId));
 
 
-        /**Node mapView = MapViewCreator.createMapView(observableGameState, claimRouteHandlerOP, (this::chooseClaimCards));
-        Node cardsView = DecksViewCreator.createCardsView(observableGameState, drawTicketsHandlerOP, drawCardHandlerOP);
-        Node handView = DecksViewCreator.createHandView(observableGameState);
-        Node infoView = InfoViewCreator.createInfoView(playerId, playerNames, observableGameState, textList);
-
-        BorderPane borderPane = new BorderPane(mapView, null, cardsView, handView, infoView);**/
+        this.playerId = playerId;
+        this.playerNames = playerNames;
 
 
+        Node mapView = MapViewCreator.createMapView(observableGameState, claimRouteHandlerOP, (this::chooseClaimCards), language);
+        Node cardsView = DecksViewCreator.createCardsView(observableGameState, drawTicketsHandlerOP, drawCardHandlerOP, language);
+        Node handView = DecksViewCreator.createHandView(observableGameState, language);
+        Node infoView = InfoViewCreator.createInfoView(playerId, playerNames, observableGameState, textList, language);
 
+        BorderPane borderPane = new BorderPane(mapView, null, cardsView, handView, infoView);
 
+        primaryStage.setScene(new Scene(borderPane));
+
+        primaryStage.show();
     }
-
-
 
     //----------------------------------------------------------------------------------------------------
 
@@ -142,14 +128,11 @@ public class GraphicalPlayer {
     public void receiveInfo(String message) {
         assert isFxApplicationThread();
 
-
         Text text = new Text(message);
         textList.add(text);
-
         if (textList.size() > MAX_TEXT_SIZE) {
             textList.remove(0);
         }
-
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -212,33 +195,36 @@ public class GraphicalPlayer {
         int minimumTicketCount = tickets.size() - Constants.DISCARDABLE_TICKETS_COUNT;
 
         Stage ticketStage;
-        Button ticketButton;
+
+
+        if (language) {
+            ticketStage = createStage(StringsFr.TICKETS_CHOICE_CHINOIS);
+        } else
+
+            ticketStage = createStage(StringsFr.TICKETS_CHOICE);
+
+
         VBox vBox = new VBox();
+
         TextFlow textFlow;
-
-        if(languge == 1){
-             ticketStage = createStage(StringsFr.TICKETS_CHOICE_CHINOIS);
-
-             textFlow = createTextFlow(String.format(
+        if (language) {
+            textFlow = createTextFlow(String.format(
                     StringsFr.CHOOSE_TICKETS_CHINOIS,
                     minimumTicketCount,
                     StringsFr.plural(tickets.size())));
 
-             ticketButton = new Button(StringsFr.CHOOSE_CHINOIS);
-        }
-        else {
-            ticketStage = createStage(StringsFr.TICKETS_CHOICE);
-
-
-             textFlow = createTextFlow(String.format(
+        } else
+            textFlow = createTextFlow(String.format(
                     StringsFr.CHOOSE_TICKETS,
                     minimumTicketCount,
                     StringsFr.plural(tickets.size())));
 
+
+        Button ticketButton;
+        if (language) {
+            ticketButton = new Button(StringsFr.CHOOSE_CHINOIS);
+        } else
             ticketButton = new Button(StringsFr.CHOOSE);
-        }
-
-
 
 
         ListView<Ticket> listView = new ListView<>(FXCollections.observableList(tickets.toList()));
@@ -294,15 +280,15 @@ public class GraphicalPlayer {
         assert isFxApplicationThread();
 
         Stage cardStage;
-        if ( languge == 1){
-             cardStage = createStage(StringsFr.CARDS_CHOICE_CHINOIS);
+        if (language) {
+            cardStage = createStage(StringsFr.CARDS_CHOICE_CHINOIS);
             VBox vBox = new VBox();
             TextFlow textFlow = createTextFlow(StringsFr.CHOOSE_CARDS_CHINOIS);
             Button cardButton = new Button(StringsFr.CHOOSE_CHINOIS);
             ListView<SortedBag<Card>> listView = createListView(initialCards);
-        }
-        else
-         cardStage = createStage(StringsFr.CARDS_CHOICE);
+
+        } else
+            cardStage = createStage(StringsFr.CARDS_CHOICE);
         VBox vBox = new VBox();
         TextFlow textFlow = createTextFlow(StringsFr.CHOOSE_CARDS);
         Button cardButton = new Button(StringsFr.CHOOSE);
@@ -339,17 +325,16 @@ public class GraphicalPlayer {
                                       ActionHandlers.ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
 
-        if( languge == 1 ){
-
-            Stage additionalStage = createStage(StringsFr.CARDS_CHOICE_CHINOIS);
+        Stage additionalStage;
+        if (language) {
+            additionalStage = createStage(StringsFr.CARDS_CHOICE_CHINOIS);
             VBox vBox = new VBox();
             TextFlow textFlow = createTextFlow(StringsFr.CHOOSE_ADDITIONAL_CARDS_CHINOIS);
             Button cardButton = new Button(StringsFr.CHOOSE_CHINOIS);
             ListView<SortedBag<Card>> listView = createListView(possibleAdditionalCards);
+        } else
 
-
-        }
-        Stage additionalStage = createStage(StringsFr.CARDS_CHOICE);
+            additionalStage = createStage(StringsFr.CARDS_CHOICE);
         VBox vBox = new VBox();
         TextFlow textFlow = createTextFlow(StringsFr.CHOOSE_ADDITIONAL_CARDS);
         Button cardButton = new Button(StringsFr.CHOOSE);
@@ -462,117 +447,6 @@ public class GraphicalPlayer {
         s.setOnCloseRequest(Event::consume);
     }
 
-    public void playMenu(ActionHandlers.MenuHandler menuHandler){
-
-        Pane root = new Pane();
-
-
-        ImageView iv = new ImageView();
-        root.getChildren().add(iv);
-        root.getStylesheets().addAll("newmap.css", CHOOSER_CSS);
-
-
-
-        // Game menu
-        VBox menu0 = new VBox(10);
-        //VBox menu1 = new VBox(10);
-
-        menu0.setTranslateX(100);
-        menu0.setTranslateY(200);
-        //menu1.setTranslateX(100);
-        //menu1.setTranslateY(200);
-
-        //MenuButton
-        StackPane btnPlay = createSP("  -  JOUER");
-        StackPane btnLanguage = createSP("  -  LANGUES");
-        StackPane btnCredit = createSP("  -  REGLES");
-
-        Node mapView = MapViewCreator.createMapView(observableGameState, claimRouteHandlerOP, (this::chooseClaimCards));
-        Node cardsView = DecksViewCreator.createCardsView(observableGameState, drawTicketsHandlerOP, drawCardHandlerOP,languge);
-        Node handView = DecksViewCreator.createHandView(observableGameState,languge);
-        Node infoView = InfoViewCreator.createInfoView(playerId, playerNames, observableGameState, textList,languge);
-
-        BorderPane borderPane = new BorderPane(mapView, null, cardsView, handView, infoView);
-
-
-        menu0.getChildren().addAll(btnPlay, btnLanguage, btnCredit);
-
-        Rectangle back = new Rectangle(843, 663);
-        back.setFill(javafx.scene.paint.Color.GRAY);
-        back.setOpacity(0.4);
-
-        root.getChildren().addAll(back, menu0);
-
-
-        btnPlay.setOnMouseClicked(e -> {
-            FadeTransition ft = new FadeTransition(Duration.seconds(0.5), root);
-            ft.setFromValue(1);
-            ft.setToValue(0);
-            ft.setOnFinished(evt -> {
-                root.setVisible(false);
-
-                //primaryStage.setScene(new Scene(borderPane));
-            });
-            ft.play();
-
-            menuHandler.onMenuButton(1);
-        });
-
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
-
-    }
-
-
-    public void startGame(){
-
-        Node mapView = MapViewCreator.createMapView(observableGameState, claimRouteHandlerOP, (this::chooseClaimCards));
-        Node cardsView = DecksViewCreator.createCardsView(observableGameState, drawTicketsHandlerOP, drawCardHandlerOP,languge);
-        Node handView = DecksViewCreator.createHandView(observableGameState,languge);
-        Node infoView = InfoViewCreator.createInfoView(playerId, playerNames, observableGameState, textList,languge);
-
-        BorderPane borderPane = new BorderPane(mapView, null, cardsView, handView, infoView);
-
-        primaryStage.setScene(new Scene(borderPane));
-    }
-
-    private static StackPane createSP(String name) {
-        StackPane sp = new StackPane();
-        sp.setAlignment(Pos.CENTER_LEFT);
-
-        Text play = new Text(name);
-        play.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
-        play.setFill(javafx.scene.paint.Color.BLACK);
-        Rectangle back = new Rectangle(180, 30);
-        back.setFill(javafx.scene.paint.Color.BLANCHEDALMOND);
-        back.setOpacity(0.7);
-        sp.getChildren().addAll(back, play);
-
-        sp.setOnMouseEntered(e -> {
-            play.setTranslateX(10);
-            play.setTranslateY(-3);
-            back.setTranslateX(10);
-            back.setTranslateY(-3);
-        });
-
-        sp.setOnMouseExited(e -> {
-            play.setTranslateX(0);
-            play.setTranslateY(0);
-            back.setTranslateX(0);
-            back.setTranslateY(0);
-        });
-
-        DropShadow drop = new DropShadow(50, Color.BLACK);
-        drop.setInput(new Glow());
-
-        sp.setOnMousePressed(e -> sp.setEffect(drop));
-
-        sp.setOnMouseReleased(e -> sp.setEffect(null));
-
-        return sp;
-
-    }
-
     //----------------------------------------------------------------------------------------------------
 
     /**
@@ -640,10 +514,6 @@ public class GraphicalPlayer {
             List<String> finalText = new ArrayList<>();
             finalText.add(textMinusOne);
             finalText.add(lastOne);
-
-            if(languge==1 ){
-                return String.join(StringsFr.AND_SEPARATOR_CHINOIS, finalText);
-            }else
 
             return String.join(StringsFr.AND_SEPARATOR, finalText);
         }

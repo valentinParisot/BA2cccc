@@ -286,17 +286,4 @@ public class RemotePlayerProxy implements Player {
     }
 
     //----------------------------------------------------------------------------------------------------
-
-
-    @Override
-    public void playMenu(){
-
-    }
-
-    @Override
-    public void startGame() {
-
-    }
-
-
 }

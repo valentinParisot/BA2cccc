@@ -3,9 +3,11 @@ VBox {
     -fx-alignment: center;
     -fx-padding: 20;
     -fx-max-width: 450;
+    -fx-font-family: Georgia;
 }
 
 ListView {
     -fx-pref-width: 400;
     -fx-pref-height: 150;
+    -fx-font-family: Georgia;
 }

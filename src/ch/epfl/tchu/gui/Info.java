@@ -23,12 +23,12 @@ public final class Info {
     //----------------------------------------------------------------------------------------------------
 
     private final String playerName;
-    public static int language;
+    public static boolean language;
 
     //----------------------------------------------------------------------------------------------------
 
 
-    public Info(String playerName,int i) {
+    public Info(String playerName,boolean i) {
         this.playerName = playerName;
         this.language = i;
     }
@@ -45,7 +45,7 @@ public final class Info {
 
         String name = "";
 
-        if(language == 1){
+        if(language ){
 
             switch (Objects.requireNonNull(card)) {
                 case BLACK:
@@ -86,38 +86,38 @@ public final class Info {
 
         }else
 
-        switch (Objects.requireNonNull(card)) {
-            case BLACK:
-                name = StringsFr.BLACK_CARD;
-                break;
-            case VIOLET:
-                name = StringsFr.VIOLET_CARD;
-                break;
-            case BLUE:
-                name = StringsFr.BLUE_CARD;
-                break;
-            case GREEN:
-                name = StringsFr.GREEN_CARD;
-                break;
-            case YELLOW:
-                name = StringsFr.YELLOW_CARD;
-                break;
-            case ORANGE:
-                name = StringsFr.ORANGE_CARD;
-                break;
-            case RED:
-                name = StringsFr.RED_CARD;
-                break;
-            case WHITE:
-                name = StringsFr.WHITE_CARD;
-                break;
-            case LOCOMOTIVE:
-                name = StringsFr.LOCOMOTIVE_CARD;
-                break;
-            default:
-                break;
+            switch (Objects.requireNonNull(card)) {
+                case BLACK:
+                    name = StringsFr.BLACK_CARD;
+                    break;
+                case VIOLET:
+                    name = StringsFr.VIOLET_CARD;
+                    break;
+                case BLUE:
+                    name = StringsFr.BLUE_CARD;
+                    break;
+                case GREEN:
+                    name = StringsFr.GREEN_CARD;
+                    break;
+                case YELLOW:
+                    name = StringsFr.YELLOW_CARD;
+                    break;
+                case ORANGE:
+                    name = StringsFr.ORANGE_CARD;
+                    break;
+                case RED:
+                    name = StringsFr.RED_CARD;
+                    break;
+                case WHITE:
+                    name = StringsFr.WHITE_CARD;
+                    break;
+                case LOCOMOTIVE:
+                    name = StringsFr.LOCOMOTIVE_CARD;
+                    break;
+                default:
+                    break;
 
-        }
+            }
 
         name = (name + StringsFr.plural(count));
 
@@ -135,8 +135,8 @@ public final class Info {
     public static String draw(List<String> playerNames, int points) {
 
         String toDraw;
-        if(language == 1) {
-             toDraw = String.join(StringsFr.AND_SEPARATOR_CHINOIS, playerNames);
+        if(language ) {
+            toDraw = String.join(StringsFr.AND_SEPARATOR_CHINOIS, playerNames);
             return String.format(StringsFr.DRAW_CHINOIS, toDraw, points);
         }
         else
@@ -152,14 +152,14 @@ public final class Info {
     public String willPlayFirst() {
 
 
-        if(language == 1) {
+        if(language) {
 
             return String.format(StringsFr.WILL_PLAY_FIRST_CHINOIS, this.playerName);
 
         }
         else
 
-        return String.format(StringsFr.WILL_PLAY_FIRST, this.playerName);
+            return String.format(StringsFr.WILL_PLAY_FIRST, this.playerName);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -170,14 +170,14 @@ public final class Info {
      */
     public String keptTickets(int count) {
 
-        if(language == 1) {
+        if(language ) {
 
             return String.format(StringsFr.KEPT_N_TICKETS_CHINOIS, this.playerName, count, StringsFr.plural(count));
 
         }
         else
 
-        return String.format(StringsFr.KEPT_N_TICKETS, this.playerName, count, StringsFr.plural(count));
+            return String.format(StringsFr.KEPT_N_TICKETS, this.playerName, count, StringsFr.plural(count));
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -187,13 +187,13 @@ public final class Info {
      */
     public String canPlay() {
 
-        if(language == 1) {
+        if(language ) {
 
             return String.format(StringsFr.CAN_PLAY_CHINOIS, this.playerName);
         }
         else
 
-        return String.format(StringsFr.CAN_PLAY, this.playerName);
+            return String.format(StringsFr.CAN_PLAY, this.playerName);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -205,13 +205,13 @@ public final class Info {
      */
     public String drewTickets(int count) {
 
-        if(language == 1) {
+        if(language ) {
 
             return String.format(StringsFr.DREW_TICKETS_CHINOIS, this.playerName, count, StringsFr.plural(count));
         }
         else
 
-        return String.format(StringsFr.DREW_TICKETS, this.playerName, count, StringsFr.plural(count));
+            return String.format(StringsFr.DREW_TICKETS, this.playerName, count, StringsFr.plural(count));
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -221,14 +221,14 @@ public final class Info {
      */
     public String drewBlindCard() {
 
-        if(language == 1) {
+        if(language ) {
 
             return String.format(StringsFr.DREW_BLIND_CARD_CHINOIS, this.playerName);
         }
         else
 
 
-        return String.format(StringsFr.DREW_BLIND_CARD, this.playerName);
+            return String.format(StringsFr.DREW_BLIND_CARD, this.playerName);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -241,7 +241,7 @@ public final class Info {
 
         String name = "";
 
-        if(language == 1) {
+        if(language ) {
 
             switch (card) {
                 case BLACK:
@@ -276,35 +276,35 @@ public final class Info {
         }
         else
 
-        switch (card) {
-            case BLACK:
-                name = StringsFr.BLACK_CARD;
-                break;
-            case VIOLET:
-                name = StringsFr.VIOLET_CARD;
-                break;
-            case BLUE:
-                name = StringsFr.BLUE_CARD;
-                break;
-            case GREEN:
-                name = StringsFr.GREEN_CARD;
-                break;
-            case YELLOW:
-                name = StringsFr.YELLOW_CARD;
-                break;
-            case ORANGE:
-                name = StringsFr.ORANGE_CARD;
-                break;
-            case RED:
-                name = StringsFr.RED_CARD;
-                break;
-            case WHITE:
-                name = StringsFr.WHITE_CARD;
-                break;
-            case LOCOMOTIVE:
-                name = StringsFr.LOCOMOTIVE_CARD;
-                break;
-        }
+            switch (card) {
+                case BLACK:
+                    name = StringsFr.BLACK_CARD;
+                    break;
+                case VIOLET:
+                    name = StringsFr.VIOLET_CARD;
+                    break;
+                case BLUE:
+                    name = StringsFr.BLUE_CARD;
+                    break;
+                case GREEN:
+                    name = StringsFr.GREEN_CARD;
+                    break;
+                case YELLOW:
+                    name = StringsFr.YELLOW_CARD;
+                    break;
+                case ORANGE:
+                    name = StringsFr.ORANGE_CARD;
+                    break;
+                case RED:
+                    name = StringsFr.RED_CARD;
+                    break;
+                case WHITE:
+                    name = StringsFr.WHITE_CARD;
+                    break;
+                case LOCOMOTIVE:
+                    name = StringsFr.LOCOMOTIVE_CARD;
+                    break;
+            }
 
         return String.format(StringsFr.DREW_VISIBLE_CARD, this.playerName, name);
     }
@@ -320,13 +320,13 @@ public final class Info {
 
         Objects.requireNonNull(route);
 
-        if(language == 1) {
+        if(language ) {
 
             return (route.station1().name() + StringsFr.EN_DASH_SEPARATOR_CHINOIS + route.station2().name());
         }
         else
 
-        return (route.station1().name() + StringsFr.EN_DASH_SEPARATOR + route.station2().name());
+            return (route.station1().name() + StringsFr.EN_DASH_SEPARATOR + route.station2().name());
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -361,13 +361,13 @@ public final class Info {
         finalText.add(lastOne);
 
 
-        if(language == 1) {
+        if(language) {
 
             return String.join(StringsFr.AND_SEPARATOR_CHINOIS, finalText);
         }
         else
 
-        return String.join(StringsFr.AND_SEPARATOR, finalText);
+            return String.join(StringsFr.AND_SEPARATOR, finalText);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -382,12 +382,12 @@ public final class Info {
         String gare = routeName(route);
         String carte = cardsDescription(cards);
 
-        if(language == 1) {
+        if(language) {
 
             return String.format(StringsFr.CLAIMED_ROUTE_CHINOIS, this.playerName, gare, carte);        }
         else
 
-        return String.format(StringsFr.CLAIMED_ROUTE, this.playerName, gare, carte);
+            return String.format(StringsFr.CLAIMED_ROUTE, this.playerName, gare, carte);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -402,12 +402,12 @@ public final class Info {
         String tunnel = routeName(route);
         String carte = cardsDescription(initialCards);
 
-        if(language == 1) {
+        if(language) {
 
             return String.format(StringsFr.ATTEMPTS_TUNNEL_CLAIM_CHINOIS, this.playerName, tunnel, carte); }
         else
 
-        return String.format(StringsFr.ATTEMPTS_TUNNEL_CLAIM, this.playerName, tunnel, carte);
+            return String.format(StringsFr.ATTEMPTS_TUNNEL_CLAIM, this.playerName, tunnel, carte);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -423,27 +423,27 @@ public final class Info {
 
         if (additionalCost == 0) {
 
-            if(language == 1) {
+            if(language) {
 
                 return (String.format(StringsFr.ADDITIONAL_CARDS_ARE_CHINOIS, cards) +
                         StringsFr.NO_ADDITIONAL_COST_CHINOIS);
             }
             else
 
-            return (String.format(StringsFr.ADDITIONAL_CARDS_ARE, cards) +
-                    StringsFr.NO_ADDITIONAL_COST);
+                return (String.format(StringsFr.ADDITIONAL_CARDS_ARE, cards) +
+                        StringsFr.NO_ADDITIONAL_COST);
         }
 
 
-        if(language == 1) {
+        if(language) {
 
             return (String.format(StringsFr.ADDITIONAL_CARDS_ARE_CHINOIS, cards) +
                     String.format(StringsFr.SOME_ADDITIONAL_COST_CHINOIS, additionalCost, StringsFr.plural(additionalCost)));
         }
         else
 
-        return (String.format(StringsFr.ADDITIONAL_CARDS_ARE, cards) +
-                String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost, StringsFr.plural(additionalCost)));
+            return (String.format(StringsFr.ADDITIONAL_CARDS_ARE, cards) +
+                    String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost, StringsFr.plural(additionalCost)));
 
     }
 
@@ -457,14 +457,14 @@ public final class Info {
 
         String gare = routeName(route);
 
-        if(language == 1) {
+        if(language) {
 
             return String.format(StringsFr.DID_NOT_CLAIM_ROUTE_CHINOIS, this.playerName, gare);
         }
         else
 
 
-        return String.format(StringsFr.DID_NOT_CLAIM_ROUTE, this.playerName, gare);
+            return String.format(StringsFr.DID_NOT_CLAIM_ROUTE, this.playerName, gare);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -478,14 +478,14 @@ public final class Info {
 
         Preconditions.checkArgument(carCount <= 2);
 
-        if(language == 1) {
+        if(language) {
 
             return String.format(StringsFr.LAST_TURN_BEGINS_CHINOIS, this.playerName, carCount, StringsFr.plural(carCount));
         }
         else
 
 
-        return String.format(StringsFr.LAST_TURN_BEGINS, this.playerName, carCount, StringsFr.plural(carCount));
+            return String.format(StringsFr.LAST_TURN_BEGINS, this.playerName, carCount, StringsFr.plural(carCount));
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -499,14 +499,14 @@ public final class Info {
         String station1 = longestTrail.station1().name();
         String station2 = longestTrail.station2().name();
 
-        if(language == 1) {
+        if(language ) {
 
             return String.format(StringsFr.GETS_BONUS_CHINOIS, this.playerName, station1 + StringsFr.EN_DASH_SEPARATOR_CHINOIS + station2);
         }
         else
 
 
-        return String.format(StringsFr.GETS_BONUS, this.playerName, station1 + StringsFr.EN_DASH_SEPARATOR + station2);
+            return String.format(StringsFr.GETS_BONUS, this.playerName, station1 + StringsFr.EN_DASH_SEPARATOR + station2);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -518,14 +518,14 @@ public final class Info {
      */
     public String won(int points, int loserPoints) {
 
-        if(language == 1){
+        if(language ){
 
             return String.format(StringsFr.WINS_CHINOIS, this.playerName, points, StringsFr.plural(points), loserPoints, StringsFr.plural(loserPoints));
 
         }
         else
 
-        return String.format(StringsFr.WINS, this.playerName, points, StringsFr.plural(points), loserPoints, StringsFr.plural(loserPoints));
+            return String.format(StringsFr.WINS, this.playerName, points, StringsFr.plural(points), loserPoints, StringsFr.plural(loserPoints));
     }
 
     //----------------------------------------------------------------------------------------------------

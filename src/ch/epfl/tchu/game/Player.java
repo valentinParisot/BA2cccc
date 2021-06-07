@@ -24,9 +24,6 @@ public interface Player {
         public static final List<TurnKind> ALL = List.of(values());
     }
 
-   // public abstract boolean isMenuActive();
-
-    public boolean isMenuActive = true;
     //------------------------------------------------------------------------------------------------
 
     /**
@@ -136,9 +133,5 @@ public interface Player {
     public abstract SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options);
 
     //------------------------------------------------------------------------------------------------
-
-    public abstract void playMenu();
-
-    public abstract void startGame();
 
 }

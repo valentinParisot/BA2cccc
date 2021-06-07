@@ -24,10 +24,13 @@ public class GraphicalPlayerAdapter implements Player {
 
     private final static int CAPACITY = 1;
 
-    private final BlockingQueue<Integer> playMenu = new ArrayBlockingQueue<>(CAPACITY);
-
-
     private GraphicalPlayer graphicalPlayer;
+
+    public GraphicalPlayer getGraphicalPlayer() {
+        return graphicalPlayer;
+    }
+
+    private final boolean isChinese;
 
     private final BlockingQueue<SortedBag<Ticket>> ticketsBlockingQueue = new ArrayBlockingQueue<>(CAPACITY);
     private final BlockingQueue<GraphicalPlayer> graphicalPlayerBlockingQueue = new ArrayBlockingQueue<>(CAPACITY);
@@ -39,6 +42,12 @@ public class GraphicalPlayerAdapter implements Player {
 
     //----------------------------------------------------------------------------------------------------
 
+
+    public GraphicalPlayerAdapter(boolean isChinese){
+
+        this.isChinese = isChinese;
+    }
+
     /**
      * Builds, on the JavaFX thread, the instance of the graphical player.
      *
@@ -46,13 +55,10 @@ public class GraphicalPlayerAdapter implements Player {
      * @param playerNames the name of each player.
      */
 
-
-    //----------------------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------------------
-//ici je fais manuelle mais sinon jepeux pas overridfe
+    @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
         runLater(() ->
-                graphicalPlayerBlockingQueue.add(new GraphicalPlayer(ownId, playerNames))
+            graphicalPlayerBlockingQueue.add(new GraphicalPlayer(ownId, playerNames, isChinese))
         );
 
         graphicalPlayer = tryCatch(graphicalPlayerBlockingQueue);
@@ -99,7 +105,9 @@ public class GraphicalPlayerAdapter implements Player {
     @Override
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
         runLater(() ->
-                graphicalPlayer.chooseTickets(tickets, (ticketsBlockingQueue::add)));
+
+            graphicalPlayer.chooseTickets(tickets, (ticketsBlockingQueue::add))
+        );
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -252,27 +260,7 @@ public class GraphicalPlayerAdapter implements Player {
         }
     }
 
-    @Override
-    public void playMenu() {
-        runLater(() -> graphicalPlayer.playMenu(playMenu::add));
-
-    }
-
-    @Override
-    public void startGame() {
-
-        tryCatch(playMenu);
-
-        runLater(() ->
-                graphicalPlayer.startGame()
-        );
-
-
-    }
-
     //----------------------------------------------------------------------------------------------------
-
-
 
 }
 
